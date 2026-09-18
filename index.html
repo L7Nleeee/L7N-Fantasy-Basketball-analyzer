@@ -1,8 +1,9 @@
 <!doctype html>
+<!-- V3.14: DD/TD field normalization fix for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.8</title>
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.13</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
@@ -14,7 +15,7 @@ main{padding:18px 0 60px}.layout{display:grid;grid-template-columns:320px minmax
 .section{margin-bottom:16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.sectionhead h4{margin:0;font-size:14px}.helper{font-size:11px;color:var(--muted)}
 .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.metric{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.metric b{font-size:21px}.metric span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
 .strength-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.strength{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.strength-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}.strength-top strong{font-size:12px}.idx{font-weight:900}.idx.good{color:var(--good)}.idx.bad{color:var(--bad)}.bar{height:9px;border-radius:999px;background:#edf0f5;overflow:hidden;position:relative;margin:8px 0}.bar:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#aeb8c8}.fill{height:100%;border-radius:999px;position:absolute;top:0}.fill.pos{left:50%;background:linear-gradient(90deg,#4ad49b,#129266)}.fill.neg{right:50%;background:linear-gradient(90deg,#ef9ca6,#cc4052)}.explain{font-size:10px;color:var(--muted);line-height:1.45}.pill{display:inline-block;padding:3px 7px;border-radius:999px;font-size:9px;border:1px solid var(--line);background:#fafcff;color:#54627a}.pill.good{color:var(--good);border-color:#bce6d5;background:#f2fbf7}.pill.bad{color:var(--bad);border-color:#f0c4ca;background:#fff5f6}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.table{border-collapse:collapse;width:100%;min-width:1180px}.player-stats-table{min-width:1500px}.player-stats-table th,.player-stats-table td{font-size:10px}.player-stats-table td.stat-good{background:#f0fbf6;color:#16734f;font-weight:800}.player-stats-table td.stat-bad{background:#fff4f5;color:#b53645;font-weight:800}.player-stats-table td.stat-neutral{background:#fff}.player-stats-table .player-name-cell{min-width:170px}.player-stats-table .team-mini{display:block;font-size:9px;color:var(--muted);font-weight:500;margin-top:2px}.player-stats-note{margin-top:8px;font-size:10px;color:var(--muted);line-height:1.5}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.table{border-collapse:collapse;width:100%;min-width:1180px}.player-stats-table{min-width:1500px}.player-stats-table th,.player-stats-table td{font-size:10px}.player-stats-table td.stat-good{background:#f0fbf6;color:#16734f;font-weight:800}.player-stats-table td.stat-bad{background:#fff4f5;color:#b53645;font-weight:800}.player-stats-table td.stat-neutral{background:#fff}.player-stats-table .player-name-cell{min-width:170px}.player-stats-table .team-mini{display:block;font-size:9px;color:var(--muted);font-weight:500;margin-top:2px} .player-stats-note{margin-top:8px;font-size:10px;color:var(--muted);line-height:1.5}.stat-dd{background:#f7f3ff!important;color:#5b35c8!important;font-weight:900!important}.stat-td{background:#fff9ef!important;color:#a56600!important;font-weight:900!important}.weekly-dd-focus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0 0}.weekly-dd-card{background:linear-gradient(180deg,#fcfbff,#fff);border:1px solid #e2dcff;border-radius:12px;padding:11px 12px;box-shadow:0 7px 20px rgba(74,55,150,.06)}.weekly-dd-card b{display:block;font-size:20px;line-height:1.1;color:#4f32b8}.weekly-dd-card span{display:block;margin-top:4px;font-size:10px;color:#6d7890}.weekly-player-note{font-size:10px;color:#667085;line-height:1.35;margin-top:4px}.dd-kicker{color:#5b35c8;font-weight:900}.td-kicker{color:#a56600;font-weight:900}
 .table th,.table td{padding:8px 8px;border-bottom:1px solid #edf1f6;text-align:right;font-size:10px;white-space:nowrap}.table th{background:#f8fafc;color:#637088;position:sticky;top:0;z-index:3}.table th:first-child,.table td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:2}.table th:first-child{background:#f8fafc;z-index:4}.playerlink{font-weight:900;cursor:pointer}.playerlink:hover{text-decoration:underline;color:#5d3de0}
 .roster-row{display:grid;grid-template-columns:minmax(0,1fr) 54px 70px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eef2f7}.roster-row:last-child{border-bottom:0}.roster-name{font-size:11px;font-weight:900}.roster-meta{font-size:9px;color:var(--muted);margin-top:2px}.mini-input{width:65px;padding:6px 6px;border:1px solid var(--line);border-radius:8px;text-align:center}.remove{border:0;background:#fff;color:#a0a9b7;cursor:pointer}
 .weekbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.weekbar select{width:auto}.schedule-table{min-width:1300px}.schedule-table th,.schedule-table td{text-align:center}.schedule-table th:first-child,.schedule-table td:first-child{text-align:left;position:sticky;left:0;z-index:2}.schedule-table th:first-child{z-index:4}.hl{background:#f3efff!important}.heavy{font-weight:900;color:#16885e}.light{color:#cf3f4e}.teammark{font-size:9px;color:#6d45ff;font-weight:900}.roster-sync{margin-top:8px;font-size:9px;color:var(--muted);line-height:1.45}.trade-badge{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:999px;background:#fff6df;border:1px solid #f0d7a4;color:#8a6200;font-size:8px;font-weight:900}
@@ -41,19 +42,78 @@ header{box-shadow:0 4px 18px rgba(26,37,60,.05)}
 .fill.neg{background:linear-gradient(90deg,#f6b6bd,#c73e4e)}
 .strength .bar{height:11px;background:#eef1f6}
 .engine-badge{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:4px 7px;border-radius:999px;background:#f2fbf7;border:1px solid #c5ead8;color:#227854;font-size:9px;font-weight:900;letter-spacing:.2px;vertical-align:middle}
-aside .panel{position:sticky;top:88px}
-@media(max-width:1120px){aside .panel{position:static}}
 @media(max-width:760px){.engine-badge{display:none}.title{line-height:1.1}.subtitle{line-height:1.4}}
 
 
 .yahoo-rank{font-size:18px;font-weight:1000;min-width:52px;text-align:center}.rank-gap{font-weight:900}.rank-up{color:#147a3e}.rank-down{color:#b42318}.rank-neutral{color:#667085}.yahoo-name{font-weight:900;white-space:nowrap}.yahoo-source{font-size:11px;color:#667085}.yahoo-hit{background:#faf7ff}.table.yahoo-table th{position:sticky;top:0;z-index:2;background:#fff}.table.yahoo-table td,.table.yahoo-table th{padding:8px 9px}.yahoo-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.league-panel{border:1px solid #d9d2ff;background:linear-gradient(180deg,#fcfbff,#fff)}
+.league-select-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}
+.league-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.league-actions .btn{font-size:10px;padding:7px 6px}
+.league-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;font-size:9px;color:var(--muted)}
+.league-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:#f2efff;border:1px solid #dbd1ff;color:#5035c1;font-size:10px;font-weight:900;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.league-dot{width:7px;height:7px;border-radius:50%;background:#6d45ff;display:inline-block}
+.engine-architecture{margin-top:8px;padding:8px 9px;border:1px dashed #cdd4e1;border-radius:9px;background:#fafcff;color:#5f6b80;font-size:9px;line-height:1.5}
+@media(max-width:760px){.league-actions{grid-template-columns:1fr 1fr}.league-select-row{grid-template-columns:1fr}}
+
+/* V3.11 visual polish retained; V3.13 quality polish adds restrained motion and robust reference calibration. */
+html{scroll-behavior:smooth}
+body{font-size:15px;line-height:1.45}
+.layout>aside{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding-right:4px;scrollbar-gutter:stable}
+.layout>aside::-webkit-scrollbar{width:7px}.layout>aside::-webkit-scrollbar-thumb{background:#cbd3df;border-radius:999px}.layout>aside::-webkit-scrollbar-track{background:transparent}
+.layout>aside .panel{position:static!important;top:auto!important}
+.layout>aside{overscroll-behavior:contain;scrollbar-gutter:stable both-edges;padding-bottom:14px}
+.panel h3{font-size:16px;padding:15px 16px}.body{padding:15px 16px}.field{margin-bottom:14px}.field label{font-size:12px}
+.control{font-size:13px;padding:10px 11px}.btn{font-size:12px;padding:10px 12px}.btn.small{font-size:11px;padding:7px 9px}
+.note{font-size:12px;line-height:1.6}.tiny{font-size:10px}.helper{font-size:12px}.sectionhead h4{font-size:15px}
+.tabs{gap:8px;margin-bottom:15px}.tab{padding:10px 13px;font-size:13px}
+.nm{font-size:13px}.tm{font-size:11px}.result{padding:11px 12px}.chip{font-size:11px;padding:7px 9px}
+.roster-name{font-size:12.5px}.roster-meta{font-size:10px}.roster-row{padding:9px 0;gap:9px}
+.weight{padding:8px 9px}.weight span{font-size:12px}.weight input{font-size:12px}
+.table th,.table td{font-size:11px;padding:9px 9px}.table th{font-size:11px}.playerlink{font-size:12px;display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.player-stats-table th,.player-stats-table td{font-size:11px}.player-stats-table .player-name-cell{min-width:185px}.player-stats-table .team-mini{font-size:10px}
+.player-stats-note{font-size:11px}.strength-top{font-size:12px}.strength-top strong{font-size:13px}.explain{font-size:11px}.pill{font-size:10px}.data-row .control{font-size:12px}.match-card h5{font-size:13px}.totalcard .k{font-size:11px}.totalcard .v{font-size:20px}
+.detailgrid{gap:9px}.dmetric{padding:10px}.dmetric span{font-size:10px}.dmetric b{font-size:15px}
+.title{font-size:26px}.subtitle{font-size:12px}.status{font-size:12px}
+/* Prevent long player names from forcing tables/cards wider while keeping them visually prominent. */
+.roster-name,.playerlink{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1120px){.layout>aside{position:static;max-height:none;overflow:visible;padding-right:0}}
+@media(max-width:760px){body{font-size:14px}.title{font-size:21px}.panel h3{font-size:15px}.table th,.table td{font-size:10.5px}.playerlink{font-size:12px;max-width:170px}}
+
+/* V3.13 quality polish: white base, subtle depth, restrained motion, stronger readability. */
+:root{--bg:#ffffff;--panel:#ffffff;--ink:#172033;--muted:#66748a;--line:#e1e7f0;--accent:#6547f5;--accent2:#4c77e8;--soft:#f3f0ff;--soft2:#eef5ff;--good:#14845c;--bad:#c63c4c;--shadow:0 10px 30px rgba(30,42,67,.065)}
+body{background:linear-gradient(180deg,#fff 0%,#fbfcff 55%,#f8faff 100%);color:var(--ink)}
+header{background:rgba(255,255,255,.94);box-shadow:0 6px 22px rgba(31,42,61,.05)}
+.title{letter-spacing:-.35px}.subtitle{letter-spacing:.05px}
+main{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(249,251,255,.72))}
+.panel,.metric,.strength,.detail,.match-card,.totalcard,.pg,.rookie-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.panel:hover,.metric:hover,.strength:hover,.detail:hover,.match-card:hover,.totalcard:hover,.pg:hover,.rookie-card:hover{transform:translateY(-1px);box-shadow:0 12px 34px rgba(35,47,75,.075);border-color:#d6ddeb}
+.panel h3{letter-spacing:.05px}
+.tab{transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease}.tab.active{box-shadow:0 5px 16px rgba(31,42,61,.12)}
+.btn.primary{background:linear-gradient(135deg,#6547f5,#4c77e8);box-shadow:0 6px 15px rgba(87,72,224,.16)}
+.control{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}.control:hover{border-color:#cbd4e2;background:#fff}
+.sectionhead h4{letter-spacing:-.05px}.section{animation:none}
+.dot.ok{box-shadow:0 0 0 4px rgba(34,160,107,.08)}.status{box-shadow:0 4px 14px rgba(30,42,67,.04)}
+#tab-draft:not(.hidden),#tab-weekly:not(.hidden),#tab-schedule:not(.hidden),#tab-players:not(.hidden),#tab-rookies:not(.hidden),#tab-yahoo:not(.hidden){animation:l7nPageIn .22s ease both}
+@keyframes l7nPageIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1120px){.layout>aside{position:static;max-height:none;overflow:visible}}
+@media(max-width:760px){.title{font-size:21px}.panel h3{font-size:15px}.sectionhead h4{font-size:14px}.tab{font-size:12px;padding:9px 11px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style><link rel="manifest" href="manifest.webmanifest"></head><body>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.8｜Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.13｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
 <main><div class="wrap"><div class="layout"><aside>
+<div class="panel league-panel"><h3>🏷️ 我的聯盟</h3><div class="body">
+<div class="league-select-row"><select id="leagueSelect" class="control"></select><button class="btn primary" id="addLeague">＋ 新增</button></div>
+<div class="league-actions"><button class="btn soft" id="copyLeague">複製目前</button><button class="btn" id="renameLeague">重新命名</button><button class="btn" id="deleteLeague">刪除聯盟</button><button class="btn" id="shareLeagueMini">分享此聯盟</button></div>
+<div class="league-meta"><span id="leagueMeta">1 個聯盟</span><span>資料庫共用</span></div>
+<div class="engine-architecture"><b>架構：</b>所有聯盟共用同一套 Fantasy Engine、UI 與資料庫；每個聯盟只保存自己的 roster、對手、Week、權重、Projection 基準與 Override。未來升級功能時，只改一套程式。</div>
+</div></div>
+<div style="height:12px"></div>
 <div class="panel"><h3>⚙️ League / 模型</h3><div class="body">
 <div class="field"><label>基準賽季（球員 projection）</label><select id="season" class="control"><option>2025-26 → 用於 2026-27 Projection</option></select></div>
-<div class="field"><label>最低 GP</label><input id="minGP" class="control" type="number" min="1" max="82" value="10"></div>
-<div class="field"><label>參考池</label><select id="refMode" class="control"><option value="league">全聯盟合格球員（穩健）</option><option value="top200">前 200 高出賽量球員</option></select></div>
+<div class="field"><label>最低 GP</label><input id="minGP" class="control" type="number" min="1" max="82" value="20"></div>
+<div class="field"><label>參考池</label><select id="refMode" class="control"><option value="league">Fantasy 合格球員池（穩健）</option><option value="top200">前 200 高出賽量球員</option></select></div>
 <div class="field"><label>📊 Projection 數據基準</label><select id="dataBasis" class="control">
 <option value="last">2025-26 完整球季（建隊 baseline）</option>
 <option value="current">2026-27 本季至今</option>
@@ -62,12 +122,12 @@ aside .panel{position:sticky;top:88px}
 <option value="blend">本季 60% ＋ 上季 40%</option>
 </select>
 <div id="dataStatus" class="tiny" style="margin-top:6px"></div>
-<div class="tiny" style="margin-top:8px">開啟即先用本機資料；完整 2025-26 baseline 會在背景同步，成功後自動升級。賽季中可直接匯入 NBA Stats CSV，切換到「本季至今／近10場／近5場」重新分析。</div>
+<div class="tiny" style="margin-top:8px">開啟即先用本機資料；完整 2025-26 baseline 會在背景同步，成功後自動升級。賽每個聯盟可各自選擇 Projection 基準；資料庫本身共用。季中可直接匯入 NBA Stats CSV，切換到「本季至今／近10場／近5場」重新分析。</div>
 </div>
 <div class="field"><label>📥 季中更新資料庫</label><select id="dataImportTarget" class="control"><option value="current">本季至今（2026-27）</option><option value="recent10">近 10 場</option><option value="recent5">近 5 場</option><option value="last">完整球季 baseline</option></select><input id="dataImportFile" class="control" type="file" accept=".csv,text/csv" style="margin-top:7px"><div style="display:flex;gap:7px;margin-top:7px;flex-wrap:wrap"><button class="btn soft" id="importData">匯入 CSV</button><button class="btn small" id="clearImportedData">清除該資料</button></div><div class="tiny" style="margin-top:6px">建議從 NBA Stats Traditional 匯出 CSV，使用 Totals 模式；系統會自動換算成 Per-Game、3P%、A/T，並保存到瀏覽器。</div></div>
 <div class="field"><label>Fantasy Categories 權重（0 = Punt）</label><div id="weights" class="weight-grid"></div></div>
 <button class="btn soft block" id="reset">全部重設為 1</button>
-<div style="height:9px"></div><div class="note">Draft Strength 用來回答「我現在選的人強在哪、缺在哪」。Weekly H2H 會把每位球員的 projection × <b>2026-27 目前所屬球隊</b>本週賽程，再聚合成 matchup totals。TOV 越低越好；TD 僅顯示、不進評分。季中可把 Projection 基準切到本季至今／近10場／近5場；這個瀏覽器版會在對應資料源尚未可用時安全 fallback，不把缺資料假裝成 0。</div>
+<div style="height:9px"></div><div class="note">Draft Strength 用來回答「我現在選的人強在哪、缺在哪」。參考值以符合最低 GP 且至少約 12 MPG 的 Fantasy 合格球員池校準，使用 5% 尾端截尾＋5/95 winsorized calibration，百分比類別再按出手量做 volume adjustment；因此 50 是中性基準，不是某位球星或前 200 名的平均。Weekly H2H 會把每位球員的 projection × <b>2026-27 目前所屬球隊</b>本週賽程，再聚合成 matchup totals。TOV 越低越好；TD 僅顯示、不進評分。季中可把 Projection 基準切到本季至今／近10場／近5場；這個瀏覽器版會在對應資料源尚未可用時安全 fallback，不把缺資料假裝成 0。</div>
 </div></div>
 <div style="height:12px"></div>
 <div class="panel"><h3>👥 我的球隊</h3><div class="body"><div class="team-search"><input id="teamSearch" class="control" placeholder="搜尋球員，例如 Wemby / Jokic / Curry" autocomplete="off"><div id="results" class="results hidden"></div></div><div id="chips" class="chips"></div><div style="height:9px"></div><button id="clear" class="btn small">清空球隊</button></div></div>
@@ -78,7 +138,7 @@ aside .panel{position:sticky;top:88px}
 <div class="tabs"><button class="tab active" data-tab="draft">① 選人 / 我的球隊</button><button class="tab" data-tab="weekly">② Weekly H2H</button><button class="tab" data-tab="schedule">③ NBA 賽程</button><button class="tab" data-tab="players">④ 球員資料</button><button class="tab" data-tab="rookies">⑤ Rookie Hub</button><button class="tab" data-tab="yahoo">⑥ Yahoo Rankings</button></div>
 <div id="tab-draft">
 <div class="note" style="margin-bottom:12px"><b>🟢 L7N Stable Data Build：</b>頁面會先用本機 baseline 立即啟動；背景同步完整 2025-26 球員資料，抓不到也不會卡死。2026 Rookie 維持 NCAA → NBA Projection 獨立模型。</div>
-<div class="section"><div class="sectionhead"><h4>📊 我的球隊：Per-Game Strength</h4><span class="helper">50 = 同條件參考池中性；越高代表對應分類越強</span></div><div id="draftMetrics" class="metrics"></div></div>
+<div class="section"><div class="sectionhead"><h4>📊 我的球隊：Per-Game Strength</h4><span class="helper">50 = 同條件參考池中性；50 為基準，越高代表對應分類越強 · 參考池會排除深 bench 並做極端值校正</span></div><div id="draftMetrics" class="metrics"></div></div>
 <div class="section"><div class="sectionhead"><h4>👥 已選球員：個人數據總覽</h4><span class="helper">橫向比較每位球員；綠＝相對優勢、紅＝相對弱勢，依目前資料基準判定</span></div><div id="rosterPlayerStats"></div></div>
 <div class="section"><div class="sectionhead"><h4>🧭 分類強弱與目前缺口</h4><span id="draftHint" class="helper"></span></div><div id="strength" class="strength-grid"></div></div>
 <div class="section"><div class="sectionhead"><h4>🎯 Candidate Fit</h4><span class="helper">按照你目前的球隊缺口＋權重，而不是單純球員總排名</span></div><div class="searchbig"><input id="candSearch" class="control" placeholder="搜尋候選球員"><button class="btn soft" id="clearCand">清除</button></div><div id="candidates"></div></div>
@@ -94,7 +154,7 @@ aside .panel{position:sticky;top:88px}
 </div></div></div>
 <div class="section"><div class="sectionhead"><h4>📈 預測 Matchup Totals</h4><span class="helper">百分比用總命中 / 總出手；A/T 用總 AST ÷ 總 TOV；DD 為 DD/G × 預測場次</span></div><div id="weeklyTotals"></div></div>
 <div class="section"><div class="sectionhead"><h4>⚔️ H2H 分類預測</h4><span class="helper">綠色＝你的預測領先｜紅色＝對手領先｜中性＝接近</span></div><div id="matchupComparison"></div></div>
-<div class="section"><div class="sectionhead"><h4>🧭 這一週你欠缺什麼？</h4><span class="helper">以「相同 player-games」建立中性基準，降低參考值偏差</span></div><div id="weeklyStrength" class="strength-grid"></div></div>
+<div class="section"><div class="sectionhead"><h4>🧭 這一週你欠缺什麼？</h4><span class="helper">以「相同 player-games」建立中性基準；參考池與百分比 volume adjustment 與 Draft Engine 一致</span></div><div id="weeklyStrength" class="strength-grid"></div></div>
 </div>
 <div id="tab-schedule" class="hidden">
 <div class="section"><div class="sectionhead"><h4>📅 2026-27 NBA Weekly Schedule Grid</h4><span class="helper">紫色標記 = 你的球員所在球隊｜4+ 場為 heavy week</span></div><div id="scheduleGrid"></div></div>
@@ -116,7 +176,7 @@ aside .panel{position:sticky;top:88px}
 <div id="yahooMeta" class="tiny" style="margin:8px 0"></div><div id="yahooGrid"></div></div>
 </div>
 
-</section><div class="tiny" style="margin-top:20px;text-align:center">L7N · H2H Fantasy Lab · 2026 Edition 3.8｜本工具為個人研究用途；資料更新以外部來源與最後更新時間為準。</div></div></div></main>
+</section><div class="tiny" style="margin-top:20px;text-align:center">L7N · H2H Fantasy Lab · 2026 Edition 3.9｜本工具為個人研究用途；資料更新以外部來源與最後更新時間為準。</div></div></div></main>
 <script>
 // Yahoo current Standard Default Top 200 verified 2026-09-18 from Yahoo public pre-draft rankings page.
 const SCHEDULE={"ATL":[3,4,4,3,3,2,2,1,4,3,3,4,3,4,3,4,4,2,3,3,4,4,3,4,3],"BKN":[3,3,4,2,3,4,2,1,4,4,3,4,4,3,4,3,4,1,2,4,3,4,3,4,4],"BOS":[2,4,4,3,4,3,2,1,4,2,4,3,3,4,4,4,4,2,2,3,4,3,4,4,3],"CHA":[3,4,3,3,2,3,2,1,4,4,4,4,3,3,4,4,3,2,3,2,4,3,4,4,4],"CHI":[3,3,3,3,4,3,2,1,4,3,3,5,3,3,4,3,4,2,2,4,3,3,4,4,4],"CLE":[2,4,4,4,3,3,2,1,4,3,4,3,4,3,4,4,4,2,2,3,4,3,2,4,4],"DAL":[3,3,4,4,3,2,2,0,4,3,3,4,3,4,4,4,3,2,3,2,4,4,4,4,4],"DEN":[2,3,3,3,4,3,2,1,3,4,4,3,5,3,4,4,4,1,2,3,4,4,3,4,4],"DET":[3,3,3,3,4,3,2,1,4,4,3,4,3,3,4,4,3,2,2,3,4,3,4,4,4],"GSW":[3,4,3,3,4,3,1,1,4,4,3,3,4,4,3,4,3,2,1,4,4,3,4,4,4],"HOU":[3,4,3,4,3,3,2,1,4,2,4,3,4,4,4,3,4,2,2,4,3,3,4,4,3],"IND":[3,4,3,4,3,3,2,1,3,4,3,4,4,3,3,3,4,3,2,3,3,4,3,4,4],"LAC":[3,3,3,3,3,4,2,1,3,4,4,3,3,4,3,4,4,2,2,3,4,3,4,4,4],"LAL":[3,4,4,3,3,3,2,0,4,4,4,3,4,4,4,3,3,2,2,4,3,4,3,3,4],"MEM":[3,3,3,4,4,4,2,1,4,4,2,4,3,3,3,3,3,3,2,3,4,4,4,3,4],"MIA":[3,3,4,3,3,3,2,1,4,4,3,4,4,3,3,4,4,2,2,3,4,3,3,4,4],"MIL":[3,3,4,4,3,4,2,1,4,3,4,3,4,3,3,3,4,2,2,3,3,3,4,4,4],"MIN":[3,4,4,2,4,4,2,1,3,4,4,3,3,4,4,4,2,2,2,3,4,2,4,4,4],"NOP":[3,3,4,4,4,3,2,1,4,3,4,4,2,2,4,4,4,2,2,4,4,4,3,2,4],"NYK":[3,3,3,4,4,3,2,1,3,4,3,3,4,4,3,4,3,2,3,3,3,3,4,4,4],"OKC":[3,3,4,4,3,3,2,1,3,4,4,3,3,4,4,4,3,2,2,3,4,3,4,3,4],"ORL":[3,3,3,3,4,3,1,1,4,4,4,4,4,3,4,3,4,2,2,3,3,4,4,3,4],"PHI":[4,3,4,3,3,4,2,1,2,4,3,4,3,4,4,4,3,2,2,4,3,4,4,3,3],"PHX":[2,2,4,4,3,4,2,1,4,3,4,4,2,4,4,3,4,2,2,3,4,4,4,4,3],"POR":[2,3,4,3,4,4,2,1,3,4,2,4,4,4,3,3,5,2,2,4,3,4,3,4,3],"SAC":[3,3,4,3,3,3,2,1,3,3,4,4,4,3,4,3,4,1,3,3,4,4,3,4,4],"SAS":[3,3,4,4,3,4,2,1,4,4,4,3,2,3,3,4,3,3,2,3,3,4,3,4,4],"TOR":[3,3,3,4,3,3,2,1,4,3,4,4,4,3,4,4,3,2,2,3,3,4,4,3,4],"UTA":[3,3,4,4,4,3,2,1,4,3,3,4,4,4,3,4,2,2,2,4,3,3,4,3,4],"WAS":[3,3,4,4,4,2,2,1,4,4,3,3,4,4,3,3,4,2,2,4,3,3,4,3,4]};
@@ -175,12 +235,114 @@ function demo(){return [
 {name:'LeBron James',team:'LAL',gp:60,pts:20.9,pm3:1.3,reb:6.1,ast:7.2,stl:1.2,blk:.6,fg:.515,fga:15.3,ft:.737,fta:5.3,tov:3.0,p3:.317,p3a:4.1,dd:17,td:0},
 {name:'Donovan Mitchell',team:'CLE',gp:70,pts:27.9,pm3:3.2,reb:4.5,ast:5.7,stl:1.5,blk:.3,fg:.483,fga:20.0,ft:.865,fta:6.1,tov:2.8,p3:.364,p3a:8.8,dd:5,td:0}
 ].map(x=>({...x,at:ratio(x.ast,x.tov)}))}
-let players=[], datasets={last:[],current:[],recent10:[],recent5:[]},dataMeta={}, rookiePlayers=[], state={selected:new Set(JSON.parse(localStorage.getItem('fb_final_team')||'[]')),oppSelected:new Set(JSON.parse(localStorage.getItem('fb_opp_team')||'[]')),weights:{...DEFAULTS},tab:'draft',week:0,cand:'',playerSearch:'',oppSearch:'',rookieSearch:'',rookieFilter:'all',sort:'fit',what:null,overrides:JSON.parse(localStorage.getItem('fb_final_overrides')||'{}'),teamOverrides:JSON.parse(localStorage.getItem('fb_team_overrides')||'{}'),detail:null,rookieDetail:null,dataBasis:localStorage.getItem('fb_data_basis')||'last',blend:0.60};
+let players=[], datasets={last:[],current:[],recent10:[],recent5:[]},dataMeta={}, rookiePlayers=[];
+const LEAGUE_STORE_KEY='l7n_h2h_leagues_v1';
+const ACTIVE_LEAGUE_KEY='l7n_h2h_active_league_v1';
+const LEGACY_KEYS={team:'fb_final_team',opp:'fb_opp_team',weights:'fb_weights',week:'fb_week',dataBasis:'fb_data_basis',overrides:'fb_final_overrides',teamOverrides:'fb_team_overrides',minGP:'fb_min_gp',refMode:'fb_ref_mode'};
+function uid(){return 'lg_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function makeLeague(name='我的聯盟'){
+  return {id:uid(),name,selected:[],oppSelected:[],weights:{...DEFAULTS},tab:'draft',week:0,cand:'',playerSearch:'',oppSearch:'',rookieSearch:'',rookieFilter:'all',sort:'fit',what:null,overrides:{},teamOverrides:{},detail:null,rookieDetail:null,dataBasis:'last',blend:.60,minGP:20,refMode:'league'}
+}
+function normalizeLeagueProfile(p){
+  const d=makeLeague(p?.name||'我的聯盟');
+  const o={...d,...(p||{})};
+  o.id=p?.id||d.id; o.name=String(p?.name||d.name).slice(0,80); o.schemaVersion=1; o.schemaVersion=1;
+  o.selected=Array.isArray(p?.selected)?p.selected:[]; o.oppSelected=Array.isArray(p?.oppSelected)?p.oppSelected:[];
+  o.weights={...DEFAULTS,...(p?.weights||{})}; o.overrides=p?.overrides||{}; o.teamOverrides=p?.teamOverrides||{};
+  o.minGP=Number.isFinite(Number(p?.minGP))?Math.max(1,Math.min(82,Number(p.minGP))):10;
+  o.refMode=p?.refMode==='top200'?'top200':'league';
+  o.dataBasis=['last','current','recent10','recent5','blend'].includes(p?.dataBasis)?p.dataBasis:'last';
+  o.week=Number.isFinite(Number(p?.week))?Math.max(0,Math.min(24,Number(p.week))):0;
+  return o;
+}
+function loadLeagueProfiles(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(LEAGUE_STORE_KEY)||'null');
+    if(Array.isArray(raw)&&raw.length) return raw.map(normalizeLeagueProfile);
+  }catch(e){}
+  const legacy=makeLeague('我的聯盟');
+  try{
+    legacy.selected=JSON.parse(localStorage.getItem(LEGACY_KEYS.team)||'[]');
+    legacy.oppSelected=JSON.parse(localStorage.getItem(LEGACY_KEYS.opp)||'[]');
+    legacy.weights={...DEFAULTS,...JSON.parse(localStorage.getItem(LEGACY_KEYS.weights)||'{}')};
+    legacy.overrides=JSON.parse(localStorage.getItem(LEGACY_KEYS.overrides)||'{}')||{};
+    legacy.teamOverrides=JSON.parse(localStorage.getItem(LEGACY_KEYS.teamOverrides)||'{}')||{};
+    legacy.dataBasis=localStorage.getItem(LEGACY_KEYS.dataBasis)||'last';
+    legacy.week=Number(localStorage.getItem(LEGACY_KEYS.week)||0)||0;
+    legacy.minGP=Number(localStorage.getItem(LEGACY_KEYS.minGP)||10)||10;
+    legacy.refMode=localStorage.getItem(LEGACY_KEYS.refMode)||'league';
+  }catch(e){}
+  return [normalizeLeagueProfile(legacy)];
+}
+function toRuntimeState(p){
+  return {...p,selected:new Set(p.selected||[]),oppSelected:new Set(p.oppSelected||[]),weights:{...DEFAULTS,...(p.weights||{})},overrides:{...(p.overrides||{})},teamOverrides:{...(p.teamOverrides||{})}};
+}
+let leagueProfiles=loadLeagueProfiles();
+let activeLeagueId=localStorage.getItem(ACTIVE_LEAGUE_KEY);
+if(!leagueProfiles.some(p=>p.id===activeLeagueId)){activeLeagueId=leagueProfiles[0].id;localStorage.setItem(ACTIVE_LEAGUE_KEY,activeLeagueId)}
+let state=toRuntimeState(leagueProfiles.find(p=>p.id===activeLeagueId)||leagueProfiles[0]);
+function runtimeToProfile(){
+  const p={...state};
+  p.selected=[...state.selected]; p.oppSelected=[...state.oppSelected];
+  p.weights={...state.weights}; p.overrides={...state.overrides}; p.teamOverrides={...state.teamOverrides};
+  p.minGP=Math.max(1,Math.min(82,Number(document.getElementById('minGP')?.value||state.minGP||10)));
+  p.refMode=document.getElementById('refMode')?.value==='top200'?'top200':'league';
+  p.dataBasis=state.dataBasis; p.week=state.week; return normalizeLeagueProfile(p);
+}
+function persistProfiles(){try{localStorage.setItem(LEAGUE_STORE_KEY,JSON.stringify(leagueProfiles));localStorage.setItem(ACTIVE_LEAGUE_KEY,activeLeagueId)}catch(e){}}
+function syncControlsFromState(){
+  const mg=document.getElementById('minGP'); if(mg)mg.value=state.minGP||10;
+  const rm=document.getElementById('refMode'); if(rm)rm.value=state.refMode||'league';
+  const db=document.getElementById('dataBasis'); if(db)db.value=state.dataBasis||'last';
+  const ws=document.getElementById('weekSelect'); if(ws)ws.value=state.week??0;
+}
+function renderLeagueManager(){
+  const sel=document.getElementById('leagueSelect'); if(!sel)return;
+  sel.innerHTML=leagueProfiles.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''); sel.value=activeLeagueId;
+  const meta=document.getElementById('leagueMeta'); if(meta)meta.textContent=`${leagueProfiles.length} 個聯盟 · 目前：${state.name}`;
+  const h=document.querySelector('#activeLeagueHeader span:last-child'); if(h)h.textContent=state.name;
+  const hs=document.getElementById('activeLeagueHeader'); if(hs)hs.title=state.name;
+  sel.onchange=()=>switchLeague(sel.value);
+  const add=document.getElementById('addLeague'); if(add)add.onclick=addLeague;
+  const copy=document.getElementById('copyLeague'); if(copy)copy.onclick=copyLeague;
+  const rename=document.getElementById('renameLeague'); if(rename)rename.onclick=renameLeague;
+  const del=document.getElementById('deleteLeague'); if(del)del.onclick=deleteLeague;
+  const sh=document.getElementById('shareLeagueMini'); if(sh)sh.onclick=shareNow;
+}
+function switchLeague(id){
+  if(!leagueProfiles.some(p=>p.id===id)||id===activeLeagueId)return;
+  save();
+  const next=leagueProfiles.find(p=>p.id===id); activeLeagueId=id; state=toRuntimeState(next); syncControlsFromState();
+  document.getElementById('detail')?.scrollIntoView?.({block:'nearest'}); render();
+}
+function addLeague(){
+  const name=(prompt('新聯盟名稱：','聯盟 '+(leagueProfiles.length+1))||'').trim(); if(!name)return;
+  save(); const p=makeLeague(name); p.week=state.week; leagueProfiles.push(p); activeLeagueId=p.id; state=toRuntimeState(p); persistProfiles(); syncControlsFromState(); render();
+}
+function copyLeague(){
+  save(); const base=leagueProfiles.find(p=>p.id===activeLeagueId); if(!base)return;
+  const name=(prompt('複製後的聯盟名稱：',base.name+' Copy')||'').trim(); if(!name)return;
+  const p=normalizeLeagueProfile({...base,id:uid(),name,selected:[...state.selected],oppSelected:[...state.oppSelected],weights:{...state.weights},overrides:{...state.overrides},teamOverrides:{...state.teamOverrides}});
+  leagueProfiles.push(p); activeLeagueId=p.id; state=toRuntimeState(p); persistProfiles(); syncControlsFromState(); render();
+}
+function renameLeague(){
+  const p=leagueProfiles.find(x=>x.id===activeLeagueId); if(!p)return;
+  const name=(prompt('新的聯盟名稱：',p.name)||'').trim(); if(!name||name===p.name)return;
+  p.name=name; state.name=name; save(); render();
+}
+function deleteLeague(){
+  if(leagueProfiles.length<=1){alert('至少保留一個聯盟。');return;}
+  const p=leagueProfiles.find(x=>x.id===activeLeagueId); if(!p)return;
+  if(!confirm(`確定刪除「${p.name}」？這個聯盟的 roster 與設定會一起刪除。`))return;
+  leagueProfiles=leagueProfiles.filter(x=>x.id!==activeLeagueId);
+  activeLeagueId=leagueProfiles[0].id; state=toRuntimeState(leagueProfiles[0]); persistProfiles(); syncControlsFromState(); render();
+}
+
 function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 // Initialize rookie bridge only after rookiePlayers has been declared (fixes TDZ startup error).
 rookiePlayers=buildRookiePlayers();
 function rateVal(v){const n=num(v);if(n==null)return null;return n>1?n/100:n}
-function makePlayer(x,useHistoricalExtras=true){const gp=num(x.games??x.gp);if(!gp||gp<=0)return null;let fgm=num(x.fieldGoals??x.fgm)||0,fgaT=num(x.fieldAttempts??x.fga)||0,fg=rateVal(x.fieldPercent??x.fgPct);let ftm=num(x.ft??x.ftm)||0,ftaT=num(x.ftAttempts??x.fta)||0,ft=rateVal(x.ftPercent??x.ftPct);let p3m=num(x.threeFg??x.threeFgm??x.fg3m)||0,p3aT=num(x.threeAttempts??x.threeFga??x.fg3a)||0,p3=rateVal(x.threePercent??x.fg3Pct??x.threePct);const ast=num(x.assists??x.ast)||0,tov=num(x.turnovers??x.tov)||0,reb=num(x.totalRb??x.reb)||((num(x.offensiveRb??x.oreb)||0)+(num(x.defensiveRb??x.dreb)||0));const pts=num(x.points??x.pts)||0,stl=num(x.steals??x.stl)||0,blk=num(x.blocks??x.blk)||0,mins=num(x.minutes??x.minutesPlayed??x.minutes_played)||0;fg=fg??(fgaT?fgm/fgaT:null);ft=ft??(ftaT?ftm/ftaT:null);p3=p3??(p3aT?p3m/p3aT:null);const name=x.playerName??x.name;const baselineTeam=x.team??x.teamAbbreviation??'—';const currentTeam=currentTeamFor(name,baselineTeam);return {name,team:currentTeam,baselineTeam,currentTeam,gp,minutes:mins,pts:pts/gp,pm3:p3m/gp,reb:reb/gp,ast:ast/gp,stl:stl/gp,blk:blk/gp,tov:tov/gp,fg,fga:fgaT/gp,ft,fta:ftaT/gp,p3,p3a:p3aT/gp,dd:(useHistoricalExtras?DD_NORM[normalize(name)]:null)??num(x.dd),td:(useHistoricalExtras?TD_NORM[normalize(name)]:null)??num(x.td3),at:ratio(ast,tov)} }
+function makePlayer(x,useHistoricalExtras=true){const gp=num(x.games??x.gp);if(!gp||gp<=0)return null;let fgm=num(x.fieldGoals??x.fgm)||0,fgaT=num(x.fieldAttempts??x.fga)||0,fg=rateVal(x.fieldPercent??x.fgPct);let ftm=num(x.ft??x.ftm)||0,ftaT=num(x.ftAttempts??x.fta)||0,ft=rateVal(x.ftPercent??x.ftPct);let p3m=num(x.threeFg??x.threeFgm??x.fg3m)||0,p3aT=num(x.threeAttempts??x.threeFga??x.fg3a)||0,p3=rateVal(x.threePercent??x.fg3Pct??x.threePct);const ast=num(x.assists??x.ast)||0,tov=num(x.turnovers??x.tov)||0,reb=num(x.totalRb??x.reb)||((num(x.offensiveRb??x.oreb)||0)+(num(x.defensiveRb??x.dreb)||0));const pts=num(x.points??x.pts)||0,stl=num(x.steals??x.stl)||0,blk=num(x.blocks??x.blk)||0,mins=num(x.minutes??x.minutesPlayed??x.minutes_played)||0;fg=fg??(fgaT?fgm/fgaT:null);ft=ft??(ftaT?ftm/ftaT:null);p3=p3??(p3aT?p3m/p3aT:null);const name=x.playerName??x.name;const baselineTeam=x.team??x.teamAbbreviation??'—';const currentTeam=currentTeamFor(name,baselineTeam);const ddRaw=num(x.dd??x.dd2??x.DD2??x.doubleDoubles??x.doubleDoublesCount);const tdRaw=num(x.td??x.td3??x.TD3??x.tripleDoubles??x.tripleDoublesCount);return {name,team:currentTeam,baselineTeam,currentTeam,gp,minutes:mins,pts:pts/gp,pm3:p3m/gp,reb:reb/gp,ast:ast/gp,stl:stl/gp,blk:blk/gp,tov:tov/gp,fg,fga:fgaT/gp,ft,fta:ftaT/gp,p3,p3a:p3aT/gp,dd:ddRaw??DD_NORM[normalize(name)]??null,td:tdRaw??TD_NORM[normalize(name)]??null,at:ratio(ast,tov)} }
 function csvParse(txt){const lines=txt.trim().split(/\r?\n/);const out=[];for(let j=1;j<lines.length;j++){let s=lines[j],cur='',q=false,vals=[];for(let i=0;i<s.length;i++){const ch=s[i];if(ch==='"'){if(q&&s[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===','&&!q){vals.push(cur);cur=''}else cur+=ch}vals.push(cur);out.push(vals)}return {head:lines[0].split(','),rows:out}}
 function fromCsv(text){
  const p=csvParse(text);
@@ -260,12 +422,12 @@ function rookieProjection(r){
 }
 function buildRookiePlayers(){return ROOKIE_DB.map(r=>{const q=rookieProjection(r);return {name:r.name,team:r.team,currentTeam:r.team,baselineTeam:r.team,gp:q.gp,minutes:q.minutes,pts:q.pts,pm3:q.pm3,reb:q.reb,ast:q.ast,stl:q.stl,blk:q.blk,tov:q.tov,fg:q.fg,fga:q.fga,ft:q.ft,fta:q.fta,p3:q.p3,p3a:q.p3a,dd:q.dd,td:q.td,at:q.at,isRookie:true,rookie:true,draftPick:r.pick,school:r.school,position:r.position,ncaa:r.ncaa||null,projectionStatus:q.projectionStatus,projectionConfidence:q.projectionConfidence};});}
 function mergeRookies(base){const map=new Map(base.map(p=>[normalize(p.name),p]));return [...base,...rookiePlayers.filter(r=>!map.has(normalize(r.name)))].map(p=>{const meta=ROOKIE_DB.find(r=>normalize(r.name)===normalize(p.name));return meta?{...p,isRookie:true,rookie:true,draftPick:meta.pick,school:meta.school,position:meta.position,ncaa:meta.ncaa||null,projectionStatus:p.projectionStatus||'NBA real stats',projectionConfidence:p.projectionConfidence||'high'}:p})}
-function isReferenceEligible(p){const min=Math.max(1,num(document.getElementById('minGP').value)||1);return p.gp>=min && (!p.isRookie || p.projectionStatus==='NBA real stats')}
+function isReferenceEligible(p){const min=Math.max(1,num(document.getElementById('minGP').value)||20);const mpg=p.gp>0&&Number.isFinite(p.minutes)?p.minutes/p.gp:0;return p.gp>=min && mpg>=12 && (!p.isRookie || p.projectionStatus==='NBA real stats')}
 function getActiveDataset(){const desired=state.dataBasis;let used=desired,ps=[];if(desired==='last')ps=datasets.last;if(desired==='current')ps=datasets.current;if(desired==='recent10')ps=datasets.recent10;if(desired==='recent5')ps=datasets.recent5;if(desired==='blend')ps=(datasets.last.length&&datasets.current.length)?blendData(datasets.last,datasets.current):[];if(!ps.length){used=datasets.last.length?'last':'demo';ps=clonePlayers(datasets.last.length?datasets.last:demo())}ps=mergeRookies(ps);return {players:clonePlayers(ps),used}}
 function effectiveTeam(p){return state.teamOverrides[p.name]||p.team}
 function refPool(){const min=Math.max(1,num(document.getElementById('minGP').value)||1);let q=players.filter(isReferenceEligible);if(document.getElementById('refMode').value==='top200')q=q.sort((a,b)=>(b.minutes||b.gp*30)-(a.minutes||a.gp*30)).slice(0,200);return q}
 function trimmedValues(xs,trim=0.05){const a=xs.filter(Number.isFinite).slice().sort((x,y)=>x-y);if(!a.length)return [];const k=Math.floor(a.length*trim);return a.slice(k,Math.max(k+1,a.length-k))}
-function robustMoments(xs){const a=trimmedValues(xs,.05);if(!a.length)return{mean:0,sd:1};const mean=a.reduce((s,v)=>s+v,0)/a.length;const wins=a.map(v=>Math.max(mean-2.5*(Math.sqrt(a.reduce((s,x)=>s+(x-mean)**2,0)/Math.max(1,a.length-1))||1),Math.min(v,mean+2.5*(Math.sqrt(a.reduce((s,x)=>s+(x-mean)**2,0)/Math.max(1,a.length-1))||1))));const mu=wins.reduce((s,v)=>s+v,0)/wins.length;const sd=Math.sqrt(wins.reduce((s,v)=>s+(v-mu)**2,0)/Math.max(1,wins.length-1))||1;return{mean:mu,sd}}
+function robustMoments(xs){const a=xs.filter(Number.isFinite).slice().sort((x,y)=>x-y);if(!a.length)return{mean:0,sd:1};const n=a.length;const lo=a[Math.floor((n-1)*.05)],hi=a[Math.ceil((n-1)*.95)];const wins=a.map(v=>Math.max(lo,Math.min(v,hi)));const mu=wins.reduce((s,v)=>s+v,0)/wins.length;const sd=Math.sqrt(wins.reduce((s,v)=>s+(v-mu)**2,0)/Math.max(1,wins.length-1))||1;return{mean:mu,sd}}
 function refStats(pool){const wavg=(k,v)=>{let n=0,d=0;pool.forEach(p=>{const vol=Math.max(0,num(p[v])||0);if(Number.isFinite(p[k])&&vol>0){n+=p[k]*vol;d+=vol}});return d?n/d:null};const n=pool.length||1;const at=pool.reduce((s,p)=>s+(p.ast||0),0)/(pool.reduce((s,p)=>s+(p.tov||0),0)||1);const ddRows=pool.filter(p=>Number.isFinite(p.dd)&&p.gp>0);return{fg:wavg('fg','fga'),ft:wavg('ft','fta'),p3:wavg('p3','p3a'),ast:pool.reduce((s,p)=>s+(p.ast||0),0)/n,tov:pool.reduce((s,p)=>s+(p.tov||0),0)/n,at,ddG:ddRows.reduce((s,p)=>s+p.dd/p.gp,0)/(ddRows.length||1)}}
 function val(p,k,r){switch(k){case'PTS':return p.pts;case'3PM':return p.pm3;case'REB':return p.reb;case'AST':return p.ast;case'STL':return p.stl;case'BLK':return p.blk;case'TOV':return p.tov;case'DD':return Number.isFinite(p.dd)&&p.gp>0?p.dd/p.gp:null;case'A/T':return p.at;case'FG%':return Number.isFinite(p.fg)&&Number.isFinite(p.fga)?(p.fg-r.fg)*p.fga:null;case'FT%':return Number.isFinite(p.ft)&&Number.isFinite(p.fta)?(p.ft-r.ft)*p.fta:null;case'3P%':return Number.isFinite(p.p3)&&Number.isFinite(p.p3a)?(p.p3-r.p3)*p.p3a:null}}
 function model(){const pool=refPool(),r=refStats(pool),stats={},zs={};for(const k of Object.keys(CATS).filter(k=>CATS[k].score&&state.weights[k]>0)){const vs=pool.map(p=>val(p,k,r)).filter(Number.isFinite).map(v=>v*CATS[k].dir);const mom=robustMoments(vs);stats[k]=mom;zs[k]=new Map(players.map(p=>{const v=val(p,k,r);return [p.name,Number.isFinite(v)?Math.max(-2.5,Math.min(2.5,((v*CATS[k].dir)-mom.mean)/mom.sd)):null]}))}const team=players.filter(p=>state.selected.has(p.name));const strength={};for(const k of Object.keys(stats)){const arr=team.map(p=>zs[k].get(p.name)).filter(Number.isFinite);const z=team.length?arr.reduce((s,v)=>s+v,0)/Math.sqrt(team.length):0;strength[k]={z,index:50+20*Math.tanh(z/2.5)}}return{pool,r,stats,zs,team,strength}}
@@ -279,12 +441,19 @@ function weekly(a){const w=weeklyForTeam(a.team);const pool=refPool(),rb=refStat
 function neutralIndex(v,ref,dir=1,scale=1){if(!Number.isFinite(v)||!Number.isFinite(ref)||ref<=0)return 50;const ratio=dir<0?(v>0?ref/v:4):(v/ref);const q=Math.log(Math.max(.25,Math.min(4,ratio)));return Math.max(0,Math.min(100,50+20*Math.tanh(q/1.2*scale)))}
 function pctIndex(v,ref,scale){if(!Number.isFinite(v)||!Number.isFinite(ref))return 50;return Math.max(0,Math.min(100,50+18*Math.tanh(((v-ref)/scale)*2)))}
 function weeklyStrengthFor(team){const w=weeklyForTeam(team),r=w.raw,ref=refStats(refPool()),pool=refPool(),npg=Math.max(1,w.totalPG),avg=(k)=>pool.reduce((s,p)=>s+(p[k]||0),0)/(pool.length||1);return{PTS:neutralIndex(r.PTS,avg('pts')*npg), '3PM':neutralIndex(r['3PM'],avg('pm3')*npg),REB:neutralIndex(r.REB,avg('reb')*npg),AST:neutralIndex(r.AST,avg('ast')*npg),STL:neutralIndex(r.STL,avg('stl')*npg),BLK:neutralIndex(r.BLK,avg('blk')*npg),TOV:neutralIndex(r.TOV,avg('tov')*npg,-1),DD:neutralIndex(r.DD,ref.ddG*npg), 'FG%':pctIndex(r.FG,ref.fg,.035), 'FT%':pctIndex(r.FT,ref.ft,.06), '3P%':pctIndex(r.P3,ref.p3,.04), 'A/T':neutralIndex(r.AT,ref.at,1,.75)}}
+function encodeShare(){const payload={version:4,leagueName:state.name,team:[...state.selected],opp:[...state.oppSelected],weights:state.weights,week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode};return btoa(unescape(encodeURIComponent(JSON.stringify(payload))))}
 function shareUrl(){return location.href.split('#')[0]+'#share='+encodeShare()}
-function applyShare(){try{const m=location.hash.match(/^#share=(.+)$/);if(!m)return false;const p=JSON.parse(decodeURIComponent(escape(atob(m[1]))));state.selected=new Set(p.team||[]);state.oppSelected=new Set(p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};save();return true}catch(e){return false}}
+function applyShare(){try{
+  const m=location.hash.match(/^#share=(.+)$/);if(!m)return false;
+  const p=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+  const base=makeLeague((String(p.leagueName||'分享聯盟').slice(0,60))+' · Shared');
+  base.selected=p.team||[]; base.oppSelected=p.opp||[]; base.weights={...DEFAULTS,...(p.weights||{})}; base.week=Number.isFinite(p.week)?p.week:0; base.dataBasis=p.dataBasis||'last'; base.overrides=p.overrides||{}; base.teamOverrides=p.teamOverrides||{}; base.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):20; base.refMode=p.refMode==='top200'?'top200':'league';
+  leagueProfiles.push(base);activeLeagueId=base.id;state=toRuntimeState(base);persistProfiles();history.replaceState(null,'',location.href.split('#')[0]);return true;
+}catch(e){return false}}
 function shareNow(){const url=shareUrl();if(navigator.clipboard)navigator.clipboard.writeText(url);else{const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}alert(location.protocol==='file:'?'已複製設定連結，但目前是本機 file:// 網址；要讓朋友真的打開，先把整個資料夾部署到公開靜態網址（GitHub Pages / Netlify 等），之後再按一次分享即可。':'分享連結已複製；朋友打開同一個公開網址即可載入你的 roster、對手、權重、Week 與隊伍覆寫。')}
 function downloadJson(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function exportConfig(){downloadJson('L7N_Fantasy_Config_2026.json',{version:3,selected:[...state.selected],opponent:[...state.oppSelected],weights:state.weights,week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides})}
-async function importConfigFile(file){const p=JSON.parse(await file.text());state.selected=new Set(p.selected||p.team||[]);state.oppSelected=new Set(p.opponent||p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};save();render()}
+function exportConfig(){downloadJson('L7N_Fantasy_'+String(state.name||'League').replace(/[^a-zA-Z0-9_-]+/g,'_')+'_Config.json',{version:4,leagueName:state.name,selected:[...state.selected],opponent:[...state.oppSelected],weights:state.weights,week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode})}
+async function importConfigFile(file){const p=JSON.parse(await file.text());state.selected=new Set(p.selected||p.team||[]);state.oppSelected=new Set(p.opponent||p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};state.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):state.minGP;state.refMode=p.refMode==='top200'?'top200':state.refMode;save();syncControlsFromState();render()}
 function customKey(k){return 'fb_custom_dataset_'+k}
 function storeDataset(k,ps,source='import'){try{localStorage.setItem(customKey(k),JSON.stringify(ps));localStorage.setItem('fb_dataset_source_'+k,source)}catch(e){}}
 function loadStoredDataset(k){try{const x=JSON.parse(localStorage.getItem(customKey(k))||'null');return Array.isArray(x)?x:[]}catch(e){return []}}
@@ -309,7 +478,7 @@ async function fetchFullBaseline(){
 }
 
 async function importDataFile(k,file){const ps=fromCsv(await file.text());if(ps.length<20)throw new Error('CSV rows不足或欄位格式不符');datasets[k]=ps;storeDataset(k,ps);players=getActiveDataset().players;render();updateDataCenterInfo();updateDataDiagnostic()}
-function save(){localStorage.setItem('fb_final_team',JSON.stringify([...state.selected]));localStorage.setItem('fb_opp_team',JSON.stringify([...state.oppSelected]));localStorage.setItem('fb_final_overrides',JSON.stringify(state.overrides));localStorage.setItem('fb_team_overrides',JSON.stringify(state.teamOverrides));localStorage.setItem('fb_data_basis',state.dataBasis);localStorage.setItem('fb_weights',JSON.stringify(state.weights))}
+function save(){const idx=leagueProfiles.findIndex(p=>p.id===activeLeagueId);if(idx<0)return;leagueProfiles[idx]=runtimeToProfile();state.name=leagueProfiles[idx].name;state.minGP=leagueProfiles[idx].minGP;state.refMode=leagueProfiles[idx].refMode;persistProfiles()}
 function renderWeights(){const el=document.getElementById('weights');el.innerHTML=Object.keys(CATS).filter(k=>CATS[k].score).map(k=>`<div class="weight ${state.weights[k]===0?'off':''}"><span>${k}</span><input type="number" min="0" step="0.25" value="${state.weights[k]}" data-w="${k}"></div>`).join('');el.querySelectorAll('[data-w]').forEach(i=>i.onchange=()=>{state.weights[i.dataset.w]=Math.max(0,Number(i.value)||0);save();render()})}
 function renderChips(){const el=document.getElementById('chips');el.innerHTML=[...state.selected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.rem);save();render()})}
 function renderOppChips(){const el=document.getElementById('oppChips');el.innerHTML=[...state.oppSelected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-opp-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-opp-rem]').forEach(b=>b.onclick=()=>{state.oppSelected.delete(b.dataset.oppRem);save();render()})}
@@ -324,18 +493,21 @@ function statClass(a,p,k){
 function renderRosterPlayerStats(a){
   const el=document.getElementById('rosterPlayerStats');
   if(!a.team.length){el.innerHTML='<div class="note">先選球員，這裡會立即列出每位球員的個人數據。切換左側 Projection 基準後，這張表也會跟著更新。</div>';return}
-  const cols=[['pts','PTS/G'],['pm3','3PM/G'],['reb','REB/G'],['ast','AST/G'],['stl','STL/G'],['blk','BLK/G'],['fg','FG%'],['ft','FT%'],['tov','TOV/G'],['dd','DD'],['td','TD'],['at','A/T'],['p3','3P%']];
+  const cols=[['pts','PTS/G'],['pm3','3PM/G'],['reb','REB/G'],['ast','AST/G'],['stl','STL/G'],['blk','BLK/G'],['fg','FG%'],['ft','FT%'],['tov','TOV/G'],['dd','DD（季）'],['td','TD（季）'],['at','A/T'],['p3','3P%']];
   const rows=a.team.map(p=>`<tr><td class="player-name-cell"><span class="playerlink" data-detail-roster="${esc(p.name)}">${esc(p.name)}</span><span class="team-mini">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · ${projGames(p)} 場/週</span></td>${cols.map(([key])=>{
     let value='—';
     if(key==='fg'||key==='ft'||key==='p3') value=pct(p[key]);
     else if(key==='at') value=Number.isFinite(p.at)?p.at.toFixed(2):'—';
     else if(key==='dd'||key==='td') value=Number.isFinite(p[key])?p[key]:'—';
     else value=Number.isFinite(p[key])?fmt1(p[key]):'—';
-    return `<td class="${statClass(a,p,key==='pm3'?'3PM':key==='pts'?'PTS':key==='reb'?'REB':key==='ast'?'AST':key==='stl'?'STL':key==='blk'?'BLK':key==='fg'?'FG%':key==='ft'?'FT%':key==='tov'?'TOV':key==='dd'?'DD':key==='at'?'A/T':'3P%')}">${value}</td>`;
+    const label=key==='pm3'?'3PM':key==='pts'?'PTS':key==='reb'?'REB':key==='ast'?'AST':key==='stl'?'STL':key==='blk'?'BLK':key==='fg'?'FG%':key==='ft'?'FT%':key==='tov'?'TOV':key==='dd'?'DD':key==='at'?'A/T':'3P%';
+    const extra=key==='dd'?' stat-dd':key==='td'?' stat-td':'';
+    return `<td class="${statClass(a,p,label)}${extra}">${value}</td>`;
   }).join('')}</tr>`).join('');
-  el.innerHTML=`<div class="tablewrap"><table class="table player-stats-table"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><div class="player-stats-note">這裡是「球員本身」的資料，不是整隊總和。PTS/3PM/REB/AST/STL/BLK/TOV 為每場平均；FG%/FT%/3P% 為命中率；A/T＝AST÷TOV；DD、TD 為上一季整季總數。顏色只作為快速掃描提示，不會改變原始數據。</div>`;
+  el.innerHTML=`<div class="tablewrap"><table class="table player-stats-table"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><div class="player-stats-note">這裡是「球員本身」的資料，不是整隊總和。PTS/3PM/REB/AST/STL/BLK/TOV 為每場平均；FG%/FT%/3P% 為命中率；A/T＝AST÷TOV；<b>DD、TD 為上一季整季總數，DD 會進 Fantasy 評分、TD 不進評分。</b></div>`;
   document.querySelectorAll('[data-detail-roster]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detailRoster;renderDetail(a);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.querySelector('[data-tab="players"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!=='tab-players'));});
 }
+
 function renderDraft(a){
 const dm=[['球員數',a.team.length],['平均 PTS/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.pts,0)/a.team.length):'—'],['平均 REB/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.reb,0)/a.team.length):'—'],['平均 AST/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.ast,0)/a.team.length):'—'],['本週 Player-Games',a.team.reduce((s,p)=>s+projGames(p),0)]];
 document.getElementById('draftMetrics').innerHTML=dm.map(x=>'<div class="metric"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join('');
@@ -359,24 +531,25 @@ const mine=weeklyForTeam(a.team);
 const oppTeam=[...state.oppSelected].map(n=>players.find(p=>p.name===n)).filter(Boolean);
 const opp=weeklyForTeam(oppTeam);
 document.getElementById('weekDesc').textContent=WEEKS[state.week][1]+'｜我的 '+a.team.length+' 人 / '+mine.totalPG+' PG｜對手 '+oppTeam.length+' 人 / '+opp.totalPG+' PG';
-let myCards='<div class="pg"><strong>你的球隊</strong><small>'+mine.totalPG+' Player-Games｜平均 '+(mine.totalPG/Math.max(1,a.team.length)).toFixed(2)+' games/player</small></div>';
-a.team.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).forEach(p=>{myCards+='<div class="pg"><strong>'+esc(p.name)+'</strong><small>'+(TEAMS[effectiveTeam(p)]||effectiveTeam(p))+'｜'+projGames(p)+' games</small></div>';});
-let opCards='<div class="pg"><strong>對手球隊</strong><small>'+opp.totalPG+' Player-Games｜平均 '+(opp.totalPG/Math.max(1,oppTeam.length)).toFixed(2)+' games/player</small></div>';
-if(oppTeam.length){oppTeam.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).forEach(p=>{opCards+='<div class="pg"><strong>'+esc(p.name)+'</strong><small>'+(TEAMS[effectiveTeam(p)]||effectiveTeam(p))+'｜'+projGames(p)+' games</small></div>';});}else opCards+='<div class="muted">尚未輸入對手 roster</div>';
-document.getElementById('weeklyTop').innerHTML='<div class="panel"><div class="body"><div class="projected-games">'+myCards+'</div></div></div><div class="panel"><div class="body"><div class="projected-games">'+opCards+'</div></div></div>';
-const rows=[['FGM/A',fmt1(mine.raw.FGM)+' / '+fmt1(mine.raw.FGA),fmt1(opp.raw.FGM)+' / '+fmt1(opp.raw.FGA)],['FG%',pct(mine.raw.FG),pct(opp.raw.FG)],['FTM/A',fmt1(mine.raw.FTM)+' / '+fmt1(mine.raw.FTA),fmt1(opp.raw.FTM)+' / '+fmt1(opp.raw.FTA)],['FT%',pct(mine.raw.FT),pct(opp.raw.FT)],['3PTM/A',fmt1(mine.raw.P3M)+' / '+fmt1(mine.raw.P3A),fmt1(opp.raw.P3M)+' / '+fmt1(opp.raw.P3A)],['3P%',pct(mine.raw.P3),pct(opp.raw.P3)],['PTS',fmt1(mine.raw.PTS),fmt1(opp.raw.PTS)],['REB',fmt1(mine.raw.REB),fmt1(opp.raw.REB)],['AST',fmt1(mine.raw.AST),fmt1(opp.raw.AST)],['STL',fmt1(mine.raw.STL),fmt1(opp.raw.STL)],['BLK',fmt1(mine.raw.BLK),fmt1(opp.raw.BLK)],['TOV',fmt1(mine.raw.TOV),fmt1(opp.raw.TOV)],['DD',fmt1(mine.raw.DD),fmt1(opp.raw.DD)],['A/T',Number.isFinite(mine.raw.AT)?mine.raw.AT.toFixed(2):'—',Number.isFinite(opp.raw.AT)?opp.raw.AT.toFixed(2):'—']];
+let myCards='<div class="pg"><strong>你的球隊</strong><small>'+mine.totalPG+' Player-Games｜平均 '+(mine.totalPG/Math.max(1,a.team.length)).toFixed(2)+' games/player｜<span class="dd-kicker">預估 DD '+fmt1(mine.raw.DD)+'</span></small></div>';
+a.team.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).forEach(p=>{const pd=Number.isFinite(p.dd)&&p.gp>0?(p.dd/p.gp)*projGames(p):null;myCards+='<div class="pg"><strong>'+esc(p.name)+'</strong><small>'+(TEAMS[effectiveTeam(p)]||effectiveTeam(p))+'｜'+projGames(p)+' games｜<span class="dd-kicker">DD ≈ '+(Number.isFinite(pd)?pd.toFixed(2):'—')+'</span>｜<span class="td-kicker">TD '+(Number.isFinite(p.td)?p.td:'—')+'（季）</span></small></div>';});
+let opCards='<div class="pg"><strong>對手球隊</strong><small>'+opp.totalPG+' Player-Games｜平均 '+(opp.totalPG/Math.max(1,oppTeam.length)).toFixed(2)+' games/player｜<span class="dd-kicker">預估 DD '+fmt1(opp.raw.DD)+'</span></small></div>';
+if(oppTeam.length){oppTeam.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).forEach(p=>{const pd=Number.isFinite(p.dd)&&p.gp>0?(p.dd/p.gp)*projGames(p):null;opCards+='<div class="pg"><strong>'+esc(p.name)+'</strong><small>'+(TEAMS[effectiveTeam(p)]||effectiveTeam(p))+'｜'+projGames(p)+' games｜<span class="dd-kicker">DD ≈ '+(Number.isFinite(pd)?pd.toFixed(2):'—')+'</span>｜<span class="td-kicker">TD '+(Number.isFinite(p.td)?p.td:'—')+'（季）</span></small></div>';});}else opCards+='<div class="muted">尚未輸入對手 roster</div>';
+document.getElementById('weeklyTop').innerHTML='<div class="panel"><div class="body"><div class="projected-games">'+myCards+'</div></div></div><div class="panel"><div class="body"><div class="projected-games">'+opCards+'</div></div></div><div class="weekly-dd-focus"><div class="weekly-dd-card"><b>'+fmt1(mine.raw.DD)+'</b><span>你的本週預估 DD</span></div><div class="weekly-dd-card"><b>'+fmt1(opp.raw.DD)+'</b><span>對手的本週預估 DD</span></div><div class="weekly-dd-card"><b>'+(Number.isFinite(mine.raw.DD)&&Number.isFinite(opp.raw.DD)?(mine.raw.DD-opp.raw.DD).toFixed(1):'—')+'</b><span>DD 預估差距（你 − 對手）</span></div></div>';
+const rows=[['FGM/A',fmt1(mine.raw.FGM)+' / '+fmt1(mine.raw.FGA),fmt1(opp.raw.FGM)+' / '+fmt1(opp.raw.FGA)],['FG%',pct(mine.raw.FG),pct(opp.raw.FG)],['FTM/A',fmt1(mine.raw.FTM)+' / '+fmt1(mine.raw.FTA),fmt1(opp.raw.FTM)+' / '+fmt1(opp.raw.FTA)],['FT%',pct(mine.raw.FT),pct(opp.raw.FT)],['3PTM/A',fmt1(mine.raw.P3M)+' / '+fmt1(mine.raw.P3A),fmt1(opp.raw.P3M)+' / '+fmt1(opp.raw.P3A)],['3P%',pct(mine.raw.P3),pct(opp.raw.P3)],['PTS',fmt1(mine.raw.PTS),fmt1(opp.raw.PTS)],['REB',fmt1(mine.raw.REB),fmt1(opp.raw.REB)],['AST',fmt1(mine.raw.AST),fmt1(opp.raw.AST)],['STL',fmt1(mine.raw.STL),fmt1(opp.raw.STL)],['BLK',fmt1(mine.raw.BLK),fmt1(opp.raw.BLK)],['TOV',fmt1(mine.raw.TOV),fmt1(opp.raw.TOV)],['DD（預估）',fmt1(mine.raw.DD),fmt1(opp.raw.DD)],['A/T',Number.isFinite(mine.raw.AT)?mine.raw.AT.toFixed(2):'—',Number.isFinite(opp.raw.AT)?opp.raw.AT.toFixed(2):'—']];
 let th='<div class="tablewrap"><table class="table matchup-table"><thead><tr><th style="text-align:left">Category</th><th>你</th><th>對手</th><th>H2H</th></tr></thead><tbody>';
-rows.forEach(r=>{let key=r[0]==='FG%'?'FG':r[0]==='FT%'?'FT':r[0]==='3P%'?'P3':r[0]==='A/T'?'AT':r[0];const c=compareCategory(key,mine.raw[key],opp.raw[key]);th+='<tr><td><strong>'+r[0]+'</strong></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="'+c.cls+'">'+c.txt+'</td></tr>';});
-th+='</tbody></table></div>';document.getElementById('weeklyTotals').innerHTML=th;
+rows.forEach(r=>{let key=r[0].startsWith('FG')?'FG':r[0].startsWith('FT')?'FT':r[0].startsWith('3P%')?'P3':r[0]==='A/T'?'AT':r[0].startsWith('DD')?'DD':r[0];const c=compareCategory(key,mine.raw[key],opp.raw[key]);th+='<tr><td><strong>'+r[0]+'</strong></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="'+c.cls+'">'+c.txt+'</td></tr>';});
+th+='</tbody></table></div><div class="tiny" style="margin-top:7px"><b>DD 預測公式：</b>逐球員以「上一季 DD ÷ 上季 GP × 本週預測出賽場次」加總；因此本週 DD 是期望值，不是保證整數。TD 只在球員 Detail / 球員總表顯示，不進評分。</div>';document.getElementById('weeklyTotals').innerHTML=th;
 const catRows=[['FG%','FG'],['FT%','FT'],['3P%','P3'],['PTS','PTS'],['3PM','3PM'],['REB','REB'],['AST','AST'],['STL','STL'],['BLK','BLK'],['TOV','TOV'],['DD','DD'],['A/T','AT']];
 let cmp='<div class="tablewrap"><table class="table matchup-table"><thead><tr><th style="text-align:left">Category</th><th>你</th><th>對手</th><th>差距</th><th>預測</th></tr></thead><tbody>';
 catRows.forEach(([label,key])=>{const av=mine.raw[key],bv=opp.raw[key],c=compareCategory(key,av,bv);let diff=Number.isFinite(av)&&Number.isFinite(bv)?av-bv:null;if(key==='TOV'&&Number.isFinite(diff))diff=-diff;cmp+='<tr><td><strong>'+label+'</strong></td><td class="'+(c.cls==='win'?'goodtxt':c.cls==='loss'?'badtxt':'')+'">'+fmtWeeklyCell(key,av)+'</td><td>'+fmtWeeklyCell(key,bv)+'</td><td>'+(Number.isFinite(diff)?diff.toFixed(key==='AT'?2:1):'—')+'</td><td class="'+c.cls+'">'+c.txt+'</td></tr>';});
 cmp+='</tbody></table></div><div class="tiny" style="margin-top:7px">H2H 每分類獨立計算；TOV 越低越好。這裡不把各分類再加成單一總分。</div>';document.getElementById('matchupComparison').innerHTML=cmp;
 const ss=weeklyStrengthFor(a.team);const labels=Object.keys(CATS).filter(k=>CATS[k].score);let sh='';labels.forEach(k=>{const i=ss[k],width=Math.min(50,Math.abs(i-50)*1.5);sh+='<div class="strength"><div class="strength-top"><strong>'+k+'</strong><span class="idx '+(i>=50?'good':'bad')+'">'+i.toFixed(0)+'</span></div><div class="bar"><div class="fill '+(i>=50?'pos':'neg')+'" style="width:'+width+'%"></div></div><div class="explain">50 = 依本週 player-games 的中性產出。'+(k==='TOV'?'失誤越少越高分。':k==='DD'?'以 DD/G × 預測賽程。':'本週預測輸出對參考基準的相對位置。')+'</div></div>';});document.getElementById('weeklyStrength').innerHTML=sh;
 }
+
 function renderSchedule(){const selTeams=new Set(players.filter(p=>state.selected.has(p.name)||state.oppSelected.has(p.name)).map(p=>effectiveTeam(p)));let h='<div class="tablewrap"><table class="table schedule-table"><thead><tr><th>Team</th><th>Total</th>';WEEKS.forEach((w,i)=>h+=`<th>${w[0]}<br><span>${w[1].split('–')[0]}</span></th>`);h+='</tr></thead><tbody>';Object.keys(SCHEDULE).forEach(t=>{h+=`<tr><td><strong>${t}</strong> <span class="muted">${TEAMS[t]}</span></td><td><strong>${SCHEDULE[t].reduce((a,b)=>a+b,0)}</strong></td>`;SCHEDULE[t].forEach((g,i)=>{const cls=selTeams.has(t)?'hl':'';const wt=g>=4?'heavy':(g<=1?'light':'');h+=`<td class="${cls}"><span class="${wt}">${g}</span>${selTeams.has(t)?'<div class="teammark">已選球員</div>':''}</td>`});h+='</tr>'});h+='</tbody></table></div>';document.getElementById('scheduleGrid').innerHTML=h}
 function renderPlayers(a){const q=state.playerSearch.trim().toLowerCase();let rows=players.filter(p=>!q||p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)).map(p=>({p,f:fit(p,a)}));rows.sort((x,y)=>state.sort==='pts'?y.p.pts-x.p.pts:state.sort==='reb'?y.p.reb-x.p.reb:state.sort==='ast'?y.p.ast-x.p.ast:state.sort==='3p'?((y.p.p3||0)-(x.p.p3||0)):state.sort==='at'?((y.p.at||0)-(x.p.at||0)):y.f-x.f);rows=rows.slice(0,48);document.getElementById('playerGrid').innerHTML=`<div class="tablewrap"><table class="table"><thead><tr><th>Player</th><th>Fit</th><th>PTS/G</th><th>3PM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>DD</th><th>TD</th><th>A/T</th><th>3P%</th><th>Wk Games</th></tr></thead><tbody>${rows.map(x=>{const p=x.p,fi=fitIndex(x.f);return`<tr><td><span class="playerlink" data-detail="${esc(p.name)}">${esc(p.name)}</span> <span class="muted">${effectiveTeam(p)}</span></td><td class="${fi>=50?'goodtxt':'badtxt'}"><strong>${fi.toFixed(0)}</strong></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td><td>${SCHEDULE[effectiveTeam(p)]?.[state.week]??'—'}</td></tr>`}).join('')}</tbody></table></div>`;document.querySelectorAll('[data-detail]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detail;renderDetail(a)})}
-function renderDetail(a){const p=players.find(x=>x.name===state.detail),el=document.getElementById('detail');if(!p)return;const et=effectiveTeam(p);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(p.name)}</div><div class="muted" style="margin-top:3px">${p.isRookie?'🧑‍🎓 Rookie Projection · '+(p.school||'')+'｜':''}Projection：${esc(dataBasisLabel())}｜2025-26 baseline ${TEAMS[p.baselineTeam]||p.baselineTeam}｜2026-27 current ${TEAMS[et]||et} · GP ${p.gp}${p.baselineTeam&&p.baselineTeam!==et?` <span class="trade-badge">換隊 / 可手動覆寫</span>`:''}</div></div><span class="pill ${state.selected.has(p.name)?'good':''}">${state.selected.has(p.name)?'我的球員':state.oppSelected.has(p.name)?'對手球員':'候選球員'}</span></div><div class="detailgrid"><div class="dmetric"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="dmetric"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>本週賽事</span><b>${SCHEDULE[et]?.[state.week]??'—'}</b></div><div class="dmetric"><span>DD（整季）</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="dmetric"><span>DD/G（輔助）</span><b>${Number.isFinite(p.dd)?(p.dd/p.gp).toFixed(2):'—'}</b></div><div class="dmetric"><span>TD（整季）</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div><div class="dmetric"><span>本週預測</span><b>${projGames(p)} 場</b></div></div><div class="manual-team"><div><label class="tiny">手動指定 2026-27 隊伍</label><select id="manualTeam" class="control"><option value="">${TEAMS[et]||et}（目前）</option>${Object.entries(TEAMS).map(([k,v])=>`<option value="${k}" ${k===et?'selected':''}>${k} · ${v}</option>`).join('')}</select></div><button id="clearManualTeam" class="btn small">還原官方</button></div><div class="note" style="margin-top:12px">TD 只在球員 Detail 顯示，不進 Fantasy 評分；TD 本身也符合 DD 定義，因此不額外再加一次 DD。手動換隊只影響 2026-27 賽程與 weekly projection，不會修改歷史統計。</div>`;document.getElementById('manualTeam').onchange=e=>{const v=e.target.value;if(!v)delete state.teamOverrides[p.name];else state.teamOverrides[p.name]=v;save();renderDetail(a);renderSchedule();renderRosterTable(a);renderWeekly(a)};document.getElementById('clearManualTeam').onclick=()=>{delete state.teamOverrides[p.name];save();render()}}
+function renderDetail(a){const p=players.find(x=>x.name===state.detail),el=document.getElementById('detail');if(!p)return;const et=effectiveTeam(p);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(p.name)}</div><div class="muted" style="margin-top:3px">${p.isRookie?'🧑‍🎓 Rookie Projection · '+(p.school||'')+'｜':''}Projection：${esc(dataBasisLabel())}｜2025-26 baseline ${TEAMS[p.baselineTeam]||p.baselineTeam}｜2026-27 current ${TEAMS[et]||et} · GP ${p.gp}${p.baselineTeam&&p.baselineTeam!==et?` <span class="trade-badge">換隊 / 可手動覆寫</span>`:''}</div></div><span class="pill ${state.selected.has(p.name)?'good':''}">${state.selected.has(p.name)?'我的球員':state.oppSelected.has(p.name)?'對手球員':'候選球員'}</span></div><div class="detailgrid"><div class="dmetric"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="dmetric"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>本週賽事</span><b>${SCHEDULE[et]?.[state.week]??'—'}</b></div><div class="dmetric stat-dd"><span>DD（整季）</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="dmetric"><span>DD/G（輔助）</span><b>${Number.isFinite(p.dd)?(p.dd/p.gp).toFixed(2):'—'}</b></div><div class="dmetric stat-td"><span>TD（整季）</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div><div class="dmetric"><span>本週預測</span><b>${projGames(p)} 場</b></div></div><div class="manual-team"><div><label class="tiny">手動指定 2026-27 隊伍</label><select id="manualTeam" class="control"><option value="">${TEAMS[et]||et}（目前）</option>${Object.entries(TEAMS).map(([k,v])=>`<option value="${k}" ${k===et?'selected':''}>${k} · ${v}</option>`).join('')}</select></div><button id="clearManualTeam" class="btn small">還原官方</button></div><div class="note" style="margin-top:12px">TD 只在球員 Detail 顯示，不進 Fantasy 評分；TD 本身也符合 DD 定義，因此不額外再加一次 DD。手動換隊只影響 2026-27 賽程與 weekly projection，不會修改歷史統計。</div>`;document.getElementById('manualTeam').onchange=e=>{const v=e.target.value;if(!v)delete state.teamOverrides[p.name];else state.teamOverrides[p.name]=v;save();renderDetail(a);renderSchedule();renderRosterTable(a);renderWeekly(a)};document.getElementById('clearManualTeam').onclick=()=>{delete state.teamOverrides[p.name];save();render()}}
 function dataBasisLabel(){return {'last':'2025-26 完整球季','current':'2026-27 本季至今（資料匣）','recent10':'近 10 場（資料匣）','recent5':'近 5 場（資料匣）','blend':'本季 60%＋上季 40%'}[state.dataBasis]||'2025-26 完整球季'}
 function renderDataStatus(){const sel=document.getElementById('dataBasis');if(sel)sel.value=state.dataBasis;const want=state.dataBasis,available=want==='last'||(want==='current'&&datasets.current.length)||(want==='blend'&&datasets.current.length);let msg='';if(available&&want==='current')msg=`可用：${datasets.current.length} 人｜2026-27 Season-to-Date`;else if(available&&want==='blend')msg=`可用：上季 ${datasets.last.length} + 本季 ${datasets.current.length} 人｜混合權重 ${(state.blend*100).toFixed(0)} / ${((1-state.blend)*100).toFixed(0)}`;else if(want==='last')msg=`基準：${datasets.last.length} 人｜完整 2025-26 baseline`;else msg=`目前此瀏覽器版沒有 ${want==='recent10'?'近10場':want==='recent5'?'近5場':'本季至今'} 的獨立 game-log feed，已安全 fallback 到 ${datasets.last.length} 人 baseline；正式雲端後端會接日期/Last-N 資料源。`;document.getElementById('dataStatus').textContent=msg}
 function rookieStatus(r){const verified=!!r.ncaa;return verified?'NCAA verified':'Metadata only'}
@@ -411,13 +584,14 @@ function renderYahoo(a){
   document.querySelectorAll('#yahooGrid [data-detail]').forEach(x=>x.onclick=()=>{});
 }
 
-function render(){renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
+function render(){renderLeagueManager();renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
 function switchTab(tab){state.tab=tab;document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!==`tab-${tab}`));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}
-function initWeeks(){const s=document.getElementById('weekSelect');s.innerHTML=WEEKS.map((w,i)=>`<option value="${i}">${w[0]} · ${w[1]}</option>`).join('');const now=new Date(),d=now.getTime();const starts=[new Date('2026-10-19'),...WEEKS.slice(1).map((w,i)=>{const a=new Date('2026-10-26');a.setDate(a.getDate()+7*i);return a})];let idx=0;starts.forEach((x,i)=>{if(d>=x.getTime())idx=i});state.week=Math.min(24,Math.max(0,idx));s.value=state.week}
+function initWeeks(){const s=document.getElementById('weekSelect');s.innerHTML=WEEKS.map((w,i)=>`<option value="${i}">${w[0]} · ${w[1]}</option>`).join('');state.week=Math.min(24,Math.max(0,Number(state.week)||0));s.value=state.week}
 function setStatus(ok,msg){document.getElementById('dot').className='dot'+(ok?' ok':'');document.getElementById('status').textContent=msg;const b=document.getElementById('dataBadge');if(b)b.textContent=dataBasisLabel()}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=render;document.getElementById('refMode').onchange=render;document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
-state.weights={...DEFAULTS,...JSON.parse(localStorage.getItem('fb_weights')||'{}')};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(1,Math.min(82,Number(e.target.value)||10));save();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='top200'?'top200':'league';save();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
+state.weights={...DEFAULTS,...state.weights};
 initWeeks();
+syncControlsFromState();
 // Synchronous startup: no Promise/remote loading step, so the UI is immediately interactive.
 datasets={last:loadStoredDataset('last').length?loadStoredDataset('last'):demo(),current:loadStoredDataset('current'),recent10:loadStoredDataset('recent10'),recent5:loadStoredDataset('recent5')};
 players=getActiveDataset().players;
@@ -426,4 +600,5 @@ state.oppSelected=new Set([...state.oppSelected].filter(n=>players.some(p=>p.nam
 setStatus(true,`${players.length} 位球員｜本機資料已就緒｜2026-27 schedule snapshot`);
 render();
 fetchFullBaseline();
+// V3.9 Multi-League: shared engine + shared data, league-scoped runtime settings. All league profiles use the same functions and schema.
 </script></body></html>
