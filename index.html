@@ -1,8 +1,8 @@
 <!doctype html>
-<!-- V3.15: DD/TD field normalization fix for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
+<!-- V3.15: Mobile app-style UI polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="L7N Fantasy"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.15</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
@@ -57,7 +57,7 @@ header{box-shadow:0 4px 18px rgba(26,37,60,.05)}
 .engine-architecture{margin-top:8px;padding:8px 9px;border:1px dashed #cdd4e1;border-radius:9px;background:#fafcff;color:#5f6b80;font-size:9px;line-height:1.5}
 @media(max-width:760px){.league-actions{grid-template-columns:1fr 1fr}.league-select-row{grid-template-columns:1fr}}
 
-/* V3.11 visual polish retained; V3.15 quality polish adds restrained motion and robust reference calibration. */
+/* V3.11 visual polish retained; V3.13 quality polish adds restrained motion and robust reference calibration. */
 html{scroll-behavior:smooth}
 body{font-size:15px;line-height:1.45}
 .layout>aside{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding-right:4px;scrollbar-gutter:stable}
@@ -81,7 +81,7 @@ body{font-size:15px;line-height:1.45}
 @media(max-width:1120px){.layout>aside{position:static;max-height:none;overflow:visible;padding-right:0}}
 @media(max-width:760px){body{font-size:14px}.title{font-size:21px}.panel h3{font-size:15px}.table th,.table td{font-size:10.5px}.playerlink{font-size:12px;max-width:170px}}
 
-/* V3.15 quality polish: white base, subtle depth, restrained motion, stronger readability. */
+/* V3.13 quality polish: white base, subtle depth, restrained motion, stronger readability. */
 :root{--bg:#ffffff;--panel:#ffffff;--ink:#172033;--muted:#66748a;--line:#e1e7f0;--accent:#6547f5;--accent2:#4c77e8;--soft:#f3f0ff;--soft2:#eef5ff;--good:#14845c;--bad:#c63c4c;--shadow:0 10px 30px rgba(30,42,67,.065)}
 body{background:linear-gradient(180deg,#fff 0%,#fbfcff 55%,#f8faff 100%);color:var(--ink)}
 header{background:rgba(255,255,255,.94);box-shadow:0 6px 22px rgba(31,42,61,.05)}
@@ -101,12 +101,103 @@ main{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(249,251,255,.7
 @media(max-width:760px){.title{font-size:21px}.panel h3{font-size:15px}.sectionhead h4{font-size:14px}.tab{font-size:12px;padding:9px 11px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-/* V3.15 PWA polish */
-html{background:#fff}body{padding-bottom:env(safe-area-inset-bottom);overscroll-behavior-x:none}.wrap{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}.panel,.metric,.detail,.section{scroll-margin-top:90px}.pwa-splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(145deg,#fff 0%,#f7f5ff 52%,#eef4ff 100%);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .38s ease,visibility .38s ease}.pwa-splash.hide{opacity:0;visibility:hidden;pointer-events:none}.pwa-splash-card{text-align:center;padding:28px 30px;border-radius:28px}.pwa-splash img{width:128px;height:128px;border-radius:28px;box-shadow:0 16px 45px rgba(80,70,180,.18);display:block;margin:0 auto 18px}.pwa-splash .splash-title{font-size:23px;font-weight:900;letter-spacing:-.4px}.pwa-splash .splash-sub{font-size:12px;color:var(--muted);margin-top:5px}.pwa-splash .splash-line{width:130px;height:4px;border-radius:99px;background:linear-gradient(90deg,var(--accent2),var(--accent));margin:17px auto 0;animation:splashPulse 1.15s ease-in-out infinite}.pwa-update{display:inline-flex!important;align-items:center;gap:5px}.pwa-update.busy{opacity:.7;pointer-events:none}.pwa-install-hint{display:none;margin-top:8px}.standalone .pwa-install-hint{display:none}@keyframes splashPulse{0%,100%{transform:scaleX(.72);opacity:.55}50%{transform:scaleX(1);opacity:1}}
-@media(max-width:760px){.wrap{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}.pwa-splash img{width:112px;height:112px}.pwa-splash .splash-title{font-size:21px}}
-</style><link rel="manifest" href="manifest.webmanifest"></head><body><div id="pwaSplash" class="pwa-splash"><div class="pwa-splash-card"><img src="icons/icon-512.png" alt="L7N Fantasy"><div class="splash-title">L7N Fantasy</div><div class="splash-sub">Smarter Data. Better Decisions.</div><div class="splash-line"></div></div></div>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.15｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small pwa-update" id="refreshDataBtn">↻ 更新資料</button><button class="btn small" id="shareBtn">🔗 分享目前設定</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+/* V3.15 mobile app-style UI: no engine/data architecture changes. */
+.mobile-toolbar{display:none}
+.mobile-drawer-head{display:none}
+.mobile-backdrop{display:none}
+@media(max-width:760px){
+  :root{--mobile-nav-h:68px}
+  body{background:#f6f7fb;padding-bottom:calc(var(--mobile-nav-h) + env(safe-area-inset-bottom,0px))}
+  header{position:sticky;top:0;z-index:70}
+  .wrap{padding-left:12px;padding-right:12px}
+  .head{padding:10px 0 9px;gap:8px}
+  .title{font-size:19px;letter-spacing:-.15px}
+  .creator,.engine-badge{display:none}
+  .subtitle{font-size:10px;max-width:72vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .status{font-size:10px;padding:6px 8px;white-space:nowrap}
+  .head-actions{display:none}
+  main{padding:10px 0 30px}
+  .layout{display:block;position:relative}
+  .mobile-toolbar{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+  .mobile-model-btn{flex:0 0 auto;border:1px solid #d9d0ff;background:#fff;color:#5138c7;border-radius:11px;padding:9px 11px;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(52,44,104,.06)}
+  .mobile-model-btn.is-open{background:#f0edff;border-color:#cfc4ff}
+  .mobile-current-league{min-width:0;flex:1;padding:9px 11px;border:1px solid #e7eaf0;border-radius:11px;background:#fff;color:#667085;font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .layout>aside{display:none;position:fixed;left:10px;right:10px;top:72px;bottom:calc(var(--mobile-nav-h) + 10px);z-index:65;max-height:none;overflow-y:auto;overflow-x:hidden;padding:0 2px 14px 0;background:rgba(246,247,251,.98);overscroll-behavior:contain;border-radius:18px}
+  .layout.mobile-settings-open>aside{display:block;animation:mobileDrawerIn .18s ease both}
+  .mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:8;padding:9px 10px;margin-bottom:8px;background:rgba(246,247,251,.97);backdrop-filter:blur(10px);border-bottom:1px solid #e5e7ee}
+  .mobile-drawer-head strong{font-size:13px}
+  .mobile-drawer-close{border:0;background:#fff;width:32px;height:32px;border-radius:50%;font-size:22px;line-height:1;color:#6b7280;box-shadow:0 4px 12px rgba(40,53,80,.08)}
+  .mobile-backdrop{display:block;position:fixed;inset:0;z-index:60;background:rgba(24,34,52,.18);backdrop-filter:blur(2px)}
+  .mobile-backdrop.hidden{display:none}
+  .mobile-drawer-active{overflow:hidden}
+  .layout>aside .panel{margin-bottom:10px}
+  .layout>aside .panel:last-child{margin-bottom:0}
+  .layout>aside .panel h3{font-size:14px;padding:13px 14px}
+  .layout>aside .body{padding:12px 14px}
+  .tabs{position:fixed;left:8px;right:8px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:75;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:0;padding:6px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border:1px solid #e0e5ee;border-radius:18px;box-shadow:0 10px 30px rgba(28,39,62,.14)}
+  .tab{min-width:0;padding:8px 2px 7px;border-radius:11px;font-size:0;line-height:1.05;text-align:center;border-color:transparent;background:transparent;color:#68758a}
+  .tab:hover{transform:none;box-shadow:none}
+  .tab.active{background:#1f2a3d;color:#fff;box-shadow:0 4px 12px rgba(31,42,61,.16)}
+  .tab::before{display:block;font-size:17px;margin-bottom:3px;opacity:.95}
+  .tab::after{font-size:8.5px;font-weight:900;letter-spacing:-.1px}
+  .tab[data-tab=draft]::before{content:'🏀'}.tab[data-tab=draft]::after{content:'選人'}
+  .tab[data-tab=weekly]::before{content:'⚔️'}.tab[data-tab=weekly]::after{content:'H2H'}
+  .tab[data-tab=schedule]::before{content:'📅'}.tab[data-tab=schedule]::after{content:'賽程'}
+  .tab[data-tab=players]::before{content:'🔎'}.tab[data-tab=players]::after{content:'球員'}
+  .tab[data-tab=rookies]::before{content:'🎓'}.tab[data-tab=rookies]::after{content:'新秀'}
+  .tab[data-tab=yahoo]::before{content:'Y!'}.tab[data-tab=yahoo]::after{content:'Yahoo'}
+  .section{margin-bottom:14px}
+  .sectionhead{align-items:flex-start;gap:7px}
+  .sectionhead h4{font-size:14px}
+  .helper{font-size:10px;line-height:1.35;text-align:right}
+  .metrics{grid-template-columns:1fr 1fr;gap:7px}
+  .metric{padding:10px}.metric b{font-size:19px}.metric span{font-size:9px}
+  .strength-grid{grid-template-columns:1fr;gap:8px}
+  .strength{padding:10px}
+  .strength-top strong{font-size:12px}
+  .explain{font-size:10px}
+  .tablewrap{border-radius:10px;-webkit-overflow-scrolling:touch}
+  .tablewrap::-webkit-scrollbar{height:5px}
+  .tablewrap::-webkit-scrollbar-thumb{background:#c9d1dc;border-radius:999px}
+  .player-stats-table{min-width:1160px}
+  .player-stats-table .player-name-cell{min-width:168px}
+  .player-stats-table .player-name-cell .yahoo-name,.player-stats-table .player-name-cell .playerlink{font-size:12px}
+  .player-stats-note{font-size:10px}
+  .searchbig{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .searchbig .control{min-width:0}
+  .detailgrid{grid-template-columns:1fr 1fr;gap:7px}
+  .dmetric{padding:9px}
+  .dmetric b{font-size:14px}
+  .weekly-dd-focus{grid-template-columns:1fr 1fr;gap:7px}
+  .weekly-dd-card{padding:10px}
+  .weekly-dd-card b{font-size:18px}
+  .h2h-top{gap:8px}
+  .totals{grid-template-columns:1fr 1fr;gap:7px}
+  .totalcard{padding:9px}
+  .totalcard .v{font-size:18px}
+  .matchup-grid{grid-template-columns:1fr;gap:8px}
+  .rookie-grid,.player-grid{grid-template-columns:1fr!important}
+  .rookie-strip{grid-template-columns:repeat(5,minmax(72px,1fr));overflow-x:auto}
+  .rookie-strip div{min-width:72px}
+  .notice,.model-warn,.note{font-size:10px;line-height:1.5}
+  .control{min-height:40px;border-radius:11px}
+  .btn{min-height:40px;border-radius:11px}
+  .btn.small{min-height:36px}
+  .results{top:45px;max-height:42vh;box-shadow:0 18px 45px rgba(30,45,70,.18)}
+  .result{padding:10px 11px}
+  .chips{gap:5px}
+  .chip{font-size:10px;padding:6px 8px}
+  .yahoo-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .yahoo-toolbar .control{max-width:none!important}
+}
+@keyframes mobileDrawerIn{from{transform:translateY(-6px);opacity:.7}to{transform:translateY(0);opacity:1}}
+</style><link rel="manifest" href="manifest.webmanifest"></head><body>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.15｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
 <main><div class="wrap"><div class="layout"><aside>
+<div class="mobile-drawer-head">
+  <strong>⚙️ 模型設定</strong>
+  <button class="mobile-drawer-close" id="mobileModelClose" type="button" aria-label="關閉模型設定">×</button>
+</div>
 <div class="panel league-panel"><h3>🏷️ 我的聯盟</h3><div class="body">
 <div class="league-select-row"><select id="leagueSelect" class="control"></select><button class="btn primary" id="addLeague">＋ 新增</button></div>
 <div class="league-actions"><button class="btn soft" id="copyLeague">複製目前</button><button class="btn" id="renameLeague">重新命名</button><button class="btn" id="deleteLeague">刪除聯盟</button><button class="btn" id="shareLeagueMini">分享此聯盟</button></div>
@@ -139,9 +230,14 @@ html{background:#fff}body{padding-bottom:env(safe-area-inset-bottom);overscroll-
 <div class="panel"><h3>📅 本週賽程摘要</h3><div class="body" id="sideSchedule"></div></div>
 </aside>
 <section>
+<div class="mobile-toolbar">
+  <button class="mobile-model-btn" id="mobileModelBtn" type="button" aria-expanded="false">⚙️ 模型設定</button>
+  <span class="mobile-current-league" id="mobileLeagueMini">我的聯盟</span>
+</div>
+<div class="mobile-backdrop hidden" id="mobileModelBackdrop"></div>
 <div class="tabs"><button class="tab active" data-tab="draft">① 選人 / 我的球隊</button><button class="tab" data-tab="weekly">② Weekly H2H</button><button class="tab" data-tab="schedule">③ NBA 賽程</button><button class="tab" data-tab="players">④ 球員資料</button><button class="tab" data-tab="rookies">⑤ Rookie Hub</button><button class="tab" data-tab="yahoo">⑥ Yahoo Rankings</button></div>
 <div id="tab-draft">
-<div class="note" style="margin-bottom:12px"><b>📱 L7N Fantasy App Mode：</b>從 iPhone 主畫面開啟時會以獨立 App 模式運作；資料仍保存在目前裝置。首次使用請用 Safari 的「加入主畫面」。</div><div class="note" style="margin-bottom:12px"><b>🟢 L7N Stable Data Build：</b>頁面會先用本機 baseline 立即啟動；背景同步完整 2025-26 球員資料，抓不到也不會卡死。2026 Rookie 維持 NCAA → NBA Projection 獨立模型。</div>
+<div class="note" style="margin-bottom:12px"><b>🟢 L7N Stable Data Build：</b>頁面會先用本機 baseline 立即啟動；背景同步完整 2025-26 球員資料，抓不到也不會卡死。2026 Rookie 維持 NCAA → NBA Projection 獨立模型。</div>
 <div class="section"><div class="sectionhead"><h4>📊 我的球隊：Per-Game Strength</h4><span class="helper">50 = 同條件參考池中性；50 為基準，越高代表對應分類越強 · 參考池會排除深 bench 並做極端值校正</span></div><div id="draftMetrics" class="metrics"></div></div>
 <div class="section"><div class="sectionhead"><h4>👥 已選球員：個人數據總覽</h4><span class="helper">橫向比較每位球員；綠＝相對優勢、紅＝相對弱勢，依目前資料基準判定</span></div><div id="rosterPlayerStats"></div></div>
 <div class="section"><div class="sectionhead"><h4>🧭 分類強弱與目前缺口</h4><span id="draftHint" class="helper"></span></div><div id="strength" class="strength-grid"></div></div>
@@ -461,8 +557,8 @@ async function importConfigFile(file){const p=JSON.parse(await file.text());stat
 function customKey(k){return 'fb_custom_dataset_'+k}
 function storeDataset(k,ps,source='import'){try{localStorage.setItem(customKey(k),JSON.stringify(ps));localStorage.setItem('fb_dataset_source_'+k,source)}catch(e){}}
 function loadStoredDataset(k){try{const x=JSON.parse(localStorage.getItem(customKey(k))||'null');return Array.isArray(x)?x:[]}catch(e){return []}}
-async function fetchFullBaseline(force=false){
-  const existing=loadStoredDataset('last'); const src=localStorage.getItem('fb_dataset_source_last'); if(!force && existing.length>=20 && src==='import'){ setStatus(true,`${players.length} 位球員｜使用你手動匯入的 baseline｜不覆蓋`); return; }
+async function fetchFullBaseline(){
+  const existing=loadStoredDataset('last'); const src=localStorage.getItem('fb_dataset_source_last'); if(existing.length>=20 && src==='import'){ setStatus(true,`${players.length} 位球員｜使用你手動匯入的 baseline｜不覆蓋`); return; }
   const url='https://raw.githubusercontent.com/rx-src/nba-analysis/main/nba_player_stats_2026.csv';
   try{
     const ctl=new AbortController(); const timer=setTimeout(()=>ctl.abort(),8000);
@@ -482,18 +578,6 @@ async function fetchFullBaseline(force=false){
 }
 
 async function importDataFile(k,file){const ps=fromCsv(await file.text());if(ps.length<20)throw new Error('CSV rows不足或欄位格式不符');datasets[k]=ps;storeDataset(k,ps);players=getActiveDataset().players;render();updateDataCenterInfo();updateDataDiagnostic()}
-async function refreshBaselineFromRemote(){
-  const btn=document.getElementById('refreshDataBtn'); if(btn) {btn.classList.add('busy'); btn.textContent='↻ 更新中…';}
-  setStatus(true,'正在同步最新 baseline…');
-  try {
-    await fetchFullBaseline(true);
-    alert('資料更新完成：已重新同步 baseline。');
-  } catch(e) {
-    alert('更新失敗：'+(e?.message||'網路或資料來源暫時不可用'));
-  } finally {
-    if(btn){btn.classList.remove('busy');btn.textContent='↻ 更新資料';}
-  }
-}
 function save(){const idx=leagueProfiles.findIndex(p=>p.id===activeLeagueId);if(idx<0)return;leagueProfiles[idx]=runtimeToProfile();state.name=leagueProfiles[idx].name;state.minGP=leagueProfiles[idx].minGP;state.refMode=leagueProfiles[idx].refMode;persistProfiles()}
 function renderWeights(){const el=document.getElementById('weights');el.innerHTML=Object.keys(CATS).filter(k=>CATS[k].score).map(k=>`<div class="weight ${state.weights[k]===0?'off':''}"><span>${k}</span><input type="number" min="0" step="0.25" value="${state.weights[k]}" data-w="${k}"></div>`).join('');el.querySelectorAll('[data-w]').forEach(i=>i.onchange=()=>{state.weights[i.dataset.w]=Math.max(0,Number(i.value)||0);save();render()})}
 function renderChips(){const el=document.getElementById('chips');el.innerHTML=[...state.selected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.rem);save();render()})}
@@ -600,11 +684,27 @@ function renderYahoo(a){
   document.querySelectorAll('#yahooGrid [data-detail]').forEach(x=>x.onclick=()=>{});
 }
 
-function render(){renderLeagueManager();renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
+function render(){renderLeagueManager();const ml=document.getElementById('mobileLeagueMini');if(ml&&state.leagueId){const lg=state.leagues?.find(x=>x.id===state.leagueId);ml.textContent=lg?.name||'我的聯盟';}renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
 function switchTab(tab){state.tab=tab;document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!==`tab-${tab}`));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}
 function initWeeks(){const s=document.getElementById('weekSelect');s.innerHTML=WEEKS.map((w,i)=>`<option value="${i}">${w[0]} · ${w[1]}</option>`).join('');state.week=Math.min(24,Math.max(0,Number(state.week)||0));s.value=state.week}
 function setStatus(ok,msg){document.getElementById('dot').className='dot'+(ok?' ok':'');document.getElementById('status').textContent=msg;const b=document.getElementById('dataBadge');if(b)b.textContent=dataBasisLabel()}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));document.getElementById('refreshDataBtn')?.addEventListener('click',refreshBaselineFromRemote);document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(1,Math.min(82,Number(e.target.value)||10));save();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='top200'?'top200':'league';save();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
+function setMobileModelOpen(open){
+  const layout=document.querySelector('.layout');
+  const btn=document.getElementById('mobileModelBtn');
+  const backdrop=document.getElementById('mobileModelBackdrop');
+  const close=document.getElementById('mobileModelClose');
+  if(layout) layout.classList.toggle('mobile-settings-open',!!open);
+  if(btn) btn.setAttribute('aria-expanded',String(!!open));
+  if(btn) btn.classList.toggle('is-open',!!open);
+  if(backdrop) backdrop.classList.toggle('hidden',!open);
+  document.body.classList.toggle('mobile-drawer-active',!!open);
+  if(open) setTimeout(()=>document.getElementById('leagueSelect')?.focus(),60);
+}
+document.getElementById('mobileModelBtn')?.addEventListener('click',()=>setMobileModelOpen(true));
+document.getElementById('mobileModelClose')?.addEventListener('click',()=>setMobileModelOpen(false));
+document.getElementById('mobileModelBackdrop')?.addEventListener('click',()=>setMobileModelOpen(false));
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(1,Math.min(82,Number(e.target.value)||10));save();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='top200'?'top200':'league';save();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
 state.weights={...DEFAULTS,...state.weights};
 initWeeks();
 syncControlsFromState();
@@ -617,8 +717,4 @@ setStatus(true,`${players.length} 位球員｜本機資料已就緒｜2026-27 sc
 render();
 fetchFullBaseline();
 // V3.9 Multi-League: shared engine + shared data, league-scoped runtime settings. All league profiles use the same functions and schema.
-// V3.15 PWA: register service worker only on http(s); file:// remains fully usable without it.
-if('serviceWorker' in navigator && location.protocol!=='file:'){ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
-window.addEventListener('load',()=>{ const splash=document.getElementById('pwaSplash'); setTimeout(()=>splash?.classList.add('hide'),520); });
-
 </script></body></html>
