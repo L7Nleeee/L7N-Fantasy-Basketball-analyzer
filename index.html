@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- V3.19: Mobile app-style UI + L7N logo header branding + tactile motion polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
+<!-- V3.20: Mobile help access + V3.19 branding UI + L7N logo header branding + tactile motion polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
@@ -125,6 +125,8 @@ main{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(249,251,255,.7
   .mobile-league-select{width:100%;height:42px;border:1px solid #d9d0ff;background:#fff;color:#273246;border-radius:12px;padding:0 34px 0 12px;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(52,44,104,.05)}
   .mobile-model-btn{align-self:flex-end;flex:0 0 auto;border:1px solid #d9d0ff;background:#fff;color:#5138c7;border-radius:11px;padding:9px 12px;height:42px;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(52,44,104,.06)}
   .mobile-model-btn.is-open{background:#f0edff;border-color:#cfc4ff}
+  .mobile-help-btn{align-self:flex-end;flex:0 0 auto;border:1px solid rgba(91,73,223,.22);background:#fff;color:#5138c7;border-radius:11px;padding:9px 10px;height:42px;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(52,44,104,.06)}
+  .mobile-help-btn:active{transform:scale(.96);background:#f3f1ff}
   .mobile-quick-add{display:block;margin:0 0 12px;padding:11px;border:1px solid #e2e7f0;border-radius:16px;background:#fff;box-shadow:0 6px 18px rgba(35,47,70,.06)}
   .mobile-quick-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
   .mobile-quick-head strong{font-size:13px;color:#202b3f}
@@ -292,7 +294,7 @@ header .status{position:relative;z-index:3}
 @media(prefers-reduced-motion:reduce){.help-modal,.help-card,.help-item{animation:none;transition:none}}
 
 </style><link rel="manifest" href="manifest.webmanifest"></head><body>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.19｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.20｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
 <div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="help-card">
     <div class="help-head">
@@ -357,6 +359,7 @@ header .status{position:relative;z-index:3}
     <select id="mobileLeagueSelect" class="mobile-league-select" aria-label="切換聯盟"></select>
   </div>
   <button class="mobile-model-btn" id="mobileModelBtn" type="button" aria-expanded="false">⚙️ 參數</button>
+  <button class="mobile-help-btn" id="mobileHelpBtn" type="button" aria-label="使用說明">❔ 說明</button>
 </div>
 <div class="mobile-quick-add">
   <div class="mobile-quick-head">
@@ -859,6 +862,7 @@ document.getElementById('mobileAddClear')?.addEventListener('click',()=>{const i
 const helpModal=document.getElementById('helpModal');
 function setHelpOpen(open){if(!helpModal)return;helpModal.classList.toggle('hidden',!open);document.body.classList.toggle('help-open',!!open);if(open)setTimeout(()=>document.getElementById('helpClose')?.focus(),60);}
 document.getElementById('helpBtn')?.addEventListener('click',()=>setHelpOpen(true));
+document.getElementById('mobileHelpBtn')?.addEventListener('click',()=>setHelpOpen(true));
 document.getElementById('helpClose')?.addEventListener('click',()=>setHelpOpen(false));
 helpModal?.addEventListener('click',e=>{if(e.target===helpModal)setHelpOpen(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpModal?.classList.contains('hidden'))setHelpOpen(false)});
