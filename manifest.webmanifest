@@ -1,9 +1,9 @@
 {
-  "name":"L7N H2H Fantasy Lab",
-  "short_name":"L7N Fantasy",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#ffffff",
-  "theme_color":"#182234",
-  "icons":[{"src":"l7n-logo.png","sizes":"180x180","type":"image/png","purpose":"any maskable"}]
+  "name": "L7N H2H Fantasy Lab",
+  "short_name": "L7N Fantasy",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2a44",
+  "icons": [{"src":"l7n-logo.png","sizes":"512x512","type":"image/png"}]
 }

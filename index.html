@@ -3,7 +3,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
-<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.30</title>
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.31</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
@@ -374,7 +374,7 @@ header .status{position:relative;z-index:3}
 @media(max-width:760px){.h2h-team-heading{padding:11px 12px;margin-bottom:8px}.h2h-team-heading strong{font-size:14px}.h2h-team-heading .team-count{font-size:10.5px}.h2h-roster-player strong{font-size:14px}.h2h-player-tooltip{width:min(290px,calc(100vw - 20px))}.h2h-player-tooltip .tip-grid{grid-template-columns:repeat(3,1fr)}}
 
 </style><link rel="manifest" href="manifest.webmanifest"></head><body>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.30｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.31｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
 <div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="help-card">
     <div class="help-head">
@@ -914,8 +914,8 @@ const opp=weeklyForTeam(oppTeam);
 document.getElementById('weekDesc').textContent=WEEKS[state.week][1]+'｜我的 '+a.team.length+' 人 / '+mine.totalPG+' PG｜對手 '+oppTeam.length+' 人 / '+opp.totalPG+' PG';
 const teamHeading=(name,totalPG,count,cls)=>`<div class="h2h-team-heading ${cls}"><strong>${name}</strong><span class="team-count">${count} 人 · ${totalPG} Player-Games</span></div>`;
 const playerCard=(p)=>{const et=effectiveTeam(p);const teamColor=TEAM_COLORS[et]||'#5d6b82';return `<div class="pg h2h-roster-player" data-h2h-player="${esc(p.name)}"><strong>${esc(p.name)}</strong><small><span class="weekly-team-meta" style="--team-color:${teamColor}">${TEAMS[et]||et}</span>｜<span class="weekly-games-meta">${projGames(p)} games</span></small></div>`};
-let myPlayers=a.team.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).map(playerCard).join('');
-let opPlayers=oppTeam.slice().sort((x,y)=>projGames(y)-projGames(x)).slice(0,8).map(playerCard).join('');
+let myPlayers=a.team.slice().sort((x,y)=>projGames(y)-projGames(x)).map(playerCard).join('');
+let opPlayers=oppTeam.slice().sort((x,y)=>projGames(y)-projGames(x)).map(playerCard).join('');
 const myPanel=`<div class="panel h2h-roster-panel"><div class="body"><div class="h2h-team-heading-wrap">${teamHeading('我的球隊',mine.totalPG,a.team.length,'mine')}</div><div class="projected-games h2h-roster-grid">${myPlayers||'<div class="muted">尚未選擇球員</div>'}</div></div></div>`;
 const oppPanel=`<div class="panel h2h-roster-panel"><div class="body"><div class="h2h-team-heading-wrap">${teamHeading('對手的球隊',opp.totalPG,oppTeam.length,'opp')}</div><div class="projected-games h2h-roster-grid">${opPlayers||(oppTeam.length?'':'<div class="muted">尚未輸入對手 roster</div>')}</div></div></div>`;
 document.getElementById('weeklyTop').innerHTML=myPanel+oppPanel+`<div class="weekly-dd-focus"><div class="weekly-dd-card"><b>${fmt1(mine.raw.DD)}</b><span>你的本週預估 DD</span></div><div class="weekly-dd-card"><b>${fmt1(opp.raw.DD)}</b><span>對手的本週預估 DD</span></div><div class="weekly-dd-card"><b>${Number.isFinite(mine.raw.DD)&&Number.isFinite(opp.raw.DD)?(mine.raw.DD-opp.raw.DD).toFixed(1):'—'}</b><span>DD 預估差距（你 − 對手）</span></div></div>`;
