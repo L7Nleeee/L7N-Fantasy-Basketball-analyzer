@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- V3.16: Mobile app-style UI polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
+<!-- V3.19: Mobile app-style UI + L7N logo header branding + tactile motion polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.16</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.19</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
@@ -208,8 +208,112 @@ main{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(249,251,255,.7
   .yahoo-toolbar .control{max-width:none!important}
 }
 @keyframes mobileDrawerIn{from{transform:translateY(-6px);opacity:.7}to{transform:translateY(0);opacity:1}}
+
+/* V3.18 visual identity + tactile motion: UI-only, Fantasy Engine untouched. */
+header{
+  background:linear-gradient(112deg,#121b31 0%,#202b49 43%,#4d3bd3 78%,#3e72dc 100%);
+  border-bottom:0;
+  box-shadow:0 10px 28px rgba(27,36,65,.18);
+  position:sticky;top:0;overflow:hidden;
+}
+header:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(circle at 12% 10%,rgba(255,255,255,.13),transparent 24%),
+  radial-gradient(circle at 78% 35%,rgba(139,125,255,.22),transparent 30%),
+  linear-gradient(90deg,transparent 0 55%,rgba(255,255,255,.05) 70%,transparent 100%);
+}
+header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#8b7cff,#5f8fff,#7a5cff);opacity:.9}
+header .head{position:relative;z-index:1}
+.title{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+.subtitle{color:rgba(239,243,255,.78)}
+.creator{color:rgba(255,255,255,.68)}
+.status{color:#eef2ff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);box-shadow:0 5px 16px rgba(0,0,0,.10);backdrop-filter:blur(10px)}
+.dot{box-shadow:0 0 0 4px rgba(255,255,255,.10)}
+.dot.ok{box-shadow:0 0 0 4px rgba(75,214,155,.13)}
+.btn,.tab,.mobile-model-btn,.mobile-quick-add,.league-pill,.control,.result{transition:transform .16s cubic-bezier(.2,.7,.2,1),box-shadow .16s ease,border-color .16s ease,background .16s ease}
+.btn:active,.tab:active,.mobile-model-btn:active,.mobile-quick-add:active,.league-pill:active{transform:scale(.975);box-shadow:0 2px 8px rgba(35,47,75,.12)}
+.btn.primary:active{box-shadow:0 3px 10px rgba(87,72,224,.22)}
+.tab.active{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.tab.active:active{transform:scale(.965)}
+.result:active{background:#f5f2ff;transform:translateY(1px)}
+.control:focus{animation:l7nFocus .18s ease both}
+@keyframes l7nFocus{from{box-shadow:0 0 0 0 rgba(101,71,245,0)}to{box-shadow:0 0 0 3px rgba(101,71,245,.10)}}
+#tab-draft:not(.hidden),#tab-weekly:not(.hidden),#tab-schedule:not(.hidden),#tab-players:not(.hidden),#tab-rookies:not(.hidden),#tab-yahoo:not(.hidden){animation:l7nPageIn17 .24s cubic-bezier(.2,.7,.2,1) both}
+@keyframes l7nPageIn17{from{opacity:0;transform:translateY(6px) scale(.998)}to{opacity:1;transform:translateY(0) scale(1)}}
+.panel,.metric,.strength,.detail,.match-card,.totalcard,.pg,.rookie-card{transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,border-color .18s ease}
+.panel:hover,.metric:hover,.strength:hover,.detail:hover,.match-card:hover,.totalcard:hover,.pg:hover,.rookie-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(35,47,75,.09)}
+@media(max-width:760px){
+  header{background:linear-gradient(118deg,#111a2f 0%,#222d4b 50%,#5140d7 100%);box-shadow:0 8px 22px rgba(27,36,65,.16)}
+  header .head:before{right:-72px;top:-34px;width:300px;height:220px;background-size:235px auto;opacity:.18;transform:rotate(-5deg)}
+  header .head:after{width:64%;background:linear-gradient(90deg,rgba(17,26,47,0),rgba(17,26,47,.10) 58%,rgba(81,64,215,.04))}
+  header:after{height:2px}
+  .title{color:#fff;text-shadow:none}
+  .subtitle{color:rgba(241,244,255,.72)}
+  .status{background:rgba(255,255,255,.13);color:#f5f7ff;border-color:rgba(255,255,255,.24)}
+}
+@media(prefers-reduced-motion:reduce){header:after{display:none}.control:focus{animation:none}}
+
+
+/* V3.18: L7N ghost-logo header + in-app user guide. UI-only; Fantasy Engine/data architecture unchanged. */
+header .head{position:relative;overflow:hidden}
+header .head:before{content:"";position:absolute;right:1%;top:-72px;width:430px;height:300px;background:url("l7n-logo.png") center/330px auto no-repeat;opacity:.23;mix-blend-mode:screen;transform:rotate(-4deg);pointer-events:none;user-select:none;filter:saturate(.95) brightness(1.08)}
+header .head:after{content:"";position:absolute;right:0;top:0;width:52%;height:100%;background:linear-gradient(90deg,rgba(18,27,49,0),rgba(18,27,49,.08) 55%,rgba(77,59,211,.06));pointer-events:none}
+header .head > div:first-child{position:relative;z-index:2}
+header .status{position:relative;z-index:3}
+.help-btn{border:1px solid rgba(255,255,255,.30)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;backdrop-filter:blur(8px);font-weight:800}
+.help-btn:hover{background:rgba(255,255,255,.20)!important;border-color:rgba(255,255,255,.42)!important}
+.help-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,16,30,.48);backdrop-filter:blur(7px);animation:helpFadeIn .18s ease both}
+.help-modal.hidden{display:none}
+.help-card{width:min(900px,calc(100vw - 34px));max-height:min(82vh,760px);overflow:hidden;background:#fff;border:1px solid #e1e6f0;border-radius:22px;box-shadow:0 28px 90px rgba(18,28,55,.28);animation:helpCardIn .22s cubic-bezier(.2,.7,.2,1) both}
+.help-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;background:linear-gradient(118deg,#121b31,#2b3560 52%,#5b49df);color:#fff;position:relative;overflow:hidden}
+.help-head:after{content:"L7N";position:absolute;right:18px;top:-26px;font-size:108px;font-weight:1000;letter-spacing:-.08em;color:rgba(255,255,255,.08);transform:rotate(-7deg);pointer-events:none}
+.help-head > div{position:relative;z-index:1}
+.help-title{font-size:20px;font-weight:950}.help-sub{font-size:12px;opacity:.78;margin-top:3px}
+.help-close{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.30);background:rgba(255,255,255,.12);color:#fff;font-size:24px;line-height:1;cursor:pointer;position:relative;z-index:2;transition:transform .16s ease,background .16s ease}
+.help-close:active{transform:scale(.94)}
+.help-body{padding:18px 20px 22px;overflow-y:auto;max-height:calc(min(82vh,760px) - 78px);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.help-item{border:1px solid #e2e7f0;border-radius:15px;padding:14px;background:linear-gradient(180deg,#fff,#fafbfe);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.help-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(32,46,75,.08);border-color:#cfd6e6}
+.help-item h4{margin:0 0 6px;font-size:15px}.help-item p{margin:0;color:#617087;font-size:12px;line-height:1.7}
+.help-tip{margin-top:14px;border-radius:14px;background:#f3f1ff;border:1px solid #ddd7ff;padding:12px 14px;color:#4e467f;font-size:12px;line-height:1.65}
+@keyframes helpFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes helpCardIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){
+  header .head:before{font-size:88px;right:0;top:-10px;opacity:.8}
+  .help-btn{min-height:34px!important;padding:7px 10px!important;font-size:12px!important}
+  .help-modal{padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+  .help-card{width:100%;max-height:calc(100dvh - 20px);border-radius:20px}
+  .help-body{max-height:calc(100dvh - 102px);padding:14px}
+  .help-grid{grid-template-columns:1fr;gap:9px}
+  .help-item{padding:12px}
+  .help-item h4{font-size:14px}.help-item p{font-size:12px}
+  .help-head{padding:15px 15px}.help-title{font-size:18px}.help-sub{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.help-modal,.help-card,.help-item{animation:none;transition:none}}
+
 </style><link rel="manifest" href="manifest.webmanifest"></head><body>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.16｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.19｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="help-card">
+    <div class="help-head">
+      <div><div id="helpTitle" class="help-title">🏀 L7N H2H Fantasy Lab 使用說明</div><div class="help-sub">用數據取代猜測：從選人、建隊到每週 H2H 都在這裡</div></div>
+      <button id="helpClose" class="help-close" type="button" aria-label="關閉使用說明">×</button>
+    </div>
+    <div class="help-body">
+      <div class="help-grid">
+        <div class="help-item"><h4>🏀 ① 選人 / 我的球隊</h4><p>這是建隊主畫面。加入球員後，可以看整隊 PTS、3PM、REB、AST、STL、BLK、FG%、FT%、TOV、DD、A/T、3P% 的強弱，以及每位球員自己的逐項數據。Candidate Fit 會依照你目前缺口與權重找適合的人，What-if 可以看加入前後差異。</p></div>
+        <div class="help-item"><h4>⚔️ ② Weekly H2H</h4><p>把球員的 projection 乘上該週預測出賽場次，再累加成你的 H2H matchup totals。可以放入對手 roster，直接比較每一項。FG%、FT%、3P% 用總命中／總出手，A/T 用總 AST ÷ 總 TOV，DD 會估算本週可能拿到的總量。</p></div>
+        <div class="help-item"><h4>📅 ③ NBA 賽程</h4><p>查看每週球隊賽程與你目前球員的 schedule。這對 H2H 很重要：同一名球員平均數據相同，但一週多打一場或少打一場，實際 matchup 價值就會不同。</p></div>
+        <div class="help-item"><h4>🔎 ④ 球員資料</h4><p>查整個球員池的歷史／目前資料，點球員可以看 Detail。DD 是整季總數，其他主要統計以每場平均呈現；TD 會顯示，但不加入 Fantasy 評分。</p></div>
+        <div class="help-item"><h4>🎓 ⑤ Rookie Hub</h4><p>新秀資料把 NCAA profile 與 NBA projection 分開，不會直接把 NCAA 數據當 NBA Z-score。新秀可以先用透明的 projection 輔助建隊，等正式 NBA 實績累積後再逐步以真實資料取代。</p></div>
+        <div class="help-item"><h4>🟣 ⑥ Yahoo Rankings</h4><p>提供 Yahoo Fantasy 的外部市場順序作為參考，並把 Yahoo Rank 與 L7N 自己的數據放在一起看。Yahoo Rank 不會直接改變 L7N Engine 的評分。</p></div>
+        <div class="help-item"><h4>🏷️ 多聯盟</h4><p>可以建立多個聯盟。每個聯盟各自保存 roster、對手、Week、權重、Projection 基準與 Override，但所有聯盟共用同一套 Fantasy Engine，所以未來升級只需要改一套程式。</p></div>
+        <div class="help-item"><h4>⚙️ 模型設定</h4><p>設定 Projection 資料基準、最低 GP、參考池與各分類權重。季初可用上一季資料建立方向；季中可以切到本季至今、近 10 場或近 5 場，讓判斷更貼近今年實際表現。</p></div>
+      </div>
+      <div class="help-tip"><b>💡 怎麼使用最有價值？</b><br>先用「選人」確認目前球隊缺什麼 → 用 Candidate Fit 找候選人 → 用 What-if 看加入後變化 → 到 Weekly H2H 看下一週實際累加數據 → 再搭配對手與賽程做最後判斷。<br><br><b>50 分是中性參考值</b>，不是「聯盟平均球員」的簡單平均；目前參考池會依最低 GP、出賽量與極端值校正。TOV 是反向分類：失誤越低越好。DD 會進入 Fantasy 評分，TD 只顯示、不重複計分。</div>
+    </div>
+  </div>
+</div>
 <main><div class="wrap"><div class="layout"><aside>
 <div class="mobile-drawer-head">
   <strong>⚙️ 模型設定</strong>
@@ -752,6 +856,12 @@ document.getElementById('mobileLeagueSelect')?.addEventListener('change',e=>swit
 document.getElementById('mobileTeamSearch')?.addEventListener('input',renderMobileQuickSearch);
 document.getElementById('mobileAddClear')?.addEventListener('click',()=>{const i=document.getElementById('mobileTeamSearch');if(i)i.value='';renderMobileQuickSearch();i?.focus()});
 
+const helpModal=document.getElementById('helpModal');
+function setHelpOpen(open){if(!helpModal)return;helpModal.classList.toggle('hidden',!open);document.body.classList.toggle('help-open',!!open);if(open)setTimeout(()=>document.getElementById('helpClose')?.focus(),60);}
+document.getElementById('helpBtn')?.addEventListener('click',()=>setHelpOpen(true));
+document.getElementById('helpClose')?.addEventListener('click',()=>setHelpOpen(false));
+helpModal?.addEventListener('click',e=>{if(e.target===helpModal)setHelpOpen(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpModal?.classList.contains('hidden'))setHelpOpen(false)});
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(1,Math.min(82,Number(e.target.value)||10));save();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='top200'?'top200':'league';save();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
 state.weights={...DEFAULTS,...state.weights};
 initWeeks();

@@ -1,17 +1,9 @@
 {
-  "name": "L7N Fantasy H2H Lab",
-  "short_name": "L7N Fantasy",
-  "description": "L7N H2H Fantasy Lab — data-driven Fantasy Basketball decision support.",
-  "lang": "zh-Hant",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
-  "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "icons": [
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
-  ]
+  "name":"L7N H2H Fantasy Lab",
+  "short_name":"L7N Fantasy",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#ffffff",
+  "theme_color":"#182234",
+  "icons":[{"src":"l7n-logo.png","sizes":"180x180","type":"image/png","purpose":"any maskable"}]
 }
