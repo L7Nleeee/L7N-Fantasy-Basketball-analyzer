@@ -437,7 +437,7 @@ header .status{position:relative;z-index:3}
 <div class="field"><label>Fantasy Categories 權重（0 = Punt）</label><div id="weights" class="weight-grid"></div></div>
 <button class="btn soft block" id="reset">全部重設為 1</button>
 <div style="height:9px"></div><div class="note">Draft Strength 用來回答「我現在選的人強在哪、缺在哪」。參考池預設為前 200 位穩定出賽球員；最低 GP 預設 20，並要求至少約 12 MPG。FG%／FT%／3P% 另以出賽樣本控制小樣本極端值，再按出手量做 volume adjustment。使用 5% 尾端截尾＋5/95 winsorized calibration；50 是中性基準，不是單純排名分數。Weekly H2H 會把每位球員的 projection × <b>2026-27 目前所屬球隊</b>本週賽程，再聚合成 matchup totals。TOV 越低越好；TD 僅顯示、不進評分。季中更新後可在「2025-26 完整球季／開季至今／近 10 場」之間切換；所有功能共用同一個 Active Dataset，資料不足時安全 fallback，不把缺資料當成 0。</div>
-</div></div>
+</div>
 <div style="height:12px"></div>
 <div class="panel"><h3>👥 我的球隊</h3><div class="body"><div class="team-search"><input id="teamSearch" class="control" placeholder="搜尋球員，例如 Wemby / Jokic / Curry" autocomplete="off"><div id="results" class="results hidden"></div></div><div id="chips" class="chips"></div><div style="height:9px"></div><button id="clear" class="btn small">清空球隊</button></div></div>
 <div style="height:12px"></div>
@@ -497,7 +497,6 @@ header .status{position:relative;z-index:3}
 <div id="tab-rookies" class="hidden">
 <div class="section"><div class="sectionhead"><h4>🧑‍🎓 2026 Rookie Hub</h4><span class="helper">NCAA 原始資料與 NBA projection 分開；projection 不直接當 NCAA Z-score</span></div><div class="searchbig"><input id="rookieSearch" class="control" placeholder="搜尋新秀 / 學校 / 球隊"><select id="rookieFilter" class="control" style="max-width:180px"><option value="all">全部 60 位新秀</option><option value="lottery">Lottery / 前14</option><option value="verified">已驗證 NCAA 資料</option><option value="model">有 NBA 模型 projection</option></select></div><div id="rookieGrid"></div></div>
 <div id="rookieDetail" class="detail"><div class="muted">點選 Rookie 看 NCAA profile、NBA projection、資料來源與信心。</div></div>
-</div>
 </div>
 <div id="tab-yahoo" class="hidden">
 <div class="section"><div class="sectionhead"><h4>🟣 Yahoo Fantasy 2026-27 Salary Cap Rankings</h4><span class="helper">Salary Cap · Top 200 · Yahoo current Default Pre-Draft order</span></div>
