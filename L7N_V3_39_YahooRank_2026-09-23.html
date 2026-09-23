@@ -1,0 +1,1078 @@
+<!doctype html>
+<!-- V3.32: Schedule ownership highlight fix + mobile H2H readability + responsive polish; based on V3.29 + percentage-point diff fix + V3.19 branding UI + L7N logo header branding + tactile motion polish; shared engine preserved for remote/current datasets. DD/TD now fall back to normalized season maps when source field names differ. -->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V3.35</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
+header{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}.head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0}.title{font-size:25px;font-weight:900}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}.status{font-size:11px;color:var(--muted);padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:#fff}.dot{width:8px;height:8px;background:#f0ad00;display:inline-block;border-radius:50%;margin-right:6px}.dot.ok{background:#22a06b}
+main{padding:18px 0 60px}.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.panel h3{margin:0;padding:14px 16px;border-bottom:1px solid var(--line);font-size:15px}.body{padding:14px 16px}.field{margin-bottom:13px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.control{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none}.control:focus{border-color:#9a84ff;box-shadow:0 0 0 3px rgba(109,69,255,.08)}
+.weight-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.weight{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe}.weight span{font-weight:800;font-size:11px}.weight input{width:54px;padding:4px 5px;border:1px solid var(--line);border-radius:7px}.weight.off{opacity:.45}.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;font-weight:800;cursor:pointer}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.soft{background:var(--soft);color:#5636ce;border-color:#dcd4ff}.btn.small{padding:6px 8px;font-size:10px}.btn.block{width:100%}.note{font-size:11px;line-height:1.55;color:var(--muted);background:#f8fafc;border:1px dashed #cfd8e6;padding:10px;border-radius:10px}
+.team-search{position:relative}.results{position:absolute;left:0;right:0;top:44px;z-index:40;background:#fff;border:1px solid #b9c4d5;border-radius:10px;max-height:330px;overflow:auto;box-shadow:0 14px 35px rgba(30,45,70,.16)}.result{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;border-bottom:1px solid #eef2f7;cursor:pointer}.result:hover{background:#f7f5ff}.result:last-child{border-bottom:0}.nm{font-size:12px;font-weight:900}.tm{font-size:10px;color:var(--muted);margin-top:2px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.chip{display:flex;align-items:center;gap:6px;background:#f4f0ff;border:1px solid #ddd4ff;color:#4932b5;padding:6px 8px;border-radius:999px;font-size:10px;font-weight:800}.chip button{border:0;background:none;color:#7d72a9;cursor:pointer;padding:0}
+.tabs{display:flex;gap:7px;margin-bottom:14px;overflow:auto}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer}.tab.active{background:#1f2a3d;color:#fff;border-color:#1f2a3d}
+.section{margin-bottom:16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.sectionhead h4{margin:0;font-size:14px}.helper{font-size:11px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.metric{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.metric b{font-size:21px}.metric span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.strength-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.strength{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.strength-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}.strength-top strong{font-size:12px}.idx{font-weight:900}.idx.good{color:var(--good)}.idx.bad{color:var(--bad)}.bar{height:9px;border-radius:999px;background:#edf0f5;overflow:hidden;position:relative;margin:8px 0}.bar:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#aeb8c8}.fill{height:100%;border-radius:999px;position:absolute;top:0}.fill.pos{left:50%;background:linear-gradient(90deg,#4ad49b,#129266)}.fill.neg{right:50%;background:linear-gradient(90deg,#ef9ca6,#cc4052)}.explain{font-size:10px;color:var(--muted);line-height:1.45}.pill{display:inline-block;padding:3px 7px;border-radius:999px;font-size:9px;border:1px solid var(--line);background:#fafcff;color:#54627a}.pill.good{color:var(--good);border-color:#bce6d5;background:#f2fbf7}.pill.bad{color:var(--bad);border-color:#f0c4ca;background:#fff5f6}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.table{border-collapse:collapse;width:100%;min-width:1180px}.player-stats-table{min-width:1500px}.player-stats-table th,.player-stats-table td{font-size:10px}.player-stats-table td.stat-good{background:#f0fbf6;color:#16734f;font-weight:800}.player-stats-table td.stat-bad{background:#fff4f5;color:#b53645;font-weight:800}.player-stats-table td.stat-neutral{background:#fff}.player-stats-table .player-name-cell{min-width:170px}.player-stats-table .team-mini{display:block;font-size:9px;color:var(--muted);font-weight:500;margin-top:2px} .player-stats-note{margin-top:8px;font-size:10px;color:var(--muted);line-height:1.5}.stat-dd{background:#f7f3ff!important;color:#5b35c8!important;font-weight:900!important}.stat-td{background:#fff9ef!important;color:#a56600!important;font-weight:900!important}.weekly-dd-focus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0 0}.weekly-dd-card{background:linear-gradient(180deg,#fcfbff,#fff);border:1px solid #e2dcff;border-radius:12px;padding:11px 12px;box-shadow:0 7px 20px rgba(74,55,150,.06)}.weekly-dd-card b{display:block;font-size:20px;line-height:1.1;color:#4f32b8}.weekly-dd-card span{display:block;margin-top:4px;font-size:10px;color:#6d7890}.weekly-player-note{font-size:10px;color:#667085;line-height:1.35;margin-top:4px}.dd-kicker{color:#5b35c8;font-weight:900}.td-kicker{color:#a56600;font-weight:900}
+.table th,.table td{padding:8px 8px;border-bottom:1px solid #edf1f6;text-align:right;font-size:10px;white-space:nowrap}.table th{background:#f8fafc;color:#637088;position:sticky;top:0;z-index:3}.table th:first-child,.table td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:2}.table th:first-child{background:#f8fafc;z-index:4}.playerlink{font-weight:900;cursor:pointer}.playerlink:hover{text-decoration:underline;color:#5d3de0}
+.roster-row{display:grid;grid-template-columns:minmax(0,1fr) 54px 70px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eef2f7}.roster-row:last-child{border-bottom:0}.roster-name{font-size:11px;font-weight:900}.roster-meta{font-size:9px;color:var(--muted);margin-top:2px}.mini-input{width:65px;padding:6px 6px;border:1px solid var(--line);border-radius:8px;text-align:center}.remove{border:0;background:#fff;color:#a0a9b7;cursor:pointer}
+.weekbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.weekbar select{width:auto}.schedule-table{min-width:1300px}.schedule-table th,.schedule-table td{text-align:center}.schedule-table th:first-child,.schedule-table td:first-child{text-align:left;position:sticky;left:0;z-index:2}.schedule-table th:first-child{z-index:4}.hl{background:#f3efff!important}.heavy{font-weight:900;color:#16885e}.light{color:#cf3f4e}.teammark{font-size:9px;color:#6d45ff;font-weight:900}.roster-sync{margin-top:8px;font-size:9px;color:var(--muted);line-height:1.45}.trade-badge{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:999px;background:#fff6df;border:1px solid #f0d7a4;color:#8a6200;font-size:8px;font-weight:900}
+.h2h-top{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.totalcard{padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff}.totalcard .k{font-size:10px;color:var(--muted)}.totalcard .v{font-size:19px;font-weight:900;margin-top:2px}.projected-games{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pg{padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff}.pg strong{font-size:12px}.pg small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.detail{padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff}.detailgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.dmetric{padding:9px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe}.dmetric span{display:block;color:var(--muted);font-size:9px}.dmetric b{font-size:14px}
+.hidden{display:none!important}.muted{color:var(--muted)}.goodtxt{color:var(--good)}.badtxt{color:var(--bad)}
+@media(max-width:1120px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}.h2h-top{grid-template-columns:1fr}}@media(max-width:760px){.wrap{padding:0 10px}.head{align-items:flex-start}.title{font-size:20px}.metrics{grid-template-columns:1fr 1fr}.strength-grid{grid-template-columns:1fr}.detailgrid{grid-template-columns:1fr 1fr}.totals{grid-template-columns:1fr 1fr}}
+
+.opponent-panel{border:1px solid #d9d2ff;background:linear-gradient(180deg,#fcfbff,#fff)}
+.matchup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.match-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff}.match-card h5{margin:0 0 7px;font-size:12px}.matchup-table{min-width:760px}.win{color:var(--good);font-weight:900}.loss{color:var(--bad);font-weight:900}.tie{color:var(--muted);font-weight:900}.data-badge{margin-left:6px;padding:2px 6px;border-radius:999px;font-size:8px;font-weight:900;border:1px solid #d7cffc;background:#f5f2ff;color:#5c43c9}.data-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}.data-row .control{max-width:190px}.range-box{padding:9px;border:1px dashed #cfd7e6;border-radius:10px;background:#fafcff}.splitbar{display:grid;grid-template-columns:1fr 1fr;height:8px;border-radius:999px;overflow:hidden;background:#eef1f5;margin-top:6px}.splitbar i{display:block}.splitbar i.a{background:#6d45ff}.splitbar i.b{background:#cfd6e2}.tiny{font-size:9px;color:var(--muted)}.manual-team{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:10px}.notice{padding:9px 10px;border-radius:10px;background:#fff8e6;border:1px solid #f3ddb0;color:#7a5a00;font-size:10px;line-height:1.5}.softgood{background:#f2fbf7;border:1px solid #bce6d5;color:#17694b}.softbad{background:#fff5f6;border:1px solid #f0c4ca;color:#a93643}
+@media(max-width:900px){.matchup-grid{grid-template-columns:1fr}}
+
+.creator{font-size:10px;color:#7b8799;font-weight:700;letter-spacing:.5px;margin-left:8px;vertical-align:middle}.head-actions{display:flex;gap:8px;align-items:center}.rookie-badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#f0edff;border:1px solid #d8cfff;color:#5d3fd0;font-size:9px;font-weight:900}.source-badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef6ff;border:1px solid #cfe1fb;color:#35639c;font-size:9px;font-weight:900}.rookie-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff}.rookie-card .rc-top{display:flex;justify-content:space-between;gap:10px}.rookie-card .rc-name{font-size:15px;font-weight:900}.rookie-card .rc-meta{font-size:10px;color:var(--muted);margin-top:3px}.rookie-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.rookie-strip div{padding:8px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe}.rookie-strip b{display:block;font-size:14px}.rookie-strip span{font-size:9px;color:var(--muted)}.rookie-table th,.rookie-table td{font-size:10px}.model-warn{margin-top:10px;padding:9px;border-radius:10px;background:#fff8e6;border:1px solid #f3ddb0;color:#7a5a00;font-size:10px;line-height:1.5}.rookie-click{cursor:pointer}.rookie-click:hover{background:#f7f5ff}
+@media(max-width:900px){.creator{display:block;margin:3px 0 0}.head-actions{align-self:flex-start}}
+
+/* V3.7 polish */
+body{background:radial-gradient(circle at 12% -10%,rgba(109,69,255,.08),transparent 32%),radial-gradient(circle at 90% 0%,rgba(78,124,255,.06),transparent 28%),var(--bg)}
+header{box-shadow:0 4px 18px rgba(26,37,60,.05)}
+.panel{box-shadow:0 10px 30px rgba(40,53,80,.07)}
+.tab{transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}.tab:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(40,53,80,.08)}
+.btn{transition:transform .12s ease,box-shadow .12s ease}.btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(40,53,80,.08)}
+.strength{background:linear-gradient(180deg,#fff,#fbfcff)}
+.fill.pos{background:linear-gradient(90deg,#83e6bd,#118a62)}
+.fill.neg{background:linear-gradient(90deg,#f6b6bd,#c73e4e)}
+.strength .bar{height:11px;background:#eef1f6}
+.engine-badge{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:4px 7px;border-radius:999px;background:#f2fbf7;border:1px solid #c5ead8;color:#227854;font-size:9px;font-weight:900;letter-spacing:.2px;vertical-align:middle}
+@media(max-width:760px){.engine-badge{display:none}.title{line-height:1.1}.subtitle{line-height:1.4}}
+
+
+.yahoo-rank{font-size:18px;font-weight:1000;min-width:52px;text-align:center}.rank-gap{font-weight:900}.rank-up{color:#147a3e}.rank-down{color:#b42318}.rank-neutral{color:#667085}.yahoo-name{font-weight:900;white-space:nowrap}.yahoo-source{font-size:11px;color:#667085}.yahoo-hit{background:#faf7ff}.table.yahoo-table th{position:sticky;top:0;z-index:2;background:#fff}.table.yahoo-table td,.table.yahoo-table th{padding:8px 9px}.yahoo-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.league-panel{border:1px solid #d9d2ff;background:linear-gradient(180deg,#fcfbff,#fff)}
+.league-select-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}
+.league-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.league-actions .btn{font-size:10px;padding:7px 6px}
+.league-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;font-size:9px;color:var(--muted)}
+.league-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:#f2efff;border:1px solid #dbd1ff;color:#5035c1;font-size:10px;font-weight:900;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.league-dot{width:7px;height:7px;border-radius:50%;background:#6d45ff;display:inline-block}
+.engine-architecture{margin-top:8px;padding:8px 9px;border:1px dashed #cdd4e1;border-radius:9px;background:#fafcff;color:#5f6b80;font-size:9px;line-height:1.5}
+@media(max-width:760px){.league-actions{grid-template-columns:1fr 1fr}.league-select-row{grid-template-columns:1fr}}
+
+/* V3.11 visual polish retained; V3.13 quality polish adds restrained motion and robust reference calibration. */
+html{scroll-behavior:smooth}
+body{font-size:15px;line-height:1.45}
+.layout>aside{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding-right:4px;scrollbar-gutter:stable}
+.layout>aside::-webkit-scrollbar{width:7px}.layout>aside::-webkit-scrollbar-thumb{background:#cbd3df;border-radius:999px}.layout>aside::-webkit-scrollbar-track{background:transparent}
+.layout>aside .panel{position:static!important;top:auto!important}
+.layout>aside{overscroll-behavior:contain;scrollbar-gutter:stable both-edges;padding-bottom:14px}
+.panel h3{font-size:16px;padding:15px 16px}.body{padding:15px 16px}.field{margin-bottom:14px}.field label{font-size:12px}
+.control{font-size:13px;padding:10px 11px}.btn{font-size:12px;padding:10px 12px}.btn.small{font-size:11px;padding:7px 9px}
+.note{font-size:12px;line-height:1.6}.tiny{font-size:10px}.helper{font-size:12px}.sectionhead h4{font-size:15px}
+.tabs{gap:8px;margin-bottom:15px}.tab{padding:10px 13px;font-size:13px}
+.nm{font-size:13px}.tm{font-size:11px}.result{padding:11px 12px}.chip{font-size:11px;padding:7px 9px}
+.roster-name{font-size:12.5px}.roster-meta{font-size:10px}.roster-row{padding:9px 0;gap:9px}
+.weight{padding:8px 9px}.weight span{font-size:12px}.weight input{font-size:12px}
+.table th,.table td{font-size:11px;padding:9px 9px}.table th{font-size:11px}.playerlink{font-size:12px;display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.player-stats-table th,.player-stats-table td{font-size:11px}.player-stats-table .player-name-cell{min-width:185px}.player-stats-table .team-mini{font-size:10px}
+.player-stats-note{font-size:11px}.strength-top{font-size:12px}.strength-top strong{font-size:13px}.explain{font-size:11px}.pill{font-size:10px}.data-row .control{font-size:12px}.match-card h5{font-size:13px}.totalcard .k{font-size:11px}.totalcard .v{font-size:20px}
+.detailgrid{gap:9px}.dmetric{padding:10px}.dmetric span{font-size:10px}.dmetric b{font-size:15px}
+.title{font-size:26px}.subtitle{font-size:12px}.status{font-size:12px}
+/* Prevent long player names from forcing tables/cards wider while keeping them visually prominent. */
+.roster-name,.playerlink{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1120px){.layout>aside{position:static;max-height:none;overflow:visible;padding-right:0}}
+@media(max-width:760px){body{font-size:14px}.title{font-size:21px}.panel h3{font-size:15px}.table th,.table td{font-size:10.5px}.playerlink{font-size:12px;max-width:170px}}
+
+/* V3.13 quality polish: white base, subtle depth, restrained motion, stronger readability. */
+:root{--bg:#ffffff;--panel:#ffffff;--ink:#172033;--muted:#66748a;--line:#e1e7f0;--accent:#6547f5;--accent2:#4c77e8;--soft:#f3f0ff;--soft2:#eef5ff;--good:#14845c;--bad:#c63c4c;--shadow:0 10px 30px rgba(30,42,67,.065)}
+body{background:linear-gradient(180deg,#fff 0%,#fbfcff 55%,#f8faff 100%);color:var(--ink)}
+header{background:rgba(255,255,255,.94);box-shadow:0 6px 22px rgba(31,42,61,.05)}
+.title{letter-spacing:-.35px}.subtitle{letter-spacing:.05px}
+main{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(249,251,255,.72))}
+.panel,.metric,.strength,.detail,.match-card,.totalcard,.pg,.rookie-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.panel:hover,.metric:hover,.strength:hover,.detail:hover,.match-card:hover,.totalcard:hover,.pg:hover,.rookie-card:hover{transform:translateY(-1px);box-shadow:0 12px 34px rgba(35,47,75,.075);border-color:#d6ddeb}
+.panel h3{letter-spacing:.05px}
+.tab{transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease}.tab.active{box-shadow:0 5px 16px rgba(31,42,61,.12)}
+.btn.primary{background:linear-gradient(135deg,#6547f5,#4c77e8);box-shadow:0 6px 15px rgba(87,72,224,.16)}
+.control{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}.control:hover{border-color:#cbd4e2;background:#fff}
+.sectionhead h4{letter-spacing:-.05px}.section{animation:none}
+.dot.ok{box-shadow:0 0 0 4px rgba(34,160,107,.08)}.status{box-shadow:0 4px 14px rgba(30,42,67,.04)}
+#tab-draft:not(.hidden),#tab-weekly:not(.hidden),#tab-schedule:not(.hidden),#tab-players:not(.hidden),#tab-rookies:not(.hidden),#tab-yahoo:not(.hidden){animation:l7nPageIn .22s ease both}
+@keyframes l7nPageIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1120px){.layout>aside{position:static;max-height:none;overflow:visible}}
+@media(max-width:760px){.title{font-size:21px}.panel h3{font-size:15px}.sectionhead h4{font-size:14px}.tab{font-size:12px;padding:9px 11px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* V3.16 mobile app-style UI: no engine/data architecture changes. */
+.mobile-toolbar{display:none}
+.mobile-drawer-head{display:none}
+.mobile-backdrop{display:none}
+.mobile-quick-add{display:none}
+@media(max-width:760px){
+  :root{--mobile-nav-h:68px}
+  body{background:#f6f7fb;padding-bottom:calc(var(--mobile-nav-h) + env(safe-area-inset-bottom,0px))}
+  header{position:sticky;top:0;z-index:70}
+  .wrap{padding-left:12px;padding-right:12px}
+  .head{padding:10px 0 9px;gap:8px}
+  .title{font-size:19px;letter-spacing:-.15px}
+  .creator,.engine-badge{display:none}
+  .subtitle{font-size:10px;max-width:72vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .status{font-size:10px;padding:6px 8px;white-space:nowrap}
+  .head-actions{display:none}
+  main{padding:10px 0 30px}
+  .layout{display:block;position:relative}
+  .mobile-toolbar{display:flex;align-items:stretch;gap:8px;margin:0 0 8px}
+  .mobile-league-wrap{min-width:0;flex:1;position:relative}
+  .mobile-mini-label{display:block;font-size:9px;font-weight:900;color:#7a879a;margin:0 0 3px 3px}
+  .mobile-league-select{width:100%;height:42px;border:1px solid #d9d0ff;background:#fff;color:#273246;border-radius:12px;padding:0 34px 0 12px;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(52,44,104,.05)}
+  .mobile-model-btn{align-self:flex-end;flex:0 0 auto;border:1px solid #d9d0ff;background:#fff;color:#5138c7;border-radius:11px;padding:9px 12px;height:42px;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(52,44,104,.06)}
+  .mobile-model-btn.is-open{background:#f0edff;border-color:#cfc4ff}
+  .mobile-help-btn{align-self:flex-end;flex:0 0 auto;border:1px solid rgba(91,73,223,.22);background:#fff;color:#5138c7;border-radius:11px;padding:9px 10px;height:42px;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(52,44,104,.06)}
+  .mobile-help-btn:active{transform:scale(.96);background:#f3f1ff}
+  .mobile-quick-add{display:block;margin:0 0 12px;padding:11px;border:1px solid #e2e7f0;border-radius:16px;background:#fff;box-shadow:0 6px 18px rgba(35,47,70,.06)}
+  .mobile-quick-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .mobile-quick-head strong{font-size:13px;color:#202b3f}
+  .mobile-quick-head span{font-size:9px;color:#8994a6;white-space:nowrap}
+  .mobile-team-search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .mobile-team-search .control{min-width:0}
+  .mobile-team-results{position:relative;margin-top:7px;border:1px solid #e1e5ec;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 14px 30px rgba(30,45,70,.12);max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .mobile-team-results .result{padding:10px 11px;border-bottom:1px solid #eef1f5}
+  .mobile-team-results .result:last-child{border-bottom:0}
+  .mobile-selected-chips{margin-top:8px;max-height:76px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .layout>aside{display:none;position:fixed;left:10px;right:10px;top:64px;bottom:calc(var(--mobile-nav-h) + 10px);z-index:80;max-height:none;overflow-y:auto;overflow-x:hidden;padding:0 2px 18px 0;background:rgba(246,247,251,.99);-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;border-radius:18px}
+  .layout.mobile-settings-open>aside{display:block;animation:mobileDrawerIn .18s ease both}
+  .layout.mobile-settings-open>aside .league-panel,
+  .layout.mobile-settings-open>aside .panel:nth-of-type(3),
+  .layout.mobile-settings-open>aside .panel:nth-of-type(4){display:none}
+  .layout.mobile-settings-open>aside .panel:nth-of-type(2){display:block}
+  .mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90;padding:9px 10px;margin-bottom:8px;background:rgba(246,247,251,.97);backdrop-filter:blur(10px);border-bottom:1px solid #e5e7ee}
+  .mobile-drawer-head strong{font-size:13px}
+  .mobile-drawer-close{border:0;background:#fff;width:32px;height:32px;border-radius:50%;font-size:22px;line-height:1;color:#6b7280;box-shadow:0 4px 12px rgba(40,53,80,.08)}
+  .mobile-backdrop{display:block;position:fixed;inset:0;z-index:75;background:rgba(24,34,52,.18);backdrop-filter:blur(2px)}
+  .mobile-backdrop.hidden{display:none}
+  .mobile-drawer-active{overflow:hidden}
+  .layout>aside .panel{margin-bottom:10px}
+  .layout>aside .panel:last-child{margin-bottom:0}
+  .layout>aside .panel h3{font-size:14px;padding:13px 14px}
+  .layout>aside .body{padding:12px 14px}
+  .tabs{position:fixed;left:8px;right:8px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:75;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:0;padding:6px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border:1px solid #e0e5ee;border-radius:18px;box-shadow:0 10px 30px rgba(28,39,62,.14)}
+  .tab{min-width:0;padding:8px 2px 7px;border-radius:11px;font-size:0;line-height:1.05;text-align:center;border-color:transparent;background:transparent;color:#68758a}
+  .tab:hover{transform:none;box-shadow:none}
+  .tab.active{background:#1f2a3d;color:#fff;box-shadow:0 4px 12px rgba(31,42,61,.16)}
+  .tab::before{display:block;font-size:17px;margin-bottom:3px;opacity:.95}
+  .tab::after{font-size:8.5px;font-weight:900;letter-spacing:-.1px}
+  .tab[data-tab=draft]::before{content:'🏀'}.tab[data-tab=draft]::after{content:'選人'}
+  .tab[data-tab=weekly]::before{content:'⚔️'}.tab[data-tab=weekly]::after{content:'H2H'}
+  .tab[data-tab=schedule]::before{content:'📅'}.tab[data-tab=schedule]::after{content:'賽程'}
+  .tab[data-tab=players]::before{content:'🔎'}.tab[data-tab=players]::after{content:'球員'}
+  .tab[data-tab=rookies]::before{content:'🎓'}.tab[data-tab=rookies]::after{content:'新秀'}
+  .tab[data-tab=yahoo]::before{content:'Y!'}.tab[data-tab=yahoo]::after{content:'Yahoo'}
+  .section{margin-bottom:14px}
+  .sectionhead{align-items:flex-start;gap:7px}
+  .sectionhead h4{font-size:14px}
+  .helper{font-size:10px;line-height:1.35;text-align:right}
+  .metrics{grid-template-columns:1fr 1fr;gap:7px}
+  .metric{padding:10px}.metric b{font-size:19px}.metric span{font-size:9px}
+  .strength-grid{grid-template-columns:1fr;gap:8px}
+  .strength{padding:10px}
+  .strength-top strong{font-size:12px}
+  .explain{font-size:10px}
+  .tablewrap{border-radius:10px;-webkit-overflow-scrolling:touch}
+  .tablewrap::-webkit-scrollbar{height:5px}
+  .tablewrap::-webkit-scrollbar-thumb{background:#c9d1dc;border-radius:999px}
+  .player-stats-table{min-width:1160px}
+  .player-stats-table .player-name-cell{min-width:168px}
+  .player-stats-table .player-name-cell .yahoo-name,.player-stats-table .player-name-cell .playerlink{font-size:12px}
+  .player-stats-note{font-size:10px}
+  .searchbig{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .searchbig .control{min-width:0}
+  .detailgrid{grid-template-columns:1fr 1fr;gap:7px}
+  .dmetric{padding:9px}
+  .dmetric b{font-size:14px}
+  .weekly-dd-focus{grid-template-columns:1fr 1fr;gap:7px}
+  .weekly-dd-card{padding:10px}
+  .weekly-dd-card b{font-size:18px}
+  .h2h-top{gap:8px}
+  .totals{grid-template-columns:1fr 1fr;gap:7px}
+  .totalcard{padding:9px}
+  .totalcard .v{font-size:18px}
+  .matchup-grid{grid-template-columns:1fr;gap:8px}
+  .rookie-grid,.player-grid{grid-template-columns:1fr!important}
+  .rookie-strip{grid-template-columns:repeat(5,minmax(72px,1fr));overflow-x:auto}
+  .rookie-strip div{min-width:72px}
+  .notice,.model-warn,.note{font-size:10px;line-height:1.5}
+  .control{min-height:40px;border-radius:11px}
+  .btn{min-height:40px;border-radius:11px}
+  .btn.small{min-height:36px}
+  .results{top:45px;max-height:42vh;box-shadow:0 18px 45px rgba(30,45,70,.18)}
+  .result{padding:10px 11px}
+  .chips{gap:5px}
+  .chip{font-size:10px;padding:6px 8px}
+  .yahoo-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .yahoo-toolbar .control{max-width:none!important}
+}
+@keyframes mobileDrawerIn{from{transform:translateY(-6px);opacity:.7}to{transform:translateY(0);opacity:1}}
+
+/* V3.18 visual identity + tactile motion: UI-only, Fantasy Engine untouched. */
+header{
+  background:linear-gradient(112deg,#121b31 0%,#202b49 43%,#4d3bd3 78%,#3e72dc 100%);
+  border-bottom:0;
+  box-shadow:0 10px 28px rgba(27,36,65,.18);
+  position:sticky;top:0;overflow:hidden;
+}
+header:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(circle at 12% 10%,rgba(255,255,255,.13),transparent 24%),
+  radial-gradient(circle at 78% 35%,rgba(139,125,255,.22),transparent 30%),
+  linear-gradient(90deg,transparent 0 55%,rgba(255,255,255,.05) 70%,transparent 100%);
+}
+header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#8b7cff,#5f8fff,#7a5cff);opacity:.9}
+header .head{position:relative;z-index:1}
+.title{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+.subtitle{color:rgba(239,243,255,.78)}
+.creator{color:rgba(255,255,255,.68)}
+.status{color:#eef2ff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);box-shadow:0 5px 16px rgba(0,0,0,.10);backdrop-filter:blur(10px)}
+.dot{box-shadow:0 0 0 4px rgba(255,255,255,.10)}
+.dot.ok{box-shadow:0 0 0 4px rgba(75,214,155,.13)}
+.btn,.tab,.mobile-model-btn,.mobile-quick-add,.league-pill,.control,.result{transition:transform .16s cubic-bezier(.2,.7,.2,1),box-shadow .16s ease,border-color .16s ease,background .16s ease}
+.btn:active,.tab:active,.mobile-model-btn:active,.mobile-quick-add:active,.league-pill:active{transform:scale(.975);box-shadow:0 2px 8px rgba(35,47,75,.12)}
+.btn.primary:active{box-shadow:0 3px 10px rgba(87,72,224,.22)}
+.tab.active{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.tab.active:active{transform:scale(.965)}
+.result:active{background:#f5f2ff;transform:translateY(1px)}
+.control:focus{animation:l7nFocus .18s ease both}
+@keyframes l7nFocus{from{box-shadow:0 0 0 0 rgba(101,71,245,0)}to{box-shadow:0 0 0 3px rgba(101,71,245,.10)}}
+#tab-draft:not(.hidden),#tab-weekly:not(.hidden),#tab-schedule:not(.hidden),#tab-players:not(.hidden),#tab-rookies:not(.hidden),#tab-yahoo:not(.hidden){animation:l7nPageIn17 .24s cubic-bezier(.2,.7,.2,1) both}
+@keyframes l7nPageIn17{from{opacity:0;transform:translateY(6px) scale(.998)}to{opacity:1;transform:translateY(0) scale(1)}}
+.panel,.metric,.strength,.detail,.match-card,.totalcard,.pg,.rookie-card{transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,border-color .18s ease}
+.panel:hover,.metric:hover,.strength:hover,.detail:hover,.match-card:hover,.totalcard:hover,.pg:hover,.rookie-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(35,47,75,.09)}
+@media(max-width:760px){
+  header{background:linear-gradient(118deg,#111a2f 0%,#222d4b 50%,#5140d7 100%);box-shadow:0 8px 22px rgba(27,36,65,.16)}
+  header .head:before{right:-72px;top:-34px;width:300px;height:220px;background-size:235px auto;opacity:.18;transform:rotate(-5deg)}
+  header .head:after{width:64%;background:linear-gradient(90deg,rgba(17,26,47,0),rgba(17,26,47,.10) 58%,rgba(81,64,215,.04))}
+  header:after{height:2px}
+  .title{color:#fff;text-shadow:none}
+  .subtitle{color:rgba(241,244,255,.72)}
+  .status{background:rgba(255,255,255,.13);color:#f5f7ff;border-color:rgba(255,255,255,.24)}
+}
+@media(prefers-reduced-motion:reduce){header:after{display:none}.control:focus{animation:none}}
+/* V3.30 mobile usability: preserve every function, make H2H comparison readable without horizontal scrolling. */
+@media(max-width:760px){
+  .h2h-top{grid-template-columns:1fr;gap:8px}
+  .h2h-roster-panel .body{padding:10px}
+  .projected-games{grid-template-columns:1fr 1fr;gap:6px}
+  .h2h-roster-player{padding:9px 8px}
+  .h2h-roster-player strong{font-size:13.5px}
+  .h2h-roster-player small{font-size:10.5px}
+  .h2h-team-heading{padding:10px 11px}
+  .h2h-team-heading strong{font-size:14px}
+  .h2h-team-heading .team-count{font-size:10px}
+  .weekly-dd-focus{grid-template-columns:1fr 1fr 1fr;gap:5px}
+  .weekly-dd-card{padding:8px 6px;text-align:center}
+  .weekly-dd-card b{font-size:16px}
+  .weekly-dd-card span{font-size:8.5px;line-height:1.25}
+  .matchup-table{min-width:0!important;width:100%;table-layout:fixed}
+  .matchup-table th,.matchup-table td{padding:7px 3px;font-size:9.5px;white-space:nowrap;text-align:center}
+  .matchup-table th:first-child,.matchup-table td:first-child{width:25%;text-align:left}
+  .matchup-table th:nth-child(2),.matchup-table td:nth-child(2){width:19%}
+  .matchup-table th:nth-child(3),.matchup-table td:nth-child(3){width:19%}
+  .matchup-table th:nth-child(4),.matchup-table td:nth-child(4){width:18.5%}
+  .matchup-table th:nth-child(5),.matchup-table td:nth-child(5){width:18.5%}
+  .matchup-table .win,.matchup-table .loss,.matchup-table .tie{font-size:9px}
+  #weeklyTotals .tablewrap,#matchupComparison .tablewrap{overflow:hidden}
+  #weeklyTotals .tiny,#matchupComparison .tiny{font-size:8.5px;line-height:1.45}
+  .strategy-grid{grid-template-columns:1fr}
+}
+
+
+
+/* V3.18: L7N ghost-logo header + in-app user guide. UI-only; Fantasy Engine/data architecture unchanged. */
+header .head{position:relative;overflow:hidden}
+header .head:before{content:"";position:absolute;right:1%;top:-72px;width:430px;height:300px;background:url("l7n-logo.png") center/330px auto no-repeat;opacity:.23;mix-blend-mode:screen;transform:rotate(-4deg);pointer-events:none;user-select:none;filter:saturate(.95) brightness(1.08)}
+header .head:after{content:"";position:absolute;right:0;top:0;width:52%;height:100%;background:linear-gradient(90deg,rgba(18,27,49,0),rgba(18,27,49,.08) 55%,rgba(77,59,211,.06));pointer-events:none}
+header .head > div:first-child{position:relative;z-index:2}
+header .status{position:relative;z-index:3}
+.help-btn{border:1px solid rgba(255,255,255,.30)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;backdrop-filter:blur(8px);font-weight:800}
+.help-btn:hover{background:rgba(255,255,255,.20)!important;border-color:rgba(255,255,255,.42)!important}
+.help-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,16,30,.48);backdrop-filter:blur(7px);animation:helpFadeIn .18s ease both}
+.help-modal.hidden{display:none}
+.help-card{width:min(900px,calc(100vw - 34px));max-height:min(82vh,760px);overflow:hidden;background:#fff;border:1px solid #e1e6f0;border-radius:22px;box-shadow:0 28px 90px rgba(18,28,55,.28);animation:helpCardIn .22s cubic-bezier(.2,.7,.2,1) both}
+.help-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;background:linear-gradient(118deg,#121b31,#2b3560 52%,#5b49df);color:#fff;position:relative;overflow:hidden}
+.help-head:after{content:"L7N";position:absolute;right:18px;top:-26px;font-size:108px;font-weight:1000;letter-spacing:-.08em;color:rgba(255,255,255,.08);transform:rotate(-7deg);pointer-events:none}
+.help-head > div{position:relative;z-index:1}
+.help-title{font-size:20px;font-weight:950}.help-sub{font-size:12px;opacity:.78;margin-top:3px}
+.help-close{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.30);background:rgba(255,255,255,.12);color:#fff;font-size:24px;line-height:1;cursor:pointer;position:relative;z-index:2;transition:transform .16s ease,background .16s ease}
+.help-close:active{transform:scale(.94)}
+.help-body{padding:18px 20px 22px;overflow-y:auto;max-height:calc(min(82vh,760px) - 78px);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.help-item{border:1px solid #e2e7f0;border-radius:15px;padding:14px;background:linear-gradient(180deg,#fff,#fafbfe);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.help-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(32,46,75,.08);border-color:#cfd6e6}
+.help-item h4{margin:0 0 6px;font-size:15px}.help-item p{margin:0;color:#617087;font-size:12px;line-height:1.7}
+.help-tip{margin-top:14px;border-radius:14px;background:#f3f1ff;border:1px solid #ddd7ff;padding:12px 14px;color:#4e467f;font-size:12px;line-height:1.65}
+@keyframes helpFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes helpCardIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){
+  header .head:before{font-size:88px;right:0;top:-10px;opacity:.8}
+  .help-btn{min-height:34px!important;padding:7px 10px!important;font-size:12px!important}
+  .help-modal{padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+  .help-card{width:100%;max-height:calc(100dvh - 20px);border-radius:20px}
+  .help-body{max-height:calc(100dvh - 102px);padding:14px}
+  .help-grid{grid-template-columns:1fr;gap:9px}
+  .help-item{padding:12px}
+  .help-item h4{font-size:14px}.help-item p{font-size:12px}
+  .help-head{padding:15px 15px}.help-title{font-size:18px}.help-sub{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.help-modal,.help-card,.help-item{animation:none;transition:none}}
+
+
+/* V3.24 Weekly H2H roster header polish + hover player stat card */
+.whatif-builder{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.whatif-label{font-weight:900;font-size:13px;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px}
+.whatif-label span{font-size:11px;color:var(--muted);font-weight:800}
+.whatif-help{font-size:11px;color:var(--muted);margin-bottom:8px}
+.whatif-search{position:relative;margin:8px 0 9px}.whatif-search input{width:100%;box-sizing:border-box}.whatif-search-results{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 10px 24px rgba(28,42,70,.10);overflow:hidden}.whatif-search-result{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;cursor:pointer;border-bottom:1px solid #eef1f6}.whatif-search-result:last-child{border-bottom:0}.whatif-search-result:hover{background:#f7fbff}.whatif-search-result .nm{font-weight:900;font-size:12px}.whatif-search-result .tm{font-size:10px;color:var(--muted);margin-top:2px}.whatif-search-empty{padding:10px 11px;font-size:11px;color:var(--muted)}
+.what-chip-list{display:flex;flex-wrap:wrap;gap:7px;min-height:34px;align-items:center}
+.what-chip{border:1px solid #dfe5ef;background:#fff;border-radius:999px;padding:7px 9px;font-size:11px;font-weight:800;color:#39465c;cursor:pointer;transition:.15s ease}
+.what-chip:hover{border-color:#c7d1e2;transform:translateY(-1px)}
+.what-chip.selected-out{background:#fff3f4;border-color:#e9aeb5;color:#b52e40}
+.what-chip.selected-in{background:#eefaf5;border-color:#bfe6d5;color:#137650;display:inline-flex;align-items:center;gap:4px}
+.what-chip.selected-in button{border:0;background:transparent;color:inherit;font-weight:1000;cursor:pointer;padding:0 1px;font-size:14px;line-height:1}
+.whatif-actions{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}
+.whatif-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.whatif-summary>div{border:1px solid var(--line);border-radius:10px;background:#fafcff;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.whatif-summary span{font-size:11px;color:var(--muted)}.whatif-summary b{font-size:16px}
+/* V3.24 Weekly H2H roster header + desktop hover stat tooltip */
+.h2h-roster-panel{position:relative;overflow:visible}
+.h2h-team-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-radius:12px;margin:0 0 9px;border:1px solid #d9def0;background:linear-gradient(135deg,#f5f2ff 0%,#eef4ff 100%);box-shadow:0 5px 16px rgba(67,61,150,.06)}
+.h2h-team-heading.opp{border-color:#dce2ec;background:linear-gradient(135deg,#f7f9fc 0%,#eef5ff 100%)}
+.h2h-team-heading strong{font-size:15px;font-weight:950;letter-spacing:-.15px}
+.h2h-team-heading .team-count{font-size:12px;font-weight:850;color:#5e6c82;white-space:nowrap}
+.h2h-team-heading.mine strong{color:#5137c7}.h2h-team-heading.opp strong{color:#34445c}
+.h2h-roster-grid{padding:0 2px 2px}
+.h2h-roster-player{cursor:default}
+.h2h-roster-player strong{font-size:15.5px;line-height:1.25;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h2h-roster-player small{font-size:12.5px;line-height:1.35;color:#66758d;font-weight:700}.h2h-roster-player .weekly-team-meta{font-weight:900;color:var(--team-color,#5d6b82);transition:color .15s ease}.h2h-roster-player .weekly-games-meta{font-weight:850;color:#334155}
+.h2h-player-tooltip{position:fixed;z-index:1000;display:none;width:290px;max-width:calc(100vw - 24px);padding:11px 12px;border:1px solid #d8deeb;border-radius:12px;background:rgba(255,255,255,.98);box-shadow:0 16px 38px rgba(25,38,65,.18);pointer-events:none;backdrop-filter:blur(10px)}
+.h2h-player-tooltip.show{display:block;animation:h2hTipIn .12s ease both}
+.h2h-player-tooltip .tip-name{font-size:14px;font-weight:950;color:#1c2940;margin-bottom:2px}
+.h2h-player-tooltip .tip-meta{font-size:10px;color:#718096;margin-bottom:8px}
+.h2h-player-tooltip .tip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.h2h-player-tooltip .tip-stat{padding:5px 5px;border-radius:7px;background:#f7f9fc;border:1px solid #edf0f5}
+.h2h-player-tooltip .tip-stat span{display:block;font-size:8px;color:#7a879a}
+.h2h-player-tooltip .tip-stat b{display:block;font-size:10.5px;margin-top:1px;color:#253249}
+.h2h-player-tooltip .tip-stat.dd b{color:#5b35c8}.h2h-player-tooltip .tip-stat.td b{color:#a56600}
+@keyframes h2hTipIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.weekly-strategy{display:block}
+.strategy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.strategy-card{border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff}
+.strategy-loss{border-color:#f0c7cc;background:linear-gradient(180deg,#fffafa,#fff)}
+.strategy-flip{border-color:#ead9a8;background:linear-gradient(180deg,#fffdf5,#fff)}
+.strategy-win{border-color:#c7e5d8;background:linear-gradient(180deg,#fafffc,#fff)}
+.strategy-title{font-size:13px;font-weight:950;margin-bottom:8px}.strategy-tags{display:flex;gap:6px;flex-wrap:wrap;min-height:30px}
+.strategy-tag{display:inline-flex;align-items:center;padding:6px 8px;border-radius:999px;font-size:11px;font-weight:900}
+.strategy-tag.loss{background:#fff0f2;color:#b92e40}.strategy-tag.win{background:#eaf8f1;color:#14784f}.strategy-tag.tie{background:#f1f3f7;color:#68758a}
+.strategy-copy{font-size:11px;color:var(--muted);line-height:1.55;margin-top:8px}
+.strategy-summary{margin-top:10px;border:1px dashed #d4dbe7;background:#fafcff;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.6}
+@media(max-width:760px){.whatif-builder,.whatif-summary,.strategy-grid{grid-template-columns:1fr}.what-chip{font-size:10.5px;padding:7px 8px}.strategy-card{padding:11px 12px}}
+@media(max-width:760px){.h2h-team-heading{padding:11px 12px;margin-bottom:8px}.h2h-team-heading strong{font-size:14px}.h2h-team-heading .team-count{font-size:10.5px}.h2h-roster-player strong{font-size:14px}.h2h-player-tooltip{width:min(290px,calc(100vw - 20px))}.h2h-player-tooltip .tip-grid{grid-template-columns:repeat(3,1fr)}}
+
+
+/* V3.32 Fit terminology polish */
+.cn-label{font-size:.78em;font-weight:850;color:#64748b;margin-left:5px;letter-spacing:0}
+.candidate-legend{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 9px;padding:9px 11px;border:1px solid #e4e8f0;border-radius:10px;background:#fafbfe;color:#66758d;font-size:12px;font-weight:700}
+.candidate-legend b{color:#27364d}
+@media(max-width:760px){.cn-label{display:block;margin:2px 0 0;font-size:11px}.candidate-legend{font-size:11px;gap:6px 12px;padding:8px 9px}}
+
+/* V3.35 Draft Board UI layer: ported on top of the V3.32 core; H2H/What-if engine untouched. */
+.draft-board-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:center;margin-bottom:10px}.draft-search{display:flex;gap:7px}.draft-search .control{min-width:0}.draft-board-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.draft-toggle{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap}.draft-toggle input{accent-color:var(--accent)}.draft-status{font-size:10px;color:var(--muted);white-space:nowrap}.cand-sort{width:auto;min-width:145px;font-size:10px}.candidate-viewport{height:800px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}.candidate-desktop .tablewrap{border:0;border-radius:0;overflow:visible}.candidate-table{min-width:1480px}.candidate-table th,.candidate-table td{font-size:10px;padding:7px}.candidate-table th.cand-sort-head{cursor:pointer;user-select:none}.candidate-table th.cand-sort-head:hover,.candidate-table th.cand-sort-head.active{background:#f0edff;color:#5636ce}.cand-sort-head span{font-size:9px;margin-left:3px;color:#8a93a4}.cand-rank{font-weight:950;color:#475569;display:inline-block;min-width:40px}.fit-pill{display:inline-flex;align-items:center;justify-content:center;min-width:36px;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:950;border:1px solid transparent}.fit-strong{color:#17694b;background:#eaf8f1;border-color:#b9e5d1}.fit-mid{color:#856100;background:#fff7dc;border-color:#efd98d}.fit-weak{color:#a93643;background:#fff0f2;border-color:#f0c2c9}.draft-mark-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid #d8deea;background:#fff;border-radius:8px;padding:5px 7px;font-size:9px;font-weight:900;color:#64748b;cursor:pointer;white-space:nowrap}.draft-mark-btn input{margin:0;accent-color:#475569;pointer-events:none}.draft-mark-btn:hover{background:#f6f3ff;border-color:#cfc5ff;color:#5636ce}.draft-mark-btn.marked{background:#eef1f5;border-color:#cfd6e0;color:#68758a}.candidate-row.draft-unavailable{opacity:.52;background:#f3f5f8}.candidate-row.draft-unavailable td:first-child{background:#f3f5f8}.candidate-mobile{display:none}.candidate-card{padding:10px 11px;border-bottom:1px solid #edf1f6;background:#fff}.candidate-card:last-child{border-bottom:0}.candidate-card.draft-unavailable{opacity:.55;background:#f1f3f6}.candidate-card-top{display:flex;align-items:center;justify-content:space-between;gap:7px}.candidate-card-top>div{min-width:0;display:flex;align-items:center;gap:5px;overflow:hidden}.candidate-card-top .playerlink{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.cand-team{font-size:9px;color:var(--muted);font-weight:800;white-space:nowrap}.candidate-fitline{display:flex;gap:8px;margin-top:8px}.candidate-fitline>span{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--muted);font-weight:800}.candidate-stats-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:8px}.candidate-stats-grid span{padding:5px 3px;border:1px solid #edf0f5;border-radius:7px;background:#fafcff;text-align:center;min-width:0}.candidate-stats-grid i{display:block;font-style:normal;font-size:7px;color:#7a879a}.candidate-stats-grid b{display:block;font-size:10px;margin-top:1px}.strength-gradient{position:relative;height:11px;border-radius:999px;background:linear-gradient(90deg,#d9535f 0%,#f3c94b 50%,#39a66f 100%);margin:8px 0 3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}.strength-marker{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;border:2px solid #263449;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.18);z-index:2}.strength-mid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(38,52,73,.45)}.strength-scale{display:flex;justify-content:space-between;font-size:8px;color:#7a879a}.whatif-actions{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}
+@media(max-width:900px){.draft-board-toolbar{grid-template-columns:1fr}.draft-board-controls{justify-content:flex-start}.candidate-desktop{display:none}.candidate-mobile{display:block}.candidate-viewport{height:70vh;min-height:430px;max-height:760px}.candidate-stats-grid{grid-template-columns:repeat(7,minmax(34px,1fr));overflow:hidden}.draft-status{order:3}.cand-sort{flex:1;min-width:145px}}
+@media(max-width:560px){.candidate-viewport{height:66vh;min-height:420px}.draft-search{width:100%}.draft-board-controls{gap:6px}.draft-status{width:100%}.candidate-card{padding:10px 9px}.candidate-card-top .draft-mark-btn{padding:6px 7px}.candidate-stats-grid{grid-template-columns:repeat(7,1fr);gap:3px}.candidate-stats-grid span{padding:5px 1px}.candidate-stats-grid b{font-size:9px}.candidate-fitline{gap:6px}.fit-pill{min-width:34px;padding:3px 6px}.strength-gradient{height:12px}.strength-marker{width:14px;height:14px}}
+</style><link rel="manifest" href="manifest.webmanifest"></head><body>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V3.31｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="help-card">
+    <div class="help-head">
+      <div><div id="helpTitle" class="help-title">🏀 L7N H2H Fantasy Lab 使用說明</div><div class="help-sub">用數據取代猜測：從選人、建隊到每週 H2H 都在這裡</div></div>
+      <button id="helpClose" class="help-close" type="button" aria-label="關閉使用說明">×</button>
+    </div>
+    <div class="help-body">
+      <div class="help-grid">
+        <div class="help-item"><h4>🏀 ① 選人 / 我的球隊</h4><p>這是建隊主畫面。加入球員後，可以看整隊 PTS、3PM、REB、AST、STL、BLK、FG%、FT%、TOV、DD、A/T、3P% 的強弱，以及每位球員自己的逐項數據。Candidate Fit（適合球隊的候選球員）會先看 Base Fit（球員本身綜合價值），再依目前球隊缺口與權重計算 Team Fit（球隊適合度）；What-if（加入／移除球員模擬）可以看調整前後差異。</p></div>
+        <div class="help-item"><h4>⚔️ ② Weekly H2H</h4><p>把球員的 projection 乘上該週預測出賽場次，再累加成你的 H2H matchup totals。可以放入對手 roster，直接比較每一項。FG%、FT%、3P% 用總命中／總出手，A/T 用總 AST ÷ 總 TOV，FTM 會依每場平均 × 本週預測場次累加；DD 會估算本週可能拿到的總量。</p></div>
+        <div class="help-item"><h4>📅 ③ NBA 賽程</h4><p>查看每週球隊賽程與你目前球員的 schedule。這對 H2H 很重要：同一名球員平均數據相同，但一週多打一場或少打一場，實際 matchup 價值就會不同。</p></div>
+        <div class="help-item"><h4>🔎 ④ 球員資料</h4><p>查整個球員池的歷史／目前資料，點球員可以看 Detail。DD 是整季總數，其他主要統計以每場平均呈現；TD 會顯示，但不加入 Fantasy 評分。</p></div>
+        <div class="help-item"><h4>🎓 ⑤ Rookie Hub</h4><p>新秀資料把 NCAA profile 與 NBA projection 分開，不會直接把 NCAA 數據當 NBA Z-score。新秀可以先用透明的 projection 輔助建隊，等正式 NBA 實績累積後再逐步以真實資料取代。</p></div>
+        <div class="help-item"><h4>🟣 ⑥ Yahoo Rankings</h4><p>提供 Yahoo Fantasy 的外部市場順序作為參考，並把 Yahoo Rank 與 L7N 自己的數據放在一起看。Yahoo Rank 不會直接改變 L7N Engine 的評分。</p></div>
+        <div class="help-item"><h4>🏷️ 多聯盟</h4><p>可以建立多個聯盟。每個聯盟各自保存 roster、對手、Week、權重、Projection 基準與 Override，但所有聯盟共用同一套 Fantasy Engine，所以未來升級只需要改一套程式。</p></div>
+        <div class="help-item"><h4>⚙️ 模型設定</h4><p>設定 Projection 資料基準、最低 GP、參考池與各分類權重。季初可用上一季資料建立方向；季中可以切到本季至今、近 10 場或近 5 場，讓判斷更貼近今年實際表現。</p></div>
+      </div>
+      <div class="help-tip"><b>💡 怎麼使用最有價值？</b><br>先用「選人」確認目前球隊缺什麼 → 用 Candidate Fit 找候選人 → 用 What-if 看加入後變化 → 到 Weekly H2H 看下一週實際累加數據 → 再搭配對手與賽程做最後判斷。<br><br><b>50 分是中性參考值</b>，不是「聯盟平均球員」的簡單平均；目前參考池會依最低 GP、出賽量與極端值校正。TOV 是反向分類：失誤越低越好。DD 會進入 Fantasy 評分，TD 只顯示、不重複計分。</div>
+    </div>
+  </div>
+</div>
+<main><div class="wrap"><div class="layout"><aside>
+<div class="mobile-drawer-head">
+  <strong>⚙️ 模型設定</strong>
+  <button class="mobile-drawer-close" id="mobileModelClose" type="button" aria-label="關閉模型設定">×</button>
+</div>
+<div class="panel league-panel"><h3>🏷️ 我的聯盟</h3><div class="body">
+<div class="league-select-row"><select id="leagueSelect" class="control"></select><button class="btn primary" id="addLeague">＋ 新增</button></div>
+<div class="league-actions"><button class="btn soft" id="copyLeague">複製目前</button><button class="btn" id="renameLeague">重新命名</button><button class="btn" id="deleteLeague">刪除聯盟</button><button class="btn" id="shareLeagueMini">分享此聯盟</button></div>
+<div class="league-meta"><span id="leagueMeta">1 個聯盟</span><span>資料庫共用</span></div>
+<div class="engine-architecture"><b>架構：</b>所有聯盟共用同一套 Fantasy Engine、UI 與資料庫；每個聯盟只保存自己的 roster、對手、Week、權重、Projection 基準與 Override。未來升級功能時，只改一套程式。</div>
+</div></div>
+<div style="height:12px"></div>
+<div class="panel"><h3>⚙️ League / 模型</h3><div class="body">
+<div class="field"><label>基準賽季（球員 projection）</label><select id="season" class="control"><option>2025-26 → 用於 2026-27 Projection</option></select></div>
+<div class="field"><label>最低 GP</label><input id="minGP" class="control" type="number" min="1" max="82" value="20"></div>
+<div class="field"><label>參考池</label><select id="refMode" class="control"><option value="league">Fantasy 合格球員池（穩健）</option><option value="top200">前 200 高出賽量球員</option></select></div>
+<div class="field"><label>📊 Projection 數據基準</label><select id="dataBasis" class="control">
+<option value="last">2025-26 完整球季（建隊 baseline）</option>
+<option value="current">2026-27 本季至今</option>
+<option value="recent10">近 10 場</option>
+<option value="recent5">近 5 場</option>
+<option value="blend">本季 60% ＋ 上季 40%</option>
+</select>
+<div id="dataStatus" class="tiny" style="margin-top:6px"></div>
+<div class="tiny" style="margin-top:8px">開啟即先用本機資料；完整 2025-26 baseline 會在背景同步，成功後自動升級。賽每個聯盟可各自選擇 Projection 基準；資料庫本身共用。季中可直接匯入 NBA Stats CSV，切換到「本季至今／近10場／近5場」重新分析。</div>
+</div>
+<div class="field"><label>📥 季中更新資料庫</label><select id="dataImportTarget" class="control"><option value="current">本季至今（2026-27）</option><option value="recent10">近 10 場</option><option value="recent5">近 5 場</option><option value="last">完整球季 baseline</option></select><input id="dataImportFile" class="control" type="file" accept=".csv,text/csv" style="margin-top:7px"><div style="display:flex;gap:7px;margin-top:7px;flex-wrap:wrap"><button class="btn soft" id="importData">匯入 CSV</button><button class="btn small" id="clearImportedData">清除該資料</button></div><div class="tiny" style="margin-top:6px">建議從 NBA Stats Traditional 匯出 CSV，使用 Totals 模式；系統會自動換算成 Per-Game、3P%、A/T，並保存到瀏覽器。</div></div>
+<div class="field"><label>Fantasy Categories 權重（0 = Punt）</label><div id="weights" class="weight-grid"></div></div>
+<button class="btn soft block" id="reset">全部重設為 1</button>
+<div style="height:9px"></div><div class="note">Draft Strength 用來回答「我現在選的人強在哪、缺在哪」。參考值以符合最低 GP 且至少約 12 MPG 的 Fantasy 合格球員池校準，使用 5% 尾端截尾＋5/95 winsorized calibration，百分比類別再按出手量做 volume adjustment；因此 50 是中性基準，不是某位球星或前 200 名的平均。Weekly H2H 會把每位球員的 projection × <b>2026-27 目前所屬球隊</b>本週賽程，再聚合成 matchup totals。TOV 越低越好；TD 僅顯示、不進評分。季中可把 Projection 基準切到本季至今／近10場／近5場；這個瀏覽器版會在對應資料源尚未可用時安全 fallback，不把缺資料假裝成 0。</div>
+</div></div>
+<div style="height:12px"></div>
+<div class="panel"><h3>👥 我的球隊</h3><div class="body"><div class="team-search"><input id="teamSearch" class="control" placeholder="搜尋球員，例如 Wemby / Jokic / Curry" autocomplete="off"><div id="results" class="results hidden"></div></div><div id="chips" class="chips"></div><div style="height:9px"></div><button id="clear" class="btn small">清空球隊</button></div></div>
+<div style="height:12px"></div>
+<div class="panel"><h3>📅 本週賽程摘要</h3><div class="body" id="sideSchedule"></div></div>
+</aside>
+<section>
+<div class="mobile-toolbar">
+  <div class="mobile-league-wrap">
+    <span class="mobile-mini-label">目前聯盟</span>
+    <select id="mobileLeagueSelect" class="mobile-league-select" aria-label="切換聯盟"></select>
+  </div>
+  <button class="mobile-model-btn" id="mobileModelBtn" type="button" aria-expanded="false">⚙️ 參數</button>
+  <button class="mobile-help-btn" id="mobileHelpBtn" type="button" aria-label="使用說明">❔ 說明</button>
+</div>
+<div class="mobile-quick-add">
+  <div class="mobile-quick-head">
+    <strong>🏀 快速新增球員</strong>
+    <span>選人是最常用的操作</span>
+  </div>
+  <div class="mobile-team-search">
+    <input id="mobileTeamSearch" class="control" placeholder="搜尋球員，例如 Wemby / Jokic / Curry" autocomplete="off">
+    <button id="mobileAddClear" class="btn small" type="button">清除</button>
+  </div>
+  <div id="mobileTeamResults" class="mobile-team-results hidden"></div>
+  <div id="mobileSelectedChips" class="chips mobile-selected-chips"></div>
+</div>
+<div class="mobile-backdrop hidden" id="mobileModelBackdrop"></div>
+<div class="tabs"><button class="tab active" data-tab="draft">① 選人 / 我的球隊</button><button class="tab" data-tab="weekly">② Weekly H2H</button><button class="tab" data-tab="schedule">③ NBA 賽程</button><button class="tab" data-tab="players">④ 球員資料</button><button class="tab" data-tab="rookies">⑤ Rookie Hub</button><button class="tab" data-tab="yahoo">⑥ Yahoo Rankings</button></div>
+<div id="tab-draft">
+<div class="note" style="margin-bottom:12px"><b>🟢 L7N Stable Data Build：</b>頁面會先用本機 baseline 立即啟動；背景同步完整 2025-26 球員資料，抓不到也不會卡死。2026 Rookie 維持 NCAA → NBA Projection 獨立模型。</div>
+<div class="section"><div class="sectionhead"><h4>📊 我的球隊：Per-Game Strength</h4><span class="helper">50 = 同條件參考池中性；50 為基準，越高代表對應分類越強 · 參考池會排除深 bench 並做極端值校正</span></div><div id="draftMetrics" class="metrics"></div></div>
+<div class="section"><div class="sectionhead"><h4>👥 已選球員：個人數據總覽</h4><span class="helper">橫向比較每位球員；綠＝相對優勢、紅＝相對弱勢，依目前資料基準判定</span></div><div id="rosterPlayerStats"></div></div>
+<div class="section"><div class="sectionhead"><h4>🧭 分類強弱與目前缺口</h4><span id="draftHint" class="helper"></span></div><div id="strength" class="strength-grid"></div></div>
+<div class="section"><div class="sectionhead"><h4>🎯 Candidate Fit <span class="cn-label">適合球隊的候選球員</span></h4><span class="helper">Yahoo Rank 導航＋L7N Fit 動態判斷；原始數據完整保留</span></div><div class="draft-board-toolbar"><div class="searchbig draft-search"><input id="candSearch" class="control" placeholder="搜尋球員 / 球隊 / Yahoo Rank"><button class="btn soft" id="clearCand">清除</button></div><div class="draft-board-controls"><label class="draft-toggle"><input id="candAvailableOnly" type="checkbox"> <span>只看目前可選</span></label><button class="btn small" id="clearDraftMarks">清除已選標記</button><span id="candStatus" class="draft-status"></span><select id="candSort" class="control cand-sort"><option value="yahoo">Yahoo Rank</option><option value="teamfit">Team Fit</option><option value="basefit">Base Fit</option><option value="pts">PTS/G</option><option value="3pm">3PM/G</option><option value="ftm">FTM/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="stl">STL/G</option><option value="blk">BLK/G</option><option value="fg">FG%</option><option value="ft">FT%</option><option value="tov">TOV/G（低→高）</option><option value="dd">DD</option><option value="at">A/T</option><option value="3p">3P%</option></select></div></div><div id="candidates"></div></div>
+<div class="section"><div class="sectionhead"><h4>🔄 What-if <span class="cn-label">加入／移除球員模擬</span></h4><span class="helper">最多 4 人移除＋4 人加入，模擬加入前後的球隊數據變化，不會修改正式 roster</span></div><div id="whatif" class="detail"><div class="muted">從 Candidate Fit 點球員即可加入模擬；也可以在下方選擇要移除的球員。</div></div></div>
+</div>
+<div id="tab-weekly" class="hidden">
+<div class="section"><div class="sectionhead"><h4>🏀 Weekly H2H Projection</h4><div class="weekbar"><select id="weekSelect" class="control"></select><span id="weekDesc" class="helper"></span></div></div><div id="weeklyTop" class="h2h-top"></div></div>
+<div class="section"><div class="panel opponent-panel"><h3>🆚 對手預測</h3><div class="body">
+<div class="team-search"><input id="oppSearch" class="control" placeholder="搜尋對手球員，例如 Doncic / Wemby / Curry" autocomplete="off"><div id="oppResults" class="results hidden"></div></div>
+<div id="oppChips" class="chips"></div>
+<div style="height:8px"></div><button id="clearOpp" class="btn small">清空對手</button>
+<div class="tiny" style="margin-top:8px">先把你預測對手的 roster 放進來，系統會用同一套賽程、Projection、百分比與 A/T 邏輯，直接做本週 9/12-Cat matchup forecast。</div>
+</div></div></div>
+<div class="section"><div class="sectionhead"><h4>📈 預測 Matchup Totals</h4><span class="helper">百分比用總命中 / 總出手；A/T 用總 AST ÷ 總 TOV；DD 為 DD/G × 預測場次</span></div><div id="weeklyTotals"></div></div>
+<div class="section"><div class="sectionhead"><h4>⚔️ H2H 分類預測</h4><span class="helper">綠色＝你的預測領先｜紅色＝對手領先｜中性＝接近</span></div><div id="matchupComparison"></div></div>
+<div class="section"><div class="sectionhead"><h4>🧭 本週 H2H 策略</h4><span class="helper">只根據本週你 vs 對手的預測結果，整理「守住、翻盤、主要壓力」</span></div><div id="weeklyStrength" class="weekly-strategy"></div></div>
+</div>
+<div id="tab-schedule" class="hidden">
+<div class="section"><div class="sectionhead"><h4>📅 2026-27 NBA Weekly Schedule Grid</h4><span class="helper">紫色標記 = 你的球員所在球隊｜4+ 場為 heavy week</span></div><div id="scheduleGrid"></div></div>
+<div class="note"><b>2026-27 隊伍對照已更新：</b>球員統計使用 2025-26 賽季，但本版會把今夏已確認的換隊套用到 2026-27 team/schedule（例如 Giannis→MIA、LaMelo→MIN、LeBron→PHI、Wemby 留 SAS）。賽程基準：NBA 官方 2026-27 By-Team schedule；官方目前公布每隊 80/82 場，12/4–12/10 的兩場會依 Emirates NBA Cup Group Play 結果決定。正式雲端後端版再改為即時 roster/transaction feed，自動處理季中交易。</div>
+</div>
+<div id="tab-players" class="hidden">
+<div class="section"><div class="sectionhead"><h4>🔎 球員資料</h4><span class="helper">點名字開啟 Detail</span></div><div class="searchbig"><input id="playerSearch" class="control" placeholder="搜尋球員 / 球隊"><select id="playerSort" class="control" style="max-width:160px"><option value="fit">Team Fit｜球隊適合度</option><option value="pts">PTS/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="ftm">FTM/G</option><option value="3p">3P%</option><option value="at">A/T</option></select></div><div id="playerGrid"></div></div>
+<div id="detail" class="detail"><div class="muted">點選球員後顯示詳細資料。</div></div>
+</div>
+<div id="tab-rookies" class="hidden">
+<div class="section"><div class="sectionhead"><h4>🧑‍🎓 2026 Rookie Hub</h4><span class="helper">NCAA 原始資料與 NBA projection 分開；projection 不直接當 NCAA Z-score</span></div><div class="searchbig"><input id="rookieSearch" class="control" placeholder="搜尋新秀 / 學校 / 球隊"><select id="rookieFilter" class="control" style="max-width:180px"><option value="all">全部 60 位新秀</option><option value="lottery">Lottery / 前14</option><option value="verified">已驗證 NCAA 資料</option><option value="model">有 NBA 模型 projection</option></select></div><div id="rookieGrid"></div></div>
+<div id="rookieDetail" class="detail"><div class="muted">點選 Rookie 看 NCAA profile、NBA projection、資料來源與信心。</div></div>
+</div>
+</div>
+<div id="tab-yahoo" class="hidden">
+<div class="section"><div class="sectionhead"><h4>🟣 Yahoo Fantasy 2026-27 Salary Cap Rankings</h4><span class="helper">Salary Cap · Top 200 · Yahoo current Default Pre-Draft order</span></div>
+<div class="note" style="margin-bottom:12px"><b>Yahoo Rank 是外部市場參考，不會直接改變 L7N Fantasy Engine。</b> 目前以 Yahoo Fantasy Basketball 的即時「Default Player Rankings / Top 200 Default Rankings - Salary Cap」作為 Rank 來源；這份排名可隨 Yahoo 更新而重新校正。Yahoo Rank 只作外部市場參考，不直接改變 L7N Fantasy Engine。<span class="source-badge" style="margin-left:6px">Verified 2026-09-23</span> <a href="https://basketball.fantasysports.yahoo.com/nba/public_prerank" target="_blank" rel="noopener" style="margin-left:8px;font-weight:800">查看 Yahoo 原始排名 ↗</a></div>
+<div class="searchbig"><input id="yahooSearch" class="control" placeholder="搜尋球員 / Yahoo Rank / 球隊"><select id="yahooSort" class="control" style="max-width:190px"><option value="yahoo">Yahoo Rank</option><option value="fit">L7N Fit</option><option value="pts">PTS/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="ftm">FTM/G</option><option value="3p">3P%</option><option value="at">A/T</option></select></div>
+<div id="yahooMeta" class="tiny" style="margin:8px 0"></div><div id="yahooGrid"></div></div>
+</div>
+
+</section><div class="tiny" style="margin-top:20px;text-align:center">L7N · H2H Fantasy Lab · 2026 Edition 3.9｜本工具為個人研究用途；資料更新以外部來源與最後更新時間為準。</div></div></div></main>
+<script>
+// Yahoo current Salary Cap Top 200 verified 2026-09-23 from Yahoo public pre-draft rankings page.
+const SCHEDULE={"ATL":[3,4,4,3,3,2,2,1,4,3,3,4,3,4,3,4,4,2,3,3,4,4,3,4,3],"BKN":[3,3,4,2,3,4,2,1,4,4,3,4,4,3,4,3,4,1,2,4,3,4,3,4,4],"BOS":[2,4,4,3,4,3,2,1,4,2,4,3,3,4,4,4,4,2,2,3,4,3,4,4,3],"CHA":[3,4,3,3,2,3,2,1,4,4,4,4,3,3,4,4,3,2,3,2,4,3,4,4,4],"CHI":[3,3,3,3,4,3,2,1,4,3,3,5,3,3,4,3,4,2,2,4,3,3,4,4,4],"CLE":[2,4,4,4,3,3,2,1,4,3,4,3,4,3,4,4,4,2,2,3,4,3,2,4,4],"DAL":[3,3,4,4,3,2,2,0,4,3,3,4,3,4,4,4,3,2,3,2,4,4,4,4,4],"DEN":[2,3,3,3,4,3,2,1,3,4,4,3,5,3,4,4,4,1,2,3,4,4,3,4,4],"DET":[3,3,3,3,4,3,2,1,4,4,3,4,3,3,4,4,3,2,2,3,4,3,4,4,4],"GSW":[3,4,3,3,4,3,1,1,4,4,3,3,4,4,3,4,3,2,1,4,4,3,4,4,4],"HOU":[3,4,3,4,3,3,2,1,4,2,4,3,4,4,4,3,4,2,2,4,3,3,4,4,3],"IND":[3,4,3,4,3,3,2,1,3,4,3,4,4,3,3,3,4,3,2,3,3,4,3,4,4],"LAC":[3,3,3,3,3,4,2,1,3,4,4,3,3,4,3,4,4,2,2,3,4,3,4,4,4],"LAL":[3,4,4,3,3,3,2,0,4,4,4,3,4,4,4,3,3,2,2,4,3,4,3,3,4],"MEM":[3,3,3,4,4,4,2,1,4,4,2,4,3,3,3,3,3,3,2,3,4,4,4,3,4],"MIA":[3,3,4,3,3,3,2,1,4,4,3,4,4,3,3,4,4,2,2,3,4,3,3,4,4],"MIL":[3,3,4,4,3,4,2,1,4,3,4,3,4,3,3,3,4,2,2,3,3,3,4,4,4],"MIN":[3,4,4,2,4,4,2,1,3,4,4,3,3,4,4,4,2,2,2,3,4,2,4,4,4],"NOP":[3,3,4,4,4,3,2,1,4,3,4,4,2,2,4,4,4,2,2,4,4,4,3,2,4],"NYK":[3,3,3,4,4,3,2,1,3,4,3,3,4,4,3,4,3,2,3,3,3,3,4,4,4],"OKC":[3,3,4,4,3,3,2,1,3,4,4,3,3,4,4,4,3,2,2,3,4,3,4,3,4],"ORL":[3,3,3,3,4,3,1,1,4,4,4,4,4,3,4,3,4,2,2,3,3,4,4,3,4],"PHI":[4,3,4,3,3,4,2,1,2,4,3,4,3,4,4,4,3,2,2,4,3,4,4,3,3],"PHX":[2,2,4,4,3,4,2,1,4,3,4,4,2,4,4,3,4,2,2,3,4,4,4,4,3],"POR":[2,3,4,3,4,4,2,1,3,4,2,4,4,4,3,3,5,2,2,4,3,4,3,4,3],"SAC":[3,3,4,3,3,3,2,1,3,3,4,4,4,3,4,3,4,1,3,3,4,4,3,4,4],"SAS":[3,3,4,4,3,4,2,1,4,4,4,3,2,3,3,4,3,3,2,3,3,4,3,4,4],"TOR":[3,3,3,4,3,3,2,1,4,3,4,4,4,3,4,4,3,2,2,3,3,4,4,3,4],"UTA":[3,3,4,4,4,3,2,1,4,3,3,4,4,4,3,4,2,2,2,4,3,3,4,3,4],"WAS":[3,3,4,4,4,2,2,1,4,4,3,3,4,4,3,3,4,2,2,4,3,3,4,3,4]};
+const WEEKS=[["W1","10/19–10/25"],["W2","10/26–11/1"],["W3","11/2–11/8"],["W4","11/9–11/15"],["W5","11/16–11/22"],["W6","11/23–11/29"],["W7","11/30–12/6"],["W8","12/7–12/13"],["W9","12/14–12/20"],["W10","12/21–12/27"],["W11","12/28–1/3"],["W12","1/4–1/10"],["W13","1/11–1/17"],["W14","1/18–1/24"],["W15","1/25–1/31"],["W16","2/1–2/7"],["W17","2/8–2/14"],["W18","2/15–2/21"],["W19","2/22–2/28"],["W20","3/1–3/7"],["W21","3/8–3/14"],["W22","3/15–3/21"],["W23","3/22–3/28"],["W24","3/29–4/4"],["W25","4/5–4/11"]];
+const YAHOO_RANKINGS = [
+{"rank":1,"name":"Victor Wembanyama"},{"rank":2,"name":"Nikola Jokić"},{"rank":3,"name":"Luka Dončić"},{"rank":4,"name":"Shai Gilgeous-Alexander"},{"rank":5,"name":"Cade Cunningham"},{"rank":6,"name":"Tyrese Maxey"},{"rank":7,"name":"Anthony Edwards"},{"rank":8,"name":"Jayson Tatum"},{"rank":9,"name":"Giannis Antetokounmpo"},{"rank":10,"name":"Jalen Johnson"},{"rank":11,"name":"Donovan Mitchell"},{"rank":12,"name":"Tyrese Haliburton"},{"rank":13,"name":"Cooper Flagg"},{"rank":14,"name":"Scottie Barnes"},{"rank":15,"name":"Kevin Durant"},{"rank":16,"name":"Karl-Anthony Towns"},{"rank":17,"name":"Jamal Murray"},{"rank":18,"name":"Josh Giddey"},{"rank":19,"name":"Trae Young"},{"rank":20,"name":"Austin Reaves"},{"rank":21,"name":"Amen Thompson"},{"rank":22,"name":"Domantas Sabonis"},{"rank":23,"name":"LaMelo Ball"},{"rank":24,"name":"Devin Booker"},{"rank":25,"name":"Alperen Şengün"},{"rank":26,"name":"Stephen Curry"},{"rank":27,"name":"Chet Holmgren"},{"rank":28,"name":"Evan Mobley"},{"rank":29,"name":"Jalen Brunson"},{"rank":30,"name":"James Harden"},{"rank":31,"name":"Jaylen Brown"},{"rank":32,"name":"Bam Adebayo"},{"rank":33,"name":"Kawhi Leonard"},{"rank":34,"name":"Lauri Markkanen"},{"rank":35,"name":"Trey Murphy III"},{"rank":36,"name":"Jalen Duren"},{"rank":37,"name":"Walker Kessler"},{"rank":38,"name":"Jalen Williams"},{"rank":39,"name":"Donovan Clingan"},{"rank":40,"name":"Brandon Miller"},{"rank":41,"name":"Derrick White"},{"rank":42,"name":"LeBron James"},{"rank":43,"name":"Jaren Jackson Jr."},{"rank":44,"name":"Anthony Davis"},{"rank":45,"name":"Kon Knueppel"},{"rank":46,"name":"Desmond Bane"},{"rank":47,"name":"Deni Avdija"},{"rank":48,"name":"Kyrie Irving"},{"rank":49,"name":"Franz Wagner"},{"rank":50,"name":"Onyeka Okongwu"},{"rank":51,"name":"Keyonte George"},{"rank":52,"name":"Paolo Banchero"},{"rank":53,"name":"Michael Porter Jr."},{"rank":54,"name":"Nickeil Alexander-Walker"},{"rank":55,"name":"Brandon Ingram"},{"rank":56,"name":"Naz Reid"},{"rank":57,"name":"Cameron Boozer"},{"rank":58,"name":"Damian Lillard"},{"rank":59,"name":"Joel Embiid"},{"rank":60,"name":"Dyson Daniels"},{"rank":61,"name":"Darius Garland"},{"rank":62,"name":"Pascal Siakam"},{"rank":63,"name":"Ivica Zubac"},{"rank":64,"name":"Dejounte Murray"},{"rank":65,"name":"Jarrett Allen"},{"rank":66,"name":"Zach Edey"},{"rank":67,"name":"Tyler Herro"},{"rank":68,"name":"Alex Sarr"},{"rank":69,"name":"Kel'el Ware"},{"rank":70,"name":"Ryan Rollins"},{"rank":71,"name":"OG Anunoby"},{"rank":72,"name":"Rudy Gobert"},{"rank":73,"name":"De'Aaron Fox"},{"rank":74,"name":"Payton Pritchard"},{"rank":75,"name":"Julius Randle"},{"rank":76,"name":"Paul George"},{"rank":77,"name":"Stephon Castle"},{"rank":78,"name":"Mikal Bridges"},{"rank":79,"name":"VJ Edgecombe"},{"rank":80,"name":"Matas Buzelis"},{"rank":81,"name":"Cedric Coward"},{"rank":82,"name":"Caleb Wilson"},{"rank":83,"name":"Coby White"},{"rank":84,"name":"Zion Williamson"},{"rank":85,"name":"Norman Powell"},{"rank":86,"name":"Nic Claxton"},{"rank":87,"name":"Day'Ron Sharpe"},{"rank":88,"name":"Ty Jerome"},{"rank":89,"name":"Immanuel Quickley"},{"rank":90,"name":"Jaden McDaniels"},{"rank":91,"name":"Ausar Thompson"},{"rank":92,"name":"Dylan Harper"},{"rank":93,"name":"Derik Queen"},{"rank":94,"name":"Andrew Wiggins"},{"rank":95,"name":"Jabari Smith Jr."},{"rank":96,"name":"AJ Dybantsa"},{"rank":97,"name":"Zach LaVine"},{"rank":98,"name":"Toumani Camara"},{"rank":99,"name":"Isaiah Hartenstein"},{"rank":100,"name":"Ja Morant"},{"rank":101,"name":"Jalen Suggs"},{"rank":102,"name":"Wendell Carter Jr."},{"rank":103,"name":"Mark Williams"},{"rank":104,"name":"Kristaps Porziņģis"},{"rank":105,"name":"Miles Bridges"},{"rank":106,"name":"Myles Turner"},{"rank":107,"name":"Josh Hart"},{"rank":108,"name":"Andrew Nembhard"},{"rank":109,"name":"Jusuf Nurkić"},{"rank":110,"name":"CJ McCollum"},{"rank":111,"name":"Peyton Watson"},{"rank":112,"name":"Davion Mitchell"},{"rank":113,"name":"Ayo Dosunmu"},{"rank":114,"name":"Collin Murray-Boyles"},{"rank":115,"name":"John Collins"},{"rank":116,"name":"Kevin Porter Jr."},{"rank":117,"name":"Sandro Mamukelashvili"},{"rank":118,"name":"Darryn Peterson"},{"rank":119,"name":"Jakob Poeltl"},{"rank":120,"name":"Khaman Maluach"},{"rank":121,"name":"Brandin Podziemski"},{"rank":122,"name":"Darius Acuff Jr."},{"rank":123,"name":"Reed Sheppard"},{"rank":124,"name":"Neemias Queta"},{"rank":125,"name":"Aaron Gordon"},{"rank":126,"name":"Kyshawn George"},{"rank":127,"name":"Jaime Jaquez Jr."},{"rank":128,"name":"Keegan Murray"},{"rank":129,"name":"Fred VanVleet"},{"rank":130,"name":"Devin Vassell"},{"rank":131,"name":"Yaxel Lendeborg"},{"rank":132,"name":"Jalen Green"},{"rank":133,"name":"Cason Wallace"},{"rank":134,"name":"Tre Jones"},{"rank":135,"name":"Ajay Mitchell"},{"rank":136,"name":"RJ Barrett"},{"rank":137,"name":"Jrue Holiday"},{"rank":138,"name":"Jimmy Butler III"},{"rank":139,"name":"Maxime Raynaud"},{"rank":140,"name":"Collin Gillespie"},{"rank":141,"name":"Paul Reed"},{"rank":142,"name":"Tari Eason"},{"rank":143,"name":"Bobby Portis"},{"rank":144,"name":"Draymond Green"},{"rank":145,"name":"Christian Braun"},{"rank":146,"name":"Nikola Vučević"},{"rank":147,"name":"Moussa Diabaté"},{"rank":148,"name":"Saddiq Bey"},{"rank":149,"name":"Aaron Nesmith"},{"rank":150,"name":"Tobias Harris"},{"rank":151,"name":"Herbert Jones"},{"rank":152,"name":"Dillon Brooks"},{"rank":153,"name":"P.J. Washington"},{"rank":154,"name":"Ace Bailey"},{"rank":155,"name":"Anthony Black"},{"rank":156,"name":"Daniss Jenkins"},{"rank":157,"name":"Jeremiah Fears"},{"rank":158,"name":"Kelly Oubre Jr."},{"rank":159,"name":"Quentin Grimes"},{"rank":160,"name":"Morez Johnson Jr."},{"rank":161,"name":"Grayson Allen"},{"rank":162,"name":"Collin Sexton"},{"rank":163,"name":"Bennedict Mathurin"},{"rank":164,"name":"Jerami Grant"},{"rank":165,"name":"Egor Dëmin"},{"rank":166,"name":"Brook Lopez"},{"rank":167,"name":"Yves Missi"},{"rank":168,"name":"Sam Hauser"},{"rank":169,"name":"Isaiah Stewart"},{"rank":170,"name":"Scoot Henderson"},{"rank":171,"name":"Daniel Gafford"},{"rank":172,"name":"Oso Ighodaro"},{"rank":173,"name":"Cameron Johnson"},{"rank":174,"name":"Santi Aldama"},{"rank":175,"name":"Jordan Poole"},{"rank":176,"name":"Dereck Lively II"},{"rank":177,"name":"Kyle Filipowski"},{"rank":178,"name":"De'Andre Hunter"},{"rank":179,"name":"Mitchell Robinson"},{"rank":180,"name":"Julian Champagnie"},{"rank":181,"name":"Kyle Kuzma"},{"rank":182,"name":"Anfernee Simons"},{"rank":183,"name":"Andre Drummond"},{"rank":184,"name":"Deandre Ayton"},{"rank":185,"name":"Max Strus"},{"rank":186,"name":"Jaylen Wells"},{"rank":187,"name":"Rui Hachimura"},{"rank":188,"name":"Aaron Wiggins"},{"rank":189,"name":"Brayden Burries"},{"rank":190,"name":"De'Anthony Melton"},{"rank":191,"name":"Bilal Coulibaly"},{"rank":192,"name":"Scotty Pippen Jr."},{"rank":193,"name":"Klay Thompson"},{"rank":194,"name":"Cam Whitmore"},{"rank":195,"name":"Obi Toppin"},{"rank":196,"name":"Miles McBride"},{"rank":197,"name":"Luguentz Dort"},{"rank":198,"name":"T.J. McConnell"},{"rank":199,"name":"Keldon Johnson"},{"rank":200,"name":"Jalen Smith"}
+];
+const TEAMS={ATL:'Atlanta Hawks',BKN:'Brooklyn Nets',BOS:'Boston Celtics',CHA:'Charlotte Hornets',CHI:'Chicago Bulls',CLE:'Cleveland Cavaliers',DAL:'Dallas Mavericks',DEN:'Denver Nuggets',DET:'Detroit Pistons',GSW:'Golden State Warriors',HOU:'Houston Rockets',IND:'Indiana Pacers',LAC:'LA Clippers',LAL:'Los Angeles Lakers',MEM:'Memphis Grizzlies',MIA:'Miami Heat',MIL:'Milwaukee Bucks',MIN:'Minnesota Timberwolves',NOP:'New Orleans Pelicans',NYK:'New York Knicks',OKC:'Oklahoma City Thunder',ORL:'Orlando Magic',PHI:'Philadelphia 76ers',PHX:'Phoenix Suns',POR:'Portland Trail Blazers',SAC:'Sacramento Kings',SAS:'San Antonio Spurs',TOR:'Toronto Raptors',UTA:'Utah Jazz',WAS:'Washington Wizards'};
+const TEAM_COLORS={ATL:'#C8102E',BKN:'#111111',BOS:'#007A33',CHA:'#00788C',CHI:'#CE1141',CLE:'#860038',DAL:'#00538C',DEN:'#243B6B',DET:'#C8102E',GSW:'#D9A400',HOU:'#CE1141',IND:'#8A6500',LAC:'#C8102E',LAL:'#552583',MEM:'#5D76A9',MIA:'#98002E',MIL:'#00471B',MIN:'#236192',NOP:'#0C2340',NYK:'#006BB6',OKC:'#007AC1',ORL:'#0077C0',PHI:'#006BB6',PHX:'#E56020',POR:'#C8102E',SAC:'#5A2D81',SAS:'#4B5563',TOR:'#CE1141',UTA:'#315A86',WAS:'#002B5C'};
+// 2026-27 current-team snapshot checked against NBA.com official 2026 offseason transactions / league roster (updated through 2026-09-16).
+// Stats remain 2025-26 baseline; schedule and 2026-27 team labels use currentTeam.
+const CURRENT_TEAM_OVERRIDES={
+'Jock Landale':'ATL','CJ McCollum':'ATL','Luguentz Dort':'ATL','Ryan Nembhard':'ATL','Aaron Wiggins':'ATL','Devin Carter':'ATL',
+'Jonathan Kuminga':'MIN','Zaccharie Risacher':'DAL',
+'Mike Conley':'BOS','Paul George':'BOS','Mitchell Robinson':'BOS','Jaylen Brown':'PHI','Nikola Vučević':'ORL',
+'Keon Ellis':'BKN','Julius Randle':'BKN','Moritz Wagner':'BKN','Nic Claxton':'CHI','Ziaire Williams':'LAL',
+'Grayson Allen':'CHA','Dorian Finney-Smith':'CHA','Royce O’Neale':'CHA','Naz Reid':'CHA','Dennis Schröder':'CHA','LaMelo Ball':'MIN','Miles Bridges':'PHX','Josh Green':'UTA','Tre Mann':'WAS',
+'Norman Powell':'CHI','Nick Richards':'MIA','Collin Sexton':'LAL','Anfernee Simons':'PHI',
+'Peyton Watson':'CLE','Larry Nance Jr.':'IND','Georges Niang':'GSW','Max Strus':'LAC','Dean Wade':'PHI',
+'Santi Aldama':'DAL','Marcus Sasser':'DAL','Khris Middleton':'WAS','Klay Thompson':'MIA','Brandon Williams':'GSW',
+'Marvin Bagley III':'DEN','DeMar DeRozan':'DEN','Tim Hardaway Jr.':'MIA',
+'John Collins':'DET','Gary Harris':'DET','Isaiah Joe':'DET','Taurean Prince':'DET','Tobias Harris':'SAS','Caris LeVert':'MIL','Isaiah Stewart':'MEM',
+'Georges Niang':'GSW','Quinten Post':'MEM',
+'Bogdan Bogdanović':'HOU','Marcus Smart':'HOU','Josh Okogie':'UTA',
+'Kelly Oubre Jr.':'IND','Kam Jones':'CHI','Micah Potter':'POR',
+'Johni Broome':'LAC','Gradey Dick':'LAC','Rui Hachimura':'LAC','Brandon Ingram':'LAC','Bennedict Mathurin':'NOP','Kawhi Leonard':'TOR',
+'Quentin Grimes':'LAL','Jaden Hardy':'LAL','Walker Kessler':'LAL','Kevon Looney':'LAL','Sandro Mamukelashvili':'LAL','Matisse Thybulle':'LAL','LeBron James':'PHI','Luke Kennard':'PHX',
+'Jerami Grant':'MEM','Jordan Hawkins':'MEM','Kris Murray':'MEM','Micah Peavy':'MEM','D’Angelo Russell':'MEM',
+'Giannis Antetokounmpo':'MIA','Bobby Portis':'MIA','Klay Thompson':'MIA','Tyler Herro':'MIL','Kasparas Jakučionis':'MIL','Jaime Jaquez Jr.':'MIL','Kel’el Ware':'MIL','Caris LeVert':'MIL',
+'Kyle Anderson':'TOR','John Konchar':'NYK','Ariel Hukporti':'PHI','Andre Drummond':'NYK','Jeremy Sochan':'POR',
+'Branden Carlson':'POR','Ja Morant':'POR',
+'Deandre Ayton':'WAS','D’Angelo Russell':'MEM','Cam Whitmore':'CLE','Harrison Barnes':'SAS',
+'Victor Wembanyama':'SAS','Nikola Jokić':'DEN','Luka Dončić':'LAL','Shai Gilgeous-Alexander':'OKC','Jalen Johnson':'ATL','Cade Cunningham':'DET','Karl-Anthony Towns':'NYK','Donovan Mitchell':'CLE'
+};
+
+const ROOKIE_DB=[{"pick":1,"name":"AJ Dybantsa","position":"F","school":"BYU","team":"WAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":35,"pts":25.5,"reb":6.8,"ast":3.7,"stl":1.1,"blk":null,"fg":0.51,"ft":0.774,"p3":0.331,"pm3":1.4}},{"pick":2,"name":"Darryn Peterson","position":"G","school":"Kansas","team":"UTA","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":29,"pts":20.2,"reb":null,"ast":null,"stl":null,"blk":null,"fg":null,"ft":null,"p3":null,"pm3":null}},{"pick":3,"name":"Cameron Boozer","position":"F-C","school":"Duke","team":"MEM","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":38,"pts":22.5,"reb":10.2,"ast":4.1,"stl":1.4,"blk":null,"fg":0.556,"ft":0.789,"p3":0.391,"pm3":1.4210526315789473}},{"pick":4,"name":"Caleb Wilson","position":"F","school":"North Carolina","team":"CHI","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":34,"pts":15.9,"reb":7.1,"ast":null,"stl":null,"blk":2.3,"fg":null,"ft":null,"p3":null,"pm3":null}},{"pick":5,"name":"Keaton Wagler","position":"G","school":"Illinois","team":"LAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":37,"pts":17.9,"reb":5.1,"ast":4.2,"stl":null,"blk":null,"fg":0.45,"ft":0.8,"p3":0.4,"pm3":null}},{"pick":6,"name":"Mikel Brown Jr.","position":"G","school":"Louisville","team":"BKN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":21,"pts":18.2,"reb":3.3,"ast":4.7,"stl":1.2,"blk":null,"fg":0.41,"ft":0.84,"p3":0.34,"pm3":null}},{"pick":7,"name":"Darius Acuff Jr.","position":"G","school":"Arkansas","team":"SAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":36,"pts":23.5,"reb":3.1,"ast":6.4,"stl":null,"blk":null,"fg":0.48,"ft":0.81,"p3":0.44,"pm3":2.5277777777777777}},{"pick":8,"name":"Kingston Flemings","position":"G","school":"Houston","team":"ATL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":37,"pts":16.1,"reb":4.1,"ast":5.2,"stl":1.5,"blk":null,"fg":0.48,"ft":0.85,"p3":0.39,"pm3":null}},{"pick":9,"name":"Morez Johnson Jr.","position":"F-C","school":"Michigan","team":"DAL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":40,"pts":13.1,"reb":7.3,"ast":1.2,"stl":0.7,"blk":1.1,"fg":null,"ft":null,"p3":0.343,"pm3":null}},{"pick":10,"name":"Brayden Burries","position":"G","school":"Arizona","team":"MIL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":39,"pts":16.1,"reb":4.9,"ast":2.4,"stl":1.5,"blk":null,"fg":0.491,"ft":0.805,"p3":0.391,"pm3":1.794871794871795}},{"pick":11,"name":"Yaxel Lendeborg","position":"F","school":"Michigan","team":"GSW","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true,"ncaa":{"gp":40,"pts":15.1,"reb":6.8,"ast":3.2,"stl":1.1,"blk":1.2,"fg":0.52,"ft":0.82,"p3":0.37,"pm3":null}},{"pick":12,"name":"Aday Mara","position":"C","school":"Michigan","team":"OKC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":13,"name":"Nate Ament","position":"F","school":"Tennessee","team":"MIL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":14,"name":"Hannes Steinbach","position":"F-C","school":"Washington","team":"CHA","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":15,"name":"Dailyn Swain","position":"F","school":"Texas","team":"CHI","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":16,"name":"Bennett Stirtz","position":"G","school":"Iowa","team":"OKC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":17,"name":"Ebuka Okorie","position":"G","school":"Stanford","team":"DET","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":18,"name":"Christian Anderson","position":"G","school":"Texas Tech","team":"CHA","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":19,"name":"Allen Graves","position":"F","school":"Santa Clara","team":"TOR","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":20,"name":"Jayden Quaintance","position":"F-C","school":"Kentucky","team":"SAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":21,"name":"Karim López","position":"F","school":"New Zealand Breakers","team":"MEM","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":22,"name":"Labaron Philon Jr.","position":"G","school":"Alabama","team":"PHI","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":23,"name":"Zuby Ejiofor","position":"F-C","school":"St. John's","team":"ATL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":24,"name":"Cameron Carr","position":"G","school":"Baylor","team":"LAL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":25,"name":"Sergio De Larrea","position":"G","school":"Valencia","team":"DAL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":26,"name":"Tarris Reed Jr.","position":"C","school":"Connecticut","team":"SAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":27,"name":"Chris Cenac Jr.","position":"F-C","school":"Houston","team":"BOS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":28,"name":"Joshua Jefferson","position":"F","school":"Iowa State","team":"BKN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":29,"name":"Alex Karaban","position":"F","school":"Connecticut","team":"SAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":30,"name":"Koa Peat","position":"F","school":"Arizona","team":"PHX","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":31,"name":"Bruce Thornton","position":"G","school":"Ohio State","team":"HOU","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":32,"name":"Richie Saunders","position":"G/F","school":"BYU","team":"MEM","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":33,"name":"Isaiah Evans","position":"G","school":"Duke","team":"MIN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":34,"name":"Meleek Thomas","position":"G","school":"Arkansas","team":"CLE","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":35,"name":"Trevon Brazile","position":"F","school":"Arkansas","team":"DEN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":36,"name":"Baba Miller","position":"F","school":"Cincinnati","team":"LAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":37,"name":"Ryan Conwell","position":"G","school":"Louisville","team":"MIA","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":38,"name":"Braden Smith","position":"G","school":"Purdue","team":"IND","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":39,"name":"Jack Kayil","position":"G","school":"Alba Berlin","team":"NYK","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":40,"name":"Dillon Mitchell","position":"F","school":"St. John’s","team":"BOS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":41,"name":"Otega Oweh","position":"G","school":"Kentucky","team":"OKC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":42,"name":"Ja’Kobi Gillespie","position":"G","school":"Tennessee","team":"SAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":43,"name":"Tyler Bilodeau","position":"F","school":"UCLA","team":"BKN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":44,"name":"Maliq Brown","position":"F","school":"Duke","team":"SAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":45,"name":"Emanuel Sharp","position":"G","school":"Houston","team":"SAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":46,"name":"Felix Okpara","position":"C","school":"Tennessee","team":"WAS","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":47,"name":"Tyler Nickel","position":"F","school":"Vanderbilt","team":"NYK","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":48,"name":"Tobi Lawal","position":"F","school":"Virginia Tech","team":"DAL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":49,"name":"Bryce Hopkins","position":"F","school":"St. John’s","team":"DEN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":50,"name":"Jaden Bradley","position":"G","school":"Arizona","team":"TOR","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":51,"name":"Izaiyah Nelson","position":"C","school":"South Florida","team":"ORL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":52,"name":"Henri Veesaar","position":"F-C","school":"North Carolina","team":"ATL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":53,"name":"Ugonna Onyenso","position":"C","school":"Virginia","team":"DET","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":54,"name":"Lajae Jones","position":"F","school":"Florida State","team":"GSW","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":55,"name":"Nick Martinelli","position":"F","school":"Northwestern","team":"LAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":56,"name":"Vsevolod Ishchenko","position":"F-C","school":"Lokomotiv Kuban","team":"DAL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":57,"name":"Narcisse Ngoy","position":"F","school":"Poitiers","team":"LAC","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":58,"name":"Jaron Pierre Jr.","position":"G","school":"SMU","team":"NOP","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":59,"name":"Trey Kaufman-Renn","position":"F","school":"Purdue","team":"MIN","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true},{"pick":60,"name":"Malique Lewis","position":"F","school":"South East Melbourne","team":"MIL","draftYear":2026,"nbaDraftStatus":"Rookie","isRookie":true}];
+
+// Build 2026 rookies into the main searchable/player dataset so Draft-page search can add them directly.
+const ROOKIE_SOURCE_INFO={draft:'NBA.com 2026 Draft Results',ncaa:'NBA.com 2026 Draft Profiles + NCAA D-I stats where verified',projection:'L7N Rookie Translation v0.1 (pre-season model; not an expert consensus projection)'};
+const CATS={PTS:{dir:1,type:'avg',score:true,label:'PTS'},'3PM':{dir:1,type:'avg',score:true,label:'3PM'},REB:{dir:1,type:'avg',score:true,label:'REB'},AST:{dir:1,type:'avg',score:true,label:'AST'},STL:{dir:1,type:'avg',score:true,label:'STL'},BLK:{dir:1,type:'avg',score:true,label:'BLK'},'FG%':{dir:1,type:'pct',score:true,label:'FG%'},'FT%':{dir:1,type:'pct',score:true,label:'FT%'},FTM:{dir:1,type:'avg',score:true,label:'FTM'},TOV:{dir:-1,type:'avg',score:true,label:'TOV'},DD:{dir:1,type:'total',score:true,label:'DD'},TD:{dir:1,type:'total',score:false,label:'TD'},'A/T':{dir:1,type:'ratio',score:true,label:'A/T'},'3P%':{dir:1,type:'pct3',score:true,label:'3P%'}};
+const DEFAULTS=Object.fromEntries(Object.keys(CATS).map(k=>[k,CATS[k].score?1:0]));
+const DD_MAP={'Karl-Anthony Towns':56,'Nikola Jokić':55,'Jalen Johnson':49,'Victor Wembanyama':42,'Jalen Duren':41,'Cade Cunningham':38,'Donovan Clingan':37,'Bam Adebayo':35,'Luka Dončić':34,'Alperen Şengün':34,'Rudy Gobert':33,'Scottie Barnes':30,'Josh Giddey':28,'Evan Mobley':27,'Paolo Banchero':26,'Chet Holmgren':25,'Ivica Zubac':24,'Kel\'el Ware':24,'Nikola Vučević':23,'Deandre Ayton':22,'James Harden':20,'Jarrett Allen':20,'Moussa Diabaté':20,'Amen Thompson':20,'Giannis Antetokounmpo':19,'LeBron James':17,'LaMelo Ball':10,'Shai Gilgeous-Alexander':8,'Donovan Mitchell':5};
+const TD_MAP={'Luka Dončić':8,'Victor Wembanyama':1,'Jalen Johnson':13,'Paolo Banchero':3,'Nikola Jokić':34,'Giannis Antetokounmpo':0,'Shai Gilgeous-Alexander':0,'Cade Cunningham':0,'Karl-Anthony Towns':0,'LaMelo Ball':0,'LeBron James':0,'Donovan Mitchell':0};
+const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’'\.\-]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+const CURRENT_TEAM_NORM=Object.fromEntries(Object.entries(CURRENT_TEAM_OVERRIDES).map(([k,v])=>[normalize(k),v]));
+function currentTeamFor(name,fallback){return CURRENT_TEAM_NORM[normalize(name)]||fallback}
+const DD_NORM=Object.fromEntries(Object.entries(DD_MAP).map(([k,v])=>[normalize(k),v])); const TD_NORM=Object.fromEntries(Object.entries(TD_MAP).map(([k,v])=>[normalize(k),v]));
+function num(v){const n=Number(v);return Number.isFinite(n)?n:null} function ratio(a,b){return b? a/b:null} function pct(v){return Number.isFinite(v)?(v*100).toFixed(1)+'%':'—'} function fmt1(v){return Number.isFinite(v)?v.toFixed(1):'—'}
+function demo(){return [
+{name:'Nikola Jokić',team:'DEN',gp:65,pts:27.7,pm3:1.7,reb:12.9,ast:10.7,stl:1.4,blk:.8,fg:.569,fga:17.4,ft:.831,fta:7.4,tov:3.7,p3:.380,p3a:4.5,dd:55,td:34},
+{name:'Luka Dončić',team:'LAL',gp:64,pts:33.5,pm3:4.0,reb:7.7,ast:8.3,stl:1.6,blk:.5,fg:.476,fga:22.8,ft:.780,fta:10.1,tov:4.0,p3:.366,p3a:10.8,dd:34,td:8},
+{name:'Shai Gilgeous-Alexander',team:'OKC',gp:68,pts:31.1,pm3:1.7,reb:4.3,ast:6.6,stl:1.4,blk:.8,fg:.553,fga:19.4,ft:.879,fta:9.0,tov:2.2,p3:.386,p3a:4.4,dd:8,td:0},
+{name:'Victor Wembanyama',team:'SAS',gp:64,pts:25.0,pm3:1.9,reb:11.5,ast:3.1,stl:1.0,blk:3.1,fg:.512,fga:16.9,ft:.827,fta:7.0,tov:2.4,p3:.349,p3a:5.5,dd:42,td:1},
+{name:'Giannis Antetokounmpo',team:'MIL',gp:36,pts:27.6,pm3:.4,reb:9.8,ast:5.4,stl:.9,blk:.7,fg:.624,fga:16.6,ft:.650,fta:9.9,tov:3.2,p3:.333,p3a:1.3,dd:19,td:0},
+{name:'Jalen Johnson',team:'ATL',gp:72,pts:22.5,pm3:1.7,reb:10.3,ast:7.9,stl:1.2,blk:.4,fg:.489,fga:17.1,ft:.788,fta:5.3,tov:3.4,p3:.352,p3a:4.7,dd:49,td:13},
+{name:'Cade Cunningham',team:'DET',gp:64,pts:23.9,pm3:2.0,reb:5.5,ast:9.9,stl:1.4,blk:.8,fg:.461,fga:18.6,ft:.812,fta:6.0,tov:3.7,p3:.342,p3a:5.7,dd:38,td:0},
+{name:'Karl-Anthony Towns',team:'NYK',gp:75,pts:20.1,pm3:1.5,reb:11.9,ast:3.0,stl:.9,blk:.5,fg:.501,fga:13.8,ft:.858,fta:5.5,tov:2.5,p3:.368,p3a:4.1,dd:56,td:0},
+{name:'LaMelo Ball',team:'CHA',gp:72,pts:20.1,pm3:3.8,reb:4.8,ast:7.1,stl:1.2,blk:.2,fg:.407,fga:17.3,ft:.899,fta:2.5,tov:2.8,p3:.368,p3a:10.3,dd:10,td:0},
+{name:'LeBron James',team:'LAL',gp:60,pts:20.9,pm3:1.3,reb:6.1,ast:7.2,stl:1.2,blk:.6,fg:.515,fga:15.3,ft:.737,fta:5.3,tov:3.0,p3:.317,p3a:4.1,dd:17,td:0},
+{name:'Donovan Mitchell',team:'CLE',gp:70,pts:27.9,pm3:3.2,reb:4.5,ast:5.7,stl:1.5,blk:.3,fg:.483,fga:20.0,ft:.865,fta:6.1,tov:2.8,p3:.364,p3a:8.8,dd:5,td:0}
+].map(x=>({...x,ftm:x.ft*x.fta,at:ratio(x.ast,x.tov)}))}
+let players=[], datasets={last:[],current:[],recent10:[],recent5:[]},dataMeta={}, rookiePlayers=[];
+const LEAGUE_STORE_KEY='l7n_h2h_leagues_v1';
+const ACTIVE_LEAGUE_KEY='l7n_h2h_active_league_v1';
+const LEGACY_KEYS={team:'fb_final_team',opp:'fb_opp_team',weights:'fb_weights',week:'fb_week',dataBasis:'fb_data_basis',overrides:'fb_final_overrides',teamOverrides:'fb_team_overrides',minGP:'fb_min_gp',refMode:'fb_ref_mode'};
+function uid(){return 'lg_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function makeLeague(name='我的聯盟'){
+  return {id:uid(),name,selected:[],oppSelected:[],weights:{...DEFAULTS},tab:'draft',week:0,cand:'',playerSearch:'',oppSearch:'',rookieSearch:'',rookieFilter:'all',sort:'fit',candSort:'yahoo',candAvailableOnly:false,draftUnavailable:[],what:null,whatIn:[],whatOut:[],overrides:{},teamOverrides:{},detail:null,rookieDetail:null,dataBasis:'last',blend:.60,minGP:20,refMode:'league'}
+}
+function normalizeLeagueProfile(p){
+  const d=makeLeague(p?.name||'我的聯盟');
+  const o={...d,...(p||{})};
+  o.id=p?.id||d.id; o.name=String(p?.name||d.name).slice(0,80); o.schemaVersion=1; o.schemaVersion=1;
+  o.selected=Array.isArray(p?.selected)?p.selected:[]; o.oppSelected=Array.isArray(p?.oppSelected)?p.oppSelected:[]; o.candSort=typeof p?.candSort==='string'?p.candSort:'yahoo'; o.candAvailableOnly=!!p?.candAvailableOnly; o.draftUnavailable=Array.isArray(p?.draftUnavailable)?p.draftUnavailable:[]; o.whatIn=Array.isArray(p?.whatIn)?p.whatIn:(p?.what?[p.what]:[]); o.whatOut=Array.isArray(p?.whatOut)?p.whatOut:[];
+  o.weights={...DEFAULTS,...(p?.weights||{})}; o.overrides=p?.overrides||{}; o.teamOverrides=p?.teamOverrides||{};
+  o.minGP=Number.isFinite(Number(p?.minGP))?Math.max(1,Math.min(82,Number(p.minGP))):10;
+  o.refMode=p?.refMode==='top200'?'top200':'league';
+  o.dataBasis=['last','current','recent10','recent5','blend'].includes(p?.dataBasis)?p.dataBasis:'last';
+  o.week=Number.isFinite(Number(p?.week))?Math.max(0,Math.min(24,Number(p.week))):0;
+  return o;
+}
+function loadLeagueProfiles(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(LEAGUE_STORE_KEY)||'null');
+    if(Array.isArray(raw)&&raw.length) return raw.map(normalizeLeagueProfile);
+  }catch(e){}
+  const legacy=makeLeague('我的聯盟');
+  try{
+    legacy.selected=JSON.parse(localStorage.getItem(LEGACY_KEYS.team)||'[]');
+    legacy.oppSelected=JSON.parse(localStorage.getItem(LEGACY_KEYS.opp)||'[]');
+    legacy.weights={...DEFAULTS,...JSON.parse(localStorage.getItem(LEGACY_KEYS.weights)||'{}')};
+    legacy.overrides=JSON.parse(localStorage.getItem(LEGACY_KEYS.overrides)||'{}')||{};
+    legacy.teamOverrides=JSON.parse(localStorage.getItem(LEGACY_KEYS.teamOverrides)||'{}')||{};
+    legacy.dataBasis=localStorage.getItem(LEGACY_KEYS.dataBasis)||'last';
+    legacy.week=Number(localStorage.getItem(LEGACY_KEYS.week)||0)||0;
+    legacy.minGP=Number(localStorage.getItem(LEGACY_KEYS.minGP)||10)||10;
+    legacy.refMode=localStorage.getItem(LEGACY_KEYS.refMode)||'league';
+  }catch(e){}
+  return [normalizeLeagueProfile(legacy)];
+}
+function toRuntimeState(p){
+  return {...p,selected:new Set(p.selected||[]),oppSelected:new Set(p.oppSelected||[]),draftUnavailable:new Set(p.draftUnavailable||[]),weights:{...DEFAULTS,...(p.weights||{})},overrides:{...(p.overrides||{})},teamOverrides:{...(p.teamOverrides||{})}};
+}
+let leagueProfiles=loadLeagueProfiles();
+let activeLeagueId=localStorage.getItem(ACTIVE_LEAGUE_KEY);
+if(!leagueProfiles.some(p=>p.id===activeLeagueId)){activeLeagueId=leagueProfiles[0].id;localStorage.setItem(ACTIVE_LEAGUE_KEY,activeLeagueId)}
+let state=toRuntimeState(leagueProfiles.find(p=>p.id===activeLeagueId)||leagueProfiles[0]);
+function runtimeToProfile(){
+  const p={...state};
+  p.selected=[...state.selected]; p.oppSelected=[...state.oppSelected]; p.draftUnavailable=[...state.draftUnavailable]; p.candSort=state.candSort||'yahoo'; p.candAvailableOnly=!!state.candAvailableOnly;
+  p.weights={...state.weights}; p.overrides={...state.overrides}; p.teamOverrides={...state.teamOverrides};
+  p.minGP=Math.max(1,Math.min(82,Number(document.getElementById('minGP')?.value||state.minGP||10)));
+  p.refMode=document.getElementById('refMode')?.value==='top200'?'top200':'league';
+  p.dataBasis=state.dataBasis; p.week=state.week; return normalizeLeagueProfile(p);
+}
+function persistProfiles(){try{localStorage.setItem(LEAGUE_STORE_KEY,JSON.stringify(leagueProfiles));localStorage.setItem(ACTIVE_LEAGUE_KEY,activeLeagueId)}catch(e){}}
+function syncControlsFromState(){
+  const mg=document.getElementById('minGP'); if(mg)mg.value=state.minGP||10;
+  const rm=document.getElementById('refMode'); if(rm)rm.value=state.refMode||'league';
+  const db=document.getElementById('dataBasis'); if(db)db.value=state.dataBasis||'last';
+  const ws=document.getElementById('weekSelect'); if(ws)ws.value=state.week??0;
+}
+function renderLeagueManager(){
+  const sel=document.getElementById('leagueSelect'); if(!sel)return;
+  sel.innerHTML=leagueProfiles.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''); sel.value=activeLeagueId;
+  const msel=document.getElementById('mobileLeagueSelect'); if(msel){msel.innerHTML=sel.innerHTML;msel.value=activeLeagueId;}
+  const meta=document.getElementById('leagueMeta'); if(meta)meta.textContent=`${leagueProfiles.length} 個聯盟 · 目前：${state.name}`;
+  const h=document.querySelector('#activeLeagueHeader span:last-child'); if(h)h.textContent=state.name;
+  const hs=document.getElementById('activeLeagueHeader'); if(hs)hs.title=state.name;
+  sel.onchange=()=>switchLeague(sel.value);
+  const add=document.getElementById('addLeague'); if(add)add.onclick=addLeague;
+  const copy=document.getElementById('copyLeague'); if(copy)copy.onclick=copyLeague;
+  const rename=document.getElementById('renameLeague'); if(rename)rename.onclick=renameLeague;
+  const del=document.getElementById('deleteLeague'); if(del)del.onclick=deleteLeague;
+  const sh=document.getElementById('shareLeagueMini'); if(sh)sh.onclick=shareNow;
+}
+function switchLeague(id){
+  if(!leagueProfiles.some(p=>p.id===id)||id===activeLeagueId)return;
+  save();
+  const next=leagueProfiles.find(p=>p.id===id); activeLeagueId=id; state=toRuntimeState(next); syncControlsFromState();
+  document.getElementById('detail')?.scrollIntoView?.({block:'nearest'}); render();
+}
+function addLeague(){
+  const name=(prompt('新聯盟名稱：','聯盟 '+(leagueProfiles.length+1))||'').trim(); if(!name)return;
+  save(); const p=makeLeague(name); p.week=state.week; leagueProfiles.push(p); activeLeagueId=p.id; state=toRuntimeState(p); persistProfiles(); syncControlsFromState(); render();
+}
+function copyLeague(){
+  save(); const base=leagueProfiles.find(p=>p.id===activeLeagueId); if(!base)return;
+  const name=(prompt('複製後的聯盟名稱：',base.name+' Copy')||'').trim(); if(!name)return;
+  const p=normalizeLeagueProfile({...base,id:uid(),name,selected:[...state.selected],oppSelected:[...state.oppSelected],weights:{...state.weights},overrides:{...state.overrides},teamOverrides:{...state.teamOverrides}});
+  leagueProfiles.push(p); activeLeagueId=p.id; state=toRuntimeState(p); persistProfiles(); syncControlsFromState(); render();
+}
+function renameLeague(){
+  const p=leagueProfiles.find(x=>x.id===activeLeagueId); if(!p)return;
+  const name=(prompt('新的聯盟名稱：',p.name)||'').trim(); if(!name||name===p.name)return;
+  p.name=name; state.name=name; save(); render();
+}
+function deleteLeague(){
+  if(leagueProfiles.length<=1){alert('至少保留一個聯盟。');return;}
+  const p=leagueProfiles.find(x=>x.id===activeLeagueId); if(!p)return;
+  if(!confirm(`確定刪除「${p.name}」？這個聯盟的 roster 與設定會一起刪除。`))return;
+  leagueProfiles=leagueProfiles.filter(x=>x.id!==activeLeagueId);
+  activeLeagueId=leagueProfiles[0].id; state=toRuntimeState(leagueProfiles[0]); persistProfiles(); syncControlsFromState(); render();
+}
+
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+// Initialize rookie bridge only after rookiePlayers has been declared (fixes TDZ startup error).
+rookiePlayers=buildRookiePlayers();
+function rateVal(v){const n=num(v);if(n==null)return null;return n>1?n/100:n}
+function makePlayer(x,useHistoricalExtras=true){const gp=num(x.games??x.gp);if(!gp||gp<=0)return null;let fgm=num(x.fieldGoals??x.fgm)||0,fgaT=num(x.fieldAttempts??x.fga)||0,fg=rateVal(x.fieldPercent??x.fgPct);let ftm=num(x.ft??x.ftm)||0,ftaT=num(x.ftAttempts??x.fta)||0,ft=rateVal(x.ftPercent??x.ftPct);let p3m=num(x.threeFg??x.threeFgm??x.fg3m)||0,p3aT=num(x.threeAttempts??x.threeFga??x.fg3a)||0,p3=rateVal(x.threePercent??x.fg3Pct??x.threePct);const ast=num(x.assists??x.ast)||0,tov=num(x.turnovers??x.tov)||0,reb=num(x.totalRb??x.reb)||((num(x.offensiveRb??x.oreb)||0)+(num(x.defensiveRb??x.dreb)||0));const pts=num(x.points??x.pts)||0,stl=num(x.steals??x.stl)||0,blk=num(x.blocks??x.blk)||0,mins=num(x.minutes??x.minutesPlayed??x.minutes_played)||0;fg=fg??(fgaT?fgm/fgaT:null);ft=ft??(ftaT?ftm/ftaT:null);p3=p3??(p3aT?p3m/p3aT:null);const name=x.playerName??x.name;const baselineTeam=x.team??x.teamAbbreviation??'—';const currentTeam=currentTeamFor(name,baselineTeam);const ddRaw=num(x.dd??x.dd2??x.DD2??x.doubleDoubles??x.doubleDoublesCount);const tdRaw=num(x.td??x.td3??x.TD3??x.tripleDoubles??x.tripleDoublesCount);return {name,team:currentTeam,baselineTeam,currentTeam,gp,minutes:mins,pts:pts/gp,pm3:p3m/gp,reb:reb/gp,ast:ast/gp,stl:stl/gp,blk:blk/gp,tov:tov/gp,fg,fga:fgaT/gp,ft,fta:ftaT/gp,ftm:ftm/gp,p3,p3a:p3aT/gp,dd:ddRaw??DD_NORM[normalize(name)]??null,td:tdRaw??TD_NORM[normalize(name)]??null,at:ratio(ast,tov)} }
+function csvParse(txt){const lines=txt.trim().split(/\r?\n/);const out=[];for(let j=1;j<lines.length;j++){let s=lines[j],cur='',q=false,vals=[];for(let i=0;i<s.length;i++){const ch=s[i];if(ch==='"'){if(q&&s[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===','&&!q){vals.push(cur);cur=''}else cur+=ch}vals.push(cur);out.push(vals)}return {head:lines[0].split(','),rows:out}}
+function fromCsv(text){
+ const p=csvParse(text);
+ const H=p.head.map(h=>String(h||'').trim());
+ const hi=new Map(H.map((h,i)=>[h.toLowerCase().replace(/\s+/g,'_'),i]));
+ const get=(row,...keys)=>{for(const k of keys){const i=hi.get(k.toLowerCase().replace(/\s+/g,'_'));if(i!=null)return row[i]??''}return ''};
+ const rows=[];
+ for(const row of p.rows){
+   const name=get(row,'player','player_name','name'); if(!name) continue;
+   const team=get(row,'team','team_abbreviation','tm');
+   const gp=num(get(row,'gp','games','games_played'));
+   const fgm=num(get(row,'fgm','field_goals_made'));
+   const fga=num(get(row,'fga','field_goals_attempted','field_attempts'));
+   const p3m=num(get(row,'fg3m','three_point_made','three_fg','three_fgm','three_point_field_goals_made'));
+   const p3a=num(get(row,'fg3a','three_point_attempted','three_attempts','three_fga','three_point_field_goals_attempted'));
+   const ftm=num(get(row,'ftm','ft','free_throws_made','one_point_made'));
+   const fta=num(get(row,'fta','ft_attempts','free_throw_attempts','one_point_attempted'));
+   const reb=num(get(row,'reb','total_rebounds','totalrb','total_rb'));
+   const ast=num(get(row,'ast','ast_total','assists'));
+   const stl=num(get(row,'stl','steals'));
+   const blk=num(get(row,'blk','blocks'));
+   const tov=num(get(row,'tov','to','turnovers'));
+   const pts=num(get(row,'pts','points'));
+   const min=num(get(row,'min','minutes','mpg','minutes_played'));
+   const fgPct=rateVal(get(row,'fg_pct','fg%','field_percent','field_goal_percentage'));
+   const ftPct=rateVal(get(row,'ft_pct','ft%','ft_percent','free_throw_percentage'));
+   const p3Pct=rateVal(get(row,'fg3_pct','3p%','3pt%','3p_pct','three_percent','three_point_percentage'));
+   const looksPerGame = gp!=null && gp>0 && ((fga!=null&&fga<40)||(pts!=null&&pts<60)) && ((fgm==null)||!Number.isInteger(fgm));
+   let obj;
+   if(looksPerGame){
+      obj={playerName:name,team,gp,fieldGoals:fgm,fieldAttempts:fga,threeFg:p3m,threeAttempts:p3a,ft:ftm,ftAttempts:fta,totalRb:reb,assists:ast,steals:stl,blocks:blk,turnovers:tov,points:pts,minutes:min,fieldPercent:fgPct,ftPercent:ftPct,threePercent:p3Pct};
+      const q={name,team,baselineTeam:team,currentTeam:currentTeamFor(name,team||'—'),gp,minutes:min||0,pts:pts??0,pm3:p3m??0,reb:reb??0,ast:ast??0,stl:stl??0,blk:blk??0,tov:tov??0,fg:fgPct, fga:fga, ft:ftPct,fta:fta,ftm:ftm, p3:p3Pct,p3a:p3a,dd:DD_NORM[normalize(name)]??null,td:TD_NORM[normalize(name)]??null,at:ratio(ast,tov)};
+      obj=null; rows.push(q); continue;
+   }
+   if(!gp||gp<=0) continue;
+   obj={playerName:name,team,gp,fieldGoals:fgm,fieldAttempts:fga,threeFg:p3m,threeAttempts:p3a,ft:ftm,ftAttempts:fta,totalRb:reb,assists:ast,steals:stl,blocks:blk,turnovers:tov,points:pts,minutes:min,fieldPercent:fgPct,ftPercent:ftPct,threePercent:p3Pct};
+   const made=makePlayer(obj,false);
+   if(made) rows.push(made);
+ }
+ return rows.filter(Boolean);
+}
+async function loadDataSets(){
+  // Fully offline initialization: never wait on external APIs.
+  const last=loadStoredDataset('last');
+  const current=loadStoredDataset('current');
+  const recent10=loadStoredDataset('recent10');
+  const recent5=loadStoredDataset('recent5');
+  return {
+    last: last.length ? last : demo(),
+    current,
+    recent10,
+    recent5
+  };
+}
+function clonePlayers(ps){return ps.map(p=>({...p}))}
+function blendData(last,current){const cm=new Map(current.map(p=>[normalize(p.name),p]));const lm=new Map(last.map(p=>[normalize(p.name),p]));const names=[...new Set([...last.map(p=>p.name),...current.map(p=>p.name)])];return names.map(name=>{const a=lm.get(normalize(name)),b=cm.get(normalize(name));if(!a)return b?{...b}:null;if(!b)return {...a};const w=state.blend, q=1-w;const rate=(k)=>w*(b[k]??a[k])+q*(a[k]??b[k]);const mixPct=(pctKey,volKey)=>{const ba=Number(a[pctKey]),bb=Number(b[pctKey]),va=Number(a[volKey]||0),vb=Number(b[volKey]||0);const wa=va*q,wb=vb*w;return wa+wb?((a[pctKey]||0)*wa+(b[pctKey]||0)*wb)/(wa+wb):rate(pctKey)};const out={...a,name:b.name||a.name,team:b.team||a.team,currentTeam:b.team||a.team,gp:b.gp||a.gp,minutes:rate('minutes'),pts:rate('pts'),pm3:rate('pm3'),reb:rate('reb'),ast:rate('ast'),stl:rate('stl'),blk:rate('blk'),tov:rate('tov'),fg:mixPct('fg','fga'),fga:rate('fga'),ft:mixPct('ft','fta'),fta:rate('fta'),ftm:rate('ftm'),p3:mixPct('p3','p3a'),p3a:rate('p3a'),dd:Number.isFinite(b.dd)?b.dd:a.dd,td:Number.isFinite(b.td)?b.td:a.td,at:null};out.at=ratio(out.ast,out.tov);return out}).filter(Boolean)}
+function rookieProjection(r){
+  const n=r.ncaa||{}; const p=r.pick; const pos=r.position||'';
+  const role=p<=4?1.05:p<=10?1.00:p<=14?.96:p<=30?.87:.72;
+  const gFactor=pos.includes('C')||pos.includes('F')?.78:.70;
+  const pickMin=Math.max(15,Math.min(31,31-.34*Math.max(0,p-1)));
+  const has=n.pts!=null;
+  const pts=has?Math.max(6,n.pts*(pos.includes('G')?.56:.60)*role):(p<=14?12:8);
+  const reb=n.reb!=null?n.reb*.76*role:(pos.includes('C')?5.4:pos.includes('F')?4.8:3.3)*role;
+  const ast=n.ast!=null?n.ast*.74*role:(pos.includes('G')?3.2:2.0)*role;
+  const stl=n.stl!=null?n.stl*.72*role:.8*role;
+  const blk=n.blk!=null?n.blk*.72*role:(pos.includes('C')?.9:pos.includes('F')?.55:.25)*role;
+  const fg=n.fg!=null?Math.max(.42,n.fg-.050):.455;
+  const ft=n.ft!=null?Math.max(.68,n.ft-.035):.76;
+  const p3=n.p3!=null?Math.max(.28,n.p3-.045):.335;
+  const pm3=n.pm3!=null?n.pm3*.85*role:(pos.includes('G')?1.6:1.1)*role;
+  const p3a=pm3/Math.max(.25,p3);
+  const fga=Math.max(8.5,pts/(2*fg*(1-.32)+3*p3*(.24)));
+  const fta=Math.max(1.5,pts*.20);
+  const tov=Math.max(1.2,ast*(pos.includes('G')?.50:.58));
+  return {gp:Math.round(pickMin*2.3),minutes:pickMin,pts,pm3,reb,ast,stl,blk,tov,fg,fga,ft,fta,ftm:fta*ft,p3,p3a,at:ratio(ast,tov),dd:null,td:null,projectionStatus:'L7N model',projectionConfidence:p<=10?'medium':'low'};
+}
+function buildRookiePlayers(){return ROOKIE_DB.map(r=>{const q=rookieProjection(r);return {name:r.name,team:r.team,currentTeam:r.team,baselineTeam:r.team,gp:q.gp,minutes:q.minutes,pts:q.pts,pm3:q.pm3,reb:q.reb,ast:q.ast,stl:q.stl,blk:q.blk,tov:q.tov,fg:q.fg,fga:q.fga,ft:q.ft,fta:q.fta,ftm:q.ftm,p3:q.p3,p3a:q.p3a,dd:q.dd,td:q.td,at:q.at,isRookie:true,rookie:true,draftPick:r.pick,school:r.school,position:r.position,ncaa:r.ncaa||null,projectionStatus:q.projectionStatus,projectionConfidence:q.projectionConfidence};});}
+function mergeRookies(base){const map=new Map(base.map(p=>[normalize(p.name),p]));return [...base,...rookiePlayers.filter(r=>!map.has(normalize(r.name)))].map(p=>{const meta=ROOKIE_DB.find(r=>normalize(r.name)===normalize(p.name));return meta?{...p,isRookie:true,rookie:true,draftPick:meta.pick,school:meta.school,position:meta.position,ncaa:meta.ncaa||null,projectionStatus:p.projectionStatus||'NBA real stats',projectionConfidence:p.projectionConfidence||'high'}:p})}
+function isReferenceEligible(p){const min=Math.max(1,num(document.getElementById('minGP').value)||20);const mpg=p.gp>0&&Number.isFinite(p.minutes)?p.minutes/p.gp:0;return p.gp>=min && mpg>=12 && (!p.isRookie || p.projectionStatus==='NBA real stats')}
+function getActiveDataset(){const desired=state.dataBasis;let used=desired,ps=[];if(desired==='last')ps=datasets.last;if(desired==='current')ps=datasets.current;if(desired==='recent10')ps=datasets.recent10;if(desired==='recent5')ps=datasets.recent5;if(desired==='blend')ps=(datasets.last.length&&datasets.current.length)?blendData(datasets.last,datasets.current):[];if(!ps.length){used=datasets.last.length?'last':'demo';ps=clonePlayers(datasets.last.length?datasets.last:demo())}ps=mergeRookies(ps);return {players:clonePlayers(ps),used}}
+function effectiveTeam(p){return state.teamOverrides[p.name]||p.team}
+function refPool(){const min=Math.max(1,num(document.getElementById('minGP').value)||1);let q=players.filter(isReferenceEligible);if(document.getElementById('refMode').value==='top200')q=q.sort((a,b)=>(b.minutes||b.gp*30)-(a.minutes||a.gp*30)).slice(0,200);return q}
+function trimmedValues(xs,trim=0.05){const a=xs.filter(Number.isFinite).slice().sort((x,y)=>x-y);if(!a.length)return [];const k=Math.floor(a.length*trim);return a.slice(k,Math.max(k+1,a.length-k))}
+function robustMoments(xs){const a=xs.filter(Number.isFinite).slice().sort((x,y)=>x-y);if(!a.length)return{mean:0,sd:1};const n=a.length;const lo=a[Math.floor((n-1)*.05)],hi=a[Math.ceil((n-1)*.95)];const wins=a.map(v=>Math.max(lo,Math.min(v,hi)));const mu=wins.reduce((s,v)=>s+v,0)/wins.length;const sd=Math.sqrt(wins.reduce((s,v)=>s+(v-mu)**2,0)/Math.max(1,wins.length-1))||1;return{mean:mu,sd}}
+function refStats(pool){const wavg=(k,v)=>{let n=0,d=0;pool.forEach(p=>{const vol=Math.max(0,num(p[v])||0);if(Number.isFinite(p[k])&&vol>0){n+=p[k]*vol;d+=vol}});return d?n/d:null};const n=pool.length||1;const at=pool.reduce((s,p)=>s+(p.ast||0),0)/(pool.reduce((s,p)=>s+(p.tov||0),0)||1);const ddRows=pool.filter(p=>Number.isFinite(p.dd)&&p.gp>0);return{fg:wavg('fg','fga'),ft:wavg('ft','fta'),ftm:pool.reduce((s,p)=>s+(p.ftm||0),0)/n,p3:wavg('p3','p3a'),ast:pool.reduce((s,p)=>s+(p.ast||0),0)/n,tov:pool.reduce((s,p)=>s+(p.tov||0),0)/n,at,ddG:ddRows.reduce((s,p)=>s+p.dd/p.gp,0)/(ddRows.length||1)}}
+function val(p,k,r){switch(k){case'PTS':return p.pts;case'3PM':return p.pm3;case'FTM':return p.ftm;case'REB':return p.reb;case'AST':return p.ast;case'STL':return p.stl;case'BLK':return p.blk;case'TOV':return p.tov;case'DD':return Number.isFinite(p.dd)&&p.gp>0?p.dd/p.gp:null;case'A/T':return p.at;case'FG%':return Number.isFinite(p.fg)&&Number.isFinite(p.fga)?(p.fg-r.fg)*p.fga:null;case'FT%':return Number.isFinite(p.ft)&&Number.isFinite(p.fta)?(p.ft-r.ft)*p.fta:null;case'3P%':return Number.isFinite(p.p3)&&Number.isFinite(p.p3a)?(p.p3-r.p3)*p.p3a:null}}
+function model(){const pool=refPool(),r=refStats(pool),stats={},zs={};for(const k of Object.keys(CATS).filter(k=>CATS[k].score&&state.weights[k]>0)){const vs=pool.map(p=>val(p,k,r)).filter(Number.isFinite).map(v=>v*CATS[k].dir);const mom=robustMoments(vs);stats[k]=mom;zs[k]=new Map(players.map(p=>{const v=val(p,k,r);return [p.name,Number.isFinite(v)?Math.max(-2.5,Math.min(2.5,((v*CATS[k].dir)-mom.mean)/mom.sd)):null]}))}const team=players.filter(p=>state.selected.has(p.name));const strength={};for(const k of Object.keys(stats)){const arr=team.map(p=>zs[k].get(p.name)).filter(Number.isFinite);const z=team.length?arr.reduce((s,v)=>s+v,0)/Math.sqrt(team.length):0;strength[k]={z,index:50+20*Math.tanh(z/2.5)}}return{pool,r,stats,zs,team,strength}}
+function activeCats(){return Object.keys(CATS).filter(k=>CATS[k].score&&state.weights[k]>0)}
+function baseFit(p,a){let s=0,m=0;for(const k of activeCats()){const z=a.zs[k]?.get(p.name);if(!Number.isFinite(z))continue;s+=z*state.weights[k];m+=state.weights[k]}return m?s/m:0}
+function fit(p,a){let s=0,m=0;for(const k of activeCats()){const z=a.zs[k]?.get(p.name);if(!Number.isFinite(z))continue;let need=a.strength[k]?.z||0;let factor=need<0?1+Math.min(1.5,-need/2.5):Math.max(.55,1-need/6);s+=z*state.weights[k]*factor;m+=state.weights[k]*factor}return m?s/m:0}
+function fitIndex(x){return Math.max(0,Math.min(100,50+14*x))}
+function projGames(p){const w=state.overrides[p.name];if(w!=null)return Math.max(0,Math.min(5,Number(w)||0));const i=(SCHEDULE[effectiveTeam(p)]?.[state.week]??3);return i}
+function teamRaw(team){return{PTS:team.reduce((s,p)=>s+p.pts*projGames(p),0),'3PM':team.reduce((s,p)=>s+p.pm3*projGames(p),0),REB:team.reduce((s,p)=>s+p.reb*projGames(p),0),AST:team.reduce((s,p)=>s+p.ast*projGames(p),0),STL:team.reduce((s,p)=>s+p.stl*projGames(p),0),BLK:team.reduce((s,p)=>s+p.blk*projGames(p),0),TOV:team.reduce((s,p)=>s+p.tov*projGames(p),0),FGM:team.reduce((s,p)=>s+p.fg*p.fga*projGames(p),0),FGA:team.reduce((s,p)=>s+p.fga*projGames(p),0),FTM:team.reduce((s,p)=>s+p.ft*p.fta*projGames(p),0),FTA:team.reduce((s,p)=>s+p.fta*projGames(p),0),P3M:team.reduce((s,p)=>s+p.p3*p.p3a*projGames(p),0),P3A:team.reduce((s,p)=>s+p.p3a*projGames(p),0),DD:team.reduce((s,p)=>s+(Number.isFinite(p.dd)&&p.gp>0?(p.dd/p.gp)*projGames(p):0),0)}}
+function weeklyForTeam(team){const raw=teamRaw(team);raw.FG=raw.FGA?raw.FGM/raw.FGA:null;raw.FT=raw.FTA?raw.FTM/raw.FTA:null;raw.P3=raw.P3A?raw.P3M/raw.P3A:null;raw.AT=raw.TOV?raw.AST/raw.TOV:null;return {raw,totalPG:team.reduce((s,p)=>s+projGames(p),0)}}
+function weekly(a){const w=weeklyForTeam(a.team);const pool=refPool(),rb=refStats(pool),ref={};for(const k of ['PTS','3PM','REB','AST','STL','BLK','TOV'])ref[k]=pool.reduce((s,p)=>s+(p[k==='3PM'?'pm3':k.toLowerCase()]||0),0)/(pool.length||1);ref.FTM=pool.reduce((s,p)=>s+(p.ftm||0),0)/(pool.length||1);ref.DD=rb.ddG;return{...w,ref}}
+function neutralIndex(v,ref,dir=1,scale=1){if(!Number.isFinite(v)||!Number.isFinite(ref)||ref<=0)return 50;const ratio=dir<0?(v>0?ref/v:4):(v/ref);const q=Math.log(Math.max(.25,Math.min(4,ratio)));return Math.max(0,Math.min(100,50+20*Math.tanh(q/1.2*scale)))}
+function pctIndex(v,ref,scale){if(!Number.isFinite(v)||!Number.isFinite(ref))return 50;return Math.max(0,Math.min(100,50+18*Math.tanh(((v-ref)/scale)*2)))}
+function weeklyStrengthFor(team){const w=weeklyForTeam(team),r=w.raw,ref=refStats(refPool()),pool=refPool(),npg=Math.max(1,w.totalPG),avg=(k)=>pool.reduce((s,p)=>s+(p[k]||0),0)/(pool.length||1);return{PTS:neutralIndex(r.PTS,avg('pts')*npg), '3PM':neutralIndex(r['3PM'],avg('pm3')*npg),FTM:neutralIndex(r.FTM,avg('ftm')*npg),REB:neutralIndex(r.REB,avg('reb')*npg),AST:neutralIndex(r.AST,avg('ast')*npg),STL:neutralIndex(r.STL,avg('stl')*npg),BLK:neutralIndex(r.BLK,avg('blk')*npg),TOV:neutralIndex(r.TOV,avg('tov')*npg,-1),DD:neutralIndex(r.DD,ref.ddG*npg), 'FG%':pctIndex(r.FG,ref.fg,.035), 'FT%':pctIndex(r.FT,ref.ft,.06), '3P%':pctIndex(r.P3,ref.p3,.04), 'A/T':neutralIndex(r.AT,ref.at,1,.75)}}
+function encodeShare(){const payload={version:4,leagueName:state.name,team:[...state.selected],opp:[...state.oppSelected],weights:state.weights,week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode};return btoa(unescape(encodeURIComponent(JSON.stringify(payload))))}
+function shareUrl(){return location.href.split('#')[0]+'#share='+encodeShare()}
+function applyShare(){try{
+  const m=location.hash.match(/^#share=(.+)$/);if(!m)return false;
+  const p=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+  const base=makeLeague((String(p.leagueName||'分享聯盟').slice(0,60))+' · Shared');
+  base.selected=p.team||[]; base.oppSelected=p.opp||[]; base.weights={...DEFAULTS,...(p.weights||{})}; base.week=Number.isFinite(p.week)?p.week:0; base.dataBasis=p.dataBasis||'last'; base.overrides=p.overrides||{}; base.teamOverrides=p.teamOverrides||{}; base.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):20; base.refMode=p.refMode==='top200'?'top200':'league';
+  leagueProfiles.push(base);activeLeagueId=base.id;state=toRuntimeState(base);persistProfiles();history.replaceState(null,'',location.href.split('#')[0]);return true;
+}catch(e){return false}}
+function shareNow(){const url=shareUrl();if(navigator.clipboard)navigator.clipboard.writeText(url);else{const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}alert(location.protocol==='file:'?'已複製設定連結，但目前是本機 file:// 網址；要讓朋友真的打開，先把整個資料夾部署到公開靜態網址（GitHub Pages / Netlify 等），之後再按一次分享即可。':'分享連結已複製；朋友打開同一個公開網址即可載入你的 roster、對手、權重、Week 與隊伍覆寫。')}
+function downloadJson(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function exportConfig(){downloadJson('L7N_Fantasy_'+String(state.name||'League').replace(/[^a-zA-Z0-9_-]+/g,'_')+'_Config.json',{version:4,leagueName:state.name,selected:[...state.selected],opponent:[...state.oppSelected],weights:state.weights,week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode})}
+async function importConfigFile(file){const p=JSON.parse(await file.text());state.selected=new Set(p.selected||p.team||[]);state.oppSelected=new Set(p.opponent||p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};state.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):state.minGP;state.refMode=p.refMode==='top200'?'top200':state.refMode;save();syncControlsFromState();render()}
+function customKey(k){return 'fb_custom_dataset_'+k}
+function storeDataset(k,ps,source='import'){try{localStorage.setItem(customKey(k),JSON.stringify(ps));localStorage.setItem('fb_dataset_source_'+k,source)}catch(e){}}
+function loadStoredDataset(k){try{const x=JSON.parse(localStorage.getItem(customKey(k))||'null');return Array.isArray(x)?x:[]}catch(e){return []}}
+async function fetchFullBaseline(){
+  const existing=loadStoredDataset('last'); const src=localStorage.getItem('fb_dataset_source_last'); if(existing.length>=20 && src==='import'){ setStatus(true,`${players.length} 位球員｜使用你手動匯入的 baseline｜不覆蓋`); return; }
+  const url='https://raw.githubusercontent.com/rx-src/nba-analysis/main/nba_player_stats_2026.csv';
+  try{
+    const ctl=new AbortController(); const timer=setTimeout(()=>ctl.abort(),8000);
+    const res=await fetch(url,{signal:ctl.signal,cache:'no-store'}); clearTimeout(timer);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text(); const ps=fromCsv(text);
+    if(ps.length<400) throw new Error('baseline rows '+ps.length);
+    datasets.last=ps; storeDataset('last',ps,'remote');
+    players=getActiveDataset().players;
+    state.selected=new Set([...state.selected].filter(n=>players.some(p=>p.name===n)));
+    state.oppSelected=new Set([...state.oppSelected].filter(n=>players.some(p=>p.name===n)));
+    setStatus(true,`${players.length} 位球員｜完整 baseline 已同步｜可直接使用`);
+    render();
+  }catch(e){
+    setStatus(true,`${players.length} 位球員｜本機 baseline｜背景同步未成功，功能仍可正常使用`);
+  }
+}
+
+async function importDataFile(k,file){const ps=fromCsv(await file.text());if(ps.length<20)throw new Error('CSV rows不足或欄位格式不符');datasets[k]=ps;storeDataset(k,ps);players=getActiveDataset().players;render();updateDataCenterInfo();updateDataDiagnostic()}
+function save(){const idx=leagueProfiles.findIndex(p=>p.id===activeLeagueId);if(idx<0)return;leagueProfiles[idx]=runtimeToProfile();state.name=leagueProfiles[idx].name;state.minGP=leagueProfiles[idx].minGP;state.refMode=leagueProfiles[idx].refMode;persistProfiles()}
+function renderWeights(){const el=document.getElementById('weights');el.innerHTML=Object.keys(CATS).filter(k=>CATS[k].score).map(k=>`<div class="weight ${state.weights[k]===0?'off':''}"><span>${k}</span><input type="number" min="0" step="0.25" value="${state.weights[k]}" data-w="${k}"></div>`).join('');el.querySelectorAll('[data-w]').forEach(i=>i.onchange=()=>{state.weights[i.dataset.w]=Math.max(0,Number(i.value)||0);save();render()})}
+function renderChips(){const el=document.getElementById('chips');el.innerHTML=[...state.selected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.rem);save();render()})}
+function renderOppChips(){const el=document.getElementById('oppChips');el.innerHTML=[...state.oppSelected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-opp-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-opp-rem]').forEach(b=>b.onclick=()=>{state.oppSelected.delete(b.dataset.oppRem);save();render()})}
+function renderSearch(){const q=document.getElementById('teamSearch').value.trim().toLowerCase(),box=document.getElementById('results');if(!q){box.classList.add('hidden');return}const rows=players.filter(p=>!state.selected.has(p.name)&&!state.oppSelected.has(p.name)&&(p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)||p.team.toLowerCase().includes(q))).slice(0,20);box.innerHTML=rows.map(p=>`<div class="result" data-add="${esc(p.name)}"><div><div class="nm">${esc(p.name)} ${p.isRookie?'<span class="rookie-badge">ROOKIE</span>':''}</div><div class="tm">2026-27 ${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · ${p.isRookie?('Pick #'+p.draftPick+' · '+(p.school||'未提供')):('2025-26 '+(TEAMS[p.baselineTeam]||p.baselineTeam))}</div></div><button class="btn small">加入</button></div>`).join('')||'<div class="result"><div class="muted">找不到球員</div></div>';box.classList.remove('hidden');box.querySelectorAll('[data-add]').forEach(r=>r.onclick=()=>{state.selected.add(r.dataset.add);save();document.getElementById('teamSearch').value='';box.classList.add('hidden');render()})}
+function renderOppSearch(){const q=document.getElementById('oppSearch').value.trim().toLowerCase(),box=document.getElementById('oppResults');if(!q){box.classList.add('hidden');return}const rows=players.filter(p=>!state.oppSelected.has(p.name)&&!state.selected.has(p.name)&&(p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)||p.team.toLowerCase().includes(q))).slice(0,20);box.innerHTML=rows.map(p=>`<div class="result" data-opp-add="${esc(p.name)}"><div><div class="nm">${esc(p.name)}</div><div class="tm">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · Week ${state.week+1}: ${SCHEDULE[effectiveTeam(p)]?.[state.week]??'—'} games</div></div><button class="btn small">加入對手</button></div>`).join('')||'<div class="result"><div class="muted">找不到球員</div></div>';box.classList.remove('hidden');box.querySelectorAll('[data-opp-add]').forEach(r=>r.onclick=()=>{state.oppSelected.add(r.dataset.oppAdd);save();document.getElementById('oppSearch').value='';box.classList.add('hidden');render()})}
+function statClass(a,p,k){
+  if(!CATS[k]||!CATS[k].score||!state.weights[k]) return "stat-neutral";
+  const z=a.zs[k]?.get(p.name);
+  if(!Number.isFinite(z)) return "stat-neutral";
+  return z>=0.35?"stat-good":(z<=-0.35?"stat-bad":"stat-neutral");
+}
+function renderRosterPlayerStats(a){
+  const el=document.getElementById('rosterPlayerStats');
+  if(!a.team.length){el.innerHTML='<div class="note">先選球員，這裡會立即列出每位球員的個人數據。切換左側 Projection 基準後，這張表也會跟著更新。</div>';return}
+  const cols=[['pts','PTS/G'],['pm3','3PM/G'],['ftm','FTM/G'],['reb','REB/G'],['ast','AST/G'],['stl','STL/G'],['blk','BLK/G'],['fg','FG%'],['ft','FT%'],['tov','TOV/G'],['dd','DD（季）'],['td','TD（季）'],['at','A/T'],['p3','3P%']];
+  const rows=a.team.map(p=>`<tr><td class="player-name-cell"><span class="playerlink" data-detail-roster="${esc(p.name)}">${esc(p.name)}</span><span class="team-mini">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · ${projGames(p)} 場/週</span></td>${cols.map(([key])=>{
+    let value='—';
+    if(key==='fg'||key==='ft'||key==='p3') value=pct(p[key]);
+    else if(key==='at') value=Number.isFinite(p.at)?p.at.toFixed(2):'—';
+    else if(key==='dd'||key==='td') value=Number.isFinite(p[key])?p[key]:'—';
+    else value=Number.isFinite(p[key])?fmt1(p[key]):'—';
+    const label=key==='pm3'?'3PM':key==='ftm'?'FTM':key==='pts'?'PTS':key==='reb'?'REB':key==='ast'?'AST':key==='stl'?'STL':key==='blk'?'BLK':key==='fg'?'FG%':key==='ft'?'FT%':key==='tov'?'TOV':key==='dd'?'DD':key==='at'?'A/T':'3P%';
+    const extra=key==='dd'?' stat-dd':key==='td'?' stat-td':'';
+    return `<td class="${statClass(a,p,label)}${extra}">${value}</td>`;
+  }).join('')}</tr>`).join('');
+  el.innerHTML=`<div class="tablewrap"><table class="table player-stats-table"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><div class="player-stats-note">這裡是「球員本身」的資料，不是整隊總和。PTS/3PM/FTM/REB/AST/STL/BLK/TOV 為每場平均；FG%/FT%/3P% 為命中率；A/T＝AST÷TOV；<b>DD、TD 為上一季整季總數；FTM 為每場平均且可作為第 10 個 H2H 類別；DD 會進 Fantasy 評分、TD 不進評分。</b></div>`;
+  document.querySelectorAll('[data-detail-roster]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detailRoster;renderDetail(a);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.querySelector('[data-tab="players"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!=='tab-players'));});
+}
+
+function renderDraft(a){
+const dm=[['球員數',a.team.length],['平均 PTS/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.pts,0)/a.team.length):'—'],['平均 REB/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.reb,0)/a.team.length):'—'],['平均 AST/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.ast,0)/a.team.length):'—'],['平均 FTM/G',a.team.length?fmt1(a.team.reduce((s,p)=>s+p.ftm,0)/a.team.length):'—'],['本週 Player-Games',a.team.reduce((s,p)=>s+projGames(p),0)]];
+document.getElementById('draftMetrics').innerHTML=dm.map(x=>'<div class="metric"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join('');
+const entries=Object.keys(CATS).filter(k=>CATS[k].score&&state.weights[k]>0).map(k=>({k,idx:a.strength[k]?.index??50,z:a.strength[k]?.z??0}));
+entries.sort((x,y)=>x.idx-y.idx);
+const weak=entries.filter(x=>x.idx<47).slice(0,3).map(x=>x.k), strong=entries.filter(x=>x.idx>58).slice(-3).map(x=>x.k);
+let hint='先選球員';
+if(a.team.length) hint=weak.length?'目前優先補：'+weak.join('、')+(strong.length?'｜強項：'+strong.join('、'):''):'目前沒有明顯弱項';
+document.getElementById('draftHint').textContent=hint;
+let html='';
+entries.forEach(x=>{const i=x.idx,tone=i>=58?'強項':(i<47?'弱項':'中性');html+='<div class="strength"><div class="strength-top"><strong>'+x.k+'</strong><span class="idx '+(i>=50?'good':'bad')+'">'+i.toFixed(0)+'</span></div><div class="strength-gradient"><span class="strength-marker" style="left:'+Math.max(2,Math.min(98,i))+'%"></span><span class="strength-mid"></span></div><div class="strength-scale"><span>弱</span><span>50 中性</span><span>強</span></div><div class="explain">'+tone+'｜50 = 參考池中性線；越高代表此項相對產出越強。'+(x.k==='TOV'?' 低失誤視為優勢。':x.k==='DD'?' 顯示仍依 DD 總數，但評分會以 DD/G 避免 GP 偏差。':'')+'</div></div>';});
+document.getElementById('strength').innerHTML=html;
+}
+function renderRosterTable(a){document.getElementById('sideSchedule').innerHTML=a.team.length?`<div class="roster-sync">2026-27 current team｜Projection：${esc(dataBasisLabel())}</div>`+a.team.map(p=>`<div class="roster-row"><div><div class="roster-name">${esc(p.name)} ${p.isRookie?'<span class="rookie-badge">ROOKIE</span>':''}</div><div class="roster-meta">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)}${p.baselineTeam&&p.baselineTeam!==effectiveTeam(p)?' · 今年換隊':''}</div></div><input class="mini-input" type="number" min="0" max="5" step="1" value="${projGames(p)}" data-g="${esc(p.name)}"><button class="remove" data-rem="${esc(p.name)}">移除</button></div>`).join('')+`<div class="tiny">輸入每人本週預測出賽場次，可 Override 官方賽程。</div>`:'<div class="muted">先選球員</div>';document.querySelectorAll('[data-g]').forEach(i=>i.onchange=()=>{state.overrides[i.dataset.g]=Math.max(0,Math.min(5,Number(i.value)||0));save();render()});document.querySelectorAll('#sideSchedule [data-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.rem);save();render()})}
+function toggleWhatIn(name){
+  const i=state.whatIn.indexOf(name);
+  if(i>=0){state.whatIn.splice(i,1);}else{
+    if(state.whatIn.length>=4){alert('What-if 最多同時加入 4 位球員。');return;}
+    state.whatIn.push(name);
+    state.whatOut=state.whatOut.filter(n=>n!==name);
+  }
+  state.what=state.whatIn[0]||null; save(); render();
+}
+function toggleWhatOut(name){
+  const i=state.whatOut.indexOf(name);
+  if(i>=0){state.whatOut.splice(i,1);}else{
+    if(state.whatOut.length>=4){alert('What-if 最多同時移除 4 位球員。');return;}
+    state.whatOut.push(name);
+    state.whatIn=state.whatIn.filter(n=>n!==name);
+  }
+  save(); render();
+}
+function clearWhatif(){state.whatIn=[];state.whatOut=[];state.what=null;save();render()}
+function yahooRankOf(name){const hit=YAHOO_RANKINGS.find(r=>normalize(r.name)===normalize(name));return hit?.rank??9999}
+function candSortValue(row,key){const p=row.p;switch(key){case'yahoo':return yahooRankOf(p.name);case'teamfit':return row.teamFit;case'basefit':return row.baseFit;case'pts':return p.pts;case'3pm':return p.pm3;case'ftm':return p.ftm;case'reb':return p.reb;case'ast':return p.ast;case'stl':return p.stl;case'blk':return p.blk;case'fg':return p.fg;case'ft':return p.ft;case'tov':return p.tov;case'dd':return p.dd;case'at':return p.at;case'3p':return p.p3;default:return yahooRankOf(p.name)}}
+function candDisplay(v,key){if(!Number.isFinite(v))return'—';if(['fg','ft','3p'].includes(key))return pct(v);if(key==='at')return v.toFixed(2);if(['pts','pm3','ftm','reb','ast','stl','blk','tov'].includes(key))return fmt1(v);return String(v)}
+function fitToneClass(v){return v>=58?'fit-strong':(v<47?'fit-weak':'fit-mid')}
+function renderCandidates(a){
+ const q=state.cand.trim().toLowerCase();
+ let rows=a.pool.filter(p=>!state.selected.has(p.name)&&(!q||p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)||String(yahooRankOf(p.name)).includes(q))).map(p=>{const baseVal=fitIndex(baseFit(p,a));const teamVal=fitIndex(fit(p,a));return{p,baseFit:baseVal,teamFit:teamVal,available:!state.draftUnavailable.has(p.name)}});
+ if(state.candAvailableOnly)rows=rows.filter(r=>r.available);
+ const key=state.candSort||'yahoo';
+ rows.sort((x,y)=>{const xv=candSortValue(x,key),yv=candSortValue(y,key);if(key==='yahoo')return xv-yv;return (Number.isFinite(yv)?yv:-Infinity)-(Number.isFinite(xv)?xv:-Infinity)});
+ rows=rows.slice(0,200);
+ const shown=rows.length;
+ const meta=document.getElementById('candStatus');if(meta)meta.textContent=`${state.candAvailableOnly?'可選':'候選池'} ${shown} 人｜暫標已選 ${state.draftUnavailable.size} 人`;
+ const header=(k,label)=>`<th class="cand-sort-head ${state.candSort===k?'active':''}" data-candsort="${k}">${label}<span>${state.candSort===k?(k==='yahoo'?'↑':'↓'):'↕'}</span></th>`;
+ const desktop=`<div class="candidate-viewport candidate-desktop"><div class="tablewrap"><table class="table candidate-table"><thead><tr><th>狀態</th>${header('yahoo','Yahoo')}<th>Player</th>${header('basefit','Base Fit')}${header('teamfit','Team Fit')}<th>Team</th>${header('pts','PTS/G')}${header('3pm','3PM/G')}${header('ftm','FTM/G')}${header('reb','REB/G')}${header('ast','AST/G')}${header('stl','STL/G')}${header('blk','BLK/G')}${header('fg','FG%')}${header('ft','FT%')}${header('tov','TOV/G')}<th>DD</th><th>TD</th>${header('at','A/T')}${header('3p','3P%')}</tr></thead><tbody>${rows.map(r=>{const p=r.p,un=!r.available;return `<tr class="candidate-row ${un?'draft-unavailable':''}"><td><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button></td><td><span class="cand-rank">#${yahooRankOf(p.name)===9999?'—':yahooRankOf(p.name)}</span></td><td><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span>${p.isRookie?'<span class="rookie-badge" style="margin-left:4px">R</span>':''}</td><td><span class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</span></td><td><span class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</span></td><td>${esc(effectiveTeam(p))}<div class="tiny">${esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p))}</div></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td></tr>`}).join('')}</tbody></table></div></div>`;
+ const mobile=`<div class="candidate-viewport candidate-mobile">${rows.map(r=>{const p=r.p,un=!r.available,rank=yahooRankOf(p.name);return `<article class="candidate-card ${un?'draft-unavailable':''}"><div class="candidate-card-top"><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button><div><span class="cand-rank">#${rank===9999?'—':rank}</span><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span><span class="cand-team">${esc(effectiveTeam(p))}</span></div></div><div class="candidate-fitline"><span>Base Fit <b class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</b></span><span>Team Fit <b class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</b></span></div><div class="candidate-stats-grid"><span><i>PTS</i><b>${fmt1(p.pts)}</b></span><span><i>3PM</i><b>${fmt1(p.pm3)}</b></span><span><i>FTM</i><b>${fmt1(p.ftm)}</b></span><span><i>REB</i><b>${fmt1(p.reb)}</b></span><span><i>AST</i><b>${fmt1(p.ast)}</b></span><span><i>STL</i><b>${fmt1(p.stl)}</b></span><span><i>BLK</i><b>${fmt1(p.blk)}</b></span><span><i>FG%</i><b>${pct(p.fg)}</b></span><span><i>FT%</i><b>${pct(p.ft)}</b></span><span><i>TOV</i><b>${fmt1(p.tov)}</b></span><span><i>DD</i><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></span><span><i>TD</i><b>${Number.isFinite(p.td)?p.td:'—'}</b></span><span><i>A/T</i><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></span><span><i>3P%</i><b>${pct(p.p3)}</b></span></div></article>`}).join('')}</div>`;
+ document.getElementById('candidates').innerHTML=desktop+mobile;
+ document.querySelectorAll('[data-candsort]').forEach(x=>x.onclick=()=>{state.candSort=x.dataset.candsort;save();render()});
+ document.querySelectorAll('[data-draft-mark]').forEach(x=>x.onclick=()=>{const n=x.dataset.draftMark;if(state.draftUnavailable.has(n))state.draftUnavailable.delete(n);else state.draftUnavailable.add(n);save();render()});
+ document.querySelectorAll('[data-candidate]').forEach(x=>x.onclick=()=>toggleWhatIn(x.dataset.candidate));
+}
+
+function renderWhatInSearch(q){
+  const box=document.getElementById('whatInSearchResults');
+  if(!box)return;
+  const term=(q||'').trim().toLowerCase();
+  if(!term){box.innerHTML='';box.classList.add('hidden');return;}
+  const rows=players.filter(p=>!state.selected.has(p.name)&&!state.oppSelected.has(p.name)&&!state.whatIn.includes(p.name)&&!state.whatOut.includes(p.name)&&(p.name.toLowerCase().includes(term)||effectiveTeam(p).toLowerCase().includes(term))).slice(0,8);
+  box.innerHTML=rows.length?rows.map(p=>`<div class="whatif-search-result" data-what-search-add="${esc(p.name)}"><div><div class="nm">${esc(p.name)}</div><div class="tm">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · PTS ${fmt1(p.pts)} · AST ${fmt1(p.ast)} · REB ${fmt1(p.reb)}</div></div><span class="btn small">加入</span></div>`).join(''):'<div class="whatif-search-empty">找不到符合的球員</div>';
+  box.classList.remove('hidden');
+  box.querySelectorAll('[data-what-search-add]').forEach(x=>x.onclick=()=>toggleWhatIn(x.dataset.whatSearchAdd));
+}
+
+function renderWhatif(a){
+  const el=document.getElementById('whatif');
+  state.whatIn=(state.whatIn||[]).filter(n=>players.some(p=>p.name===n)&&!state.selected.has(n));
+  state.whatOut=(state.whatOut||[]).filter(n=>a.team.some(p=>p.name===n));
+  const inTeam=state.whatIn.map(n=>players.find(p=>p.name===n)).filter(Boolean);
+  const outTeam=state.whatOut.map(n=>players.find(p=>p.name===n)).filter(Boolean);
+  const simTeam=a.team.filter(p=>!state.whatOut.includes(p.name)).concat(inTeam);
+  const changed=state.whatIn.length||state.whatOut.length;
+  const optionsOut=a.team.map(p=>`<button class="what-chip ${state.whatOut.includes(p.name)?'selected-out':''}" data-what-out="${esc(p.name)}">${state.whatOut.includes(p.name)?'✓ ':''}${esc(p.name)} ×</button>`).join('');
+  const optionsIn=state.whatIn.map(name=>{const p=players.find(x=>x.name===name);if(!p)return '';return `<span class="what-chip selected-in">✓ ${esc(p.name)} <button type="button" data-what-in="${esc(p.name)}" aria-label="取消 ${esc(p.name)}">×</button></span>`}).join('');
+  if(!changed){
+    el.innerHTML=`<div class="whatif-builder"><div><div class="whatif-label">🔴 想移除 <span>0 / 4</span></div><div class="whatif-help">先從下方球員名單選擇；不會直接改動你的正式球隊。</div><div class="what-chip-list">${optionsOut||'<span class="muted">目前沒有球員可選</span>'}</div></div><div><div class="whatif-label">🟢 想加入 <span>0 / 4</span></div><div class="whatif-help">可直接輸入球員姓名搜尋，或從 Candidate Fit 點選。</div><div class="whatif-search"><input id="whatInSearch" class="control" type="search" autocomplete="off" placeholder="輸入球員姓名，例如 Mark..."><div id="whatInSearchResults" class="whatif-search-results hidden"></div></div><div class="what-chip-list"><span class="muted">尚未選擇候選人</span></div></div></div><div class="note" style="margin-top:10px">What-if 只做模擬，不會直接改變你的 roster。最多可同時移除 4 人、加入 4 人。</div>`;
+  }else{
+    const before=weeklyForTeam(a.team), after=weeklyForTeam(simTeam), opp=weeklyForTeam([...state.oppSelected].map(n=>players.find(p=>p.name===n)).filter(Boolean));
+    const labels=['PTS','3PM','FTM','REB','AST','STL','BLK','TOV','FG','FT','P3','AT','DD'];
+    const rowDiff=k=>{const d=(after.raw[k]??0)-(before.raw[k]??0);return `<div class="barrow"><span>${k}</span><div class="bar"><div class="fill ${d>=0?'pos':'neg'}" style="width:${Math.min(50,Math.abs(d)*2)}%"></div></div><b class="${d>=0?'goodtxt':'badtxt'}">${fmtWeeklyCell(k,before.raw[k])} → ${fmtWeeklyCell(k,after.raw[k])} (${d>=0?'+':''}${k==='FG'||k==='FT'||k==='P3'?pct(d):fmt1(d)})</b></div>`};
+    const cats=[['FG%','FG'],['FT%','FT'],['FTM','FTM'],['3P%','P3'],['PTS','PTS'],['3PM','3PM'],['REB','REB'],['AST','AST'],['STL','STL'],['BLK','BLK'],['TOV','TOV'],['DD','DD'],['A/T','AT']];
+    const result=(team)=>{let w=0,l=0,t=0;cats.forEach(([,k])=>{const c=compareCategory(k,team.raw[k],opp.raw[k]);if(c.cls==='win')w++;else if(c.cls==='loss')l++;else if(c.cls==='tie')t++;});return{w,l,t}};
+    const rb=result(before),ra=result(after),summary=state.oppSelected.size?`<div class="whatif-summary"><div><span>H2H 預測</span><b>${rb.w}–${rb.l}${rb.t?`–${rb.t}`:''} → ${ra.w}–${ra.l}${ra.t?`–${ra.t}`:''}</b></div><div><span>預測勝場變化</span><b class="${ra.w-rb.w>=0?'goodtxt':'badtxt'}">${ra.w-rb.w>=0?'+':''}${ra.w-rb.w}</b></div></div>`:'<div class="note">尚未輸入對手 roster，因此先顯示本週數據變化；加入對手後會自動補上 H2H 勝負變化。</div>';
+    el.innerHTML=`<div class="whatif-builder"><div><div class="whatif-label">🔴 想移除 <span>${state.whatOut.length} / 4</span></div><div class="what-chip-list">${optionsOut||'<span class="muted">目前沒有球員可選</span>'}</div></div><div><div class="whatif-label">🟢 想加入 <span>${state.whatIn.length} / 4</span></div><div class="whatif-help">可直接輸入球員姓名搜尋，或從 Candidate Fit 點選。</div><div class="whatif-search"><input id="whatInSearch" class="control" type="search" autocomplete="off" placeholder="輸入球員姓名，例如 Mark..."><div id="whatInSearchResults" class="whatif-search-results hidden"></div></div><div class="what-chip-list">${optionsIn||'<span class="muted">尚未選擇候選人</span>'}</div></div></div><div class="whatif-actions"><button class="btn small" id="clearWhatif">清除模擬</button><span class="tiny">模擬陣容：${simTeam.length} 人｜正式 roster 不會被修改</span></div>${summary}<div style="margin-top:12px">${labels.map(rowDiff).join('')}</div>`;
+  }
+  document.querySelectorAll('[data-what-out]').forEach(x=>x.onclick=()=>toggleWhatOut(x.dataset.whatOut));
+  document.querySelectorAll('[data-what-in]').forEach(x=>x.onclick=()=>toggleWhatIn(x.dataset.whatIn));
+  const wis=document.getElementById('whatInSearch');
+  if(wis){
+    wis.oninput=e=>renderWhatInSearch(e.target.value);
+    wis.onkeydown=e=>{if(e.key==='Escape'){wis.value='';renderWhatInSearch('');}else if(e.key==='Enter'){const first=document.querySelector('#whatInSearchResults [data-what-search-add]');if(first){e.preventDefault();first.click();}}};
+    wis.onfocus=()=>renderWhatInSearch(wis.value);
+  }
+  document.getElementById('clearWhatif')?.addEventListener('click',clearWhatif);
+}
+function fmtWeeklyCell(k,v){if(['FG','FT','P3'].includes(k))return pct(v);if(k==='AT')return Number.isFinite(v)?v.toFixed(2):'—';return fmt1(v)}
+function compareCategory(k,a,b){if(!Number.isFinite(a)||!Number.isFinite(b))return {cls:'tie',txt:'—'};let av=a,bv=b;if(k==='TOV'){if(av<bv)return{cls:'win',txt:'你'};if(av>bv)return{cls:'loss',txt:'對手'};return{cls:'tie',txt:'平'}};if(av>bv)return{cls:'win',txt:'你'};if(av<bv)return{cls:'loss',txt:'對手'};return{cls:'tie',txt:'平'}}
+function renderWeekly(a){
+const mine=weeklyForTeam(a.team);
+const oppTeam=[...state.oppSelected].map(n=>players.find(p=>p.name===n)).filter(Boolean);
+const opp=weeklyForTeam(oppTeam);
+document.getElementById('weekDesc').textContent=WEEKS[state.week][1]+'｜我的 '+a.team.length+' 人 / '+mine.totalPG+' PG｜對手 '+oppTeam.length+' 人 / '+opp.totalPG+' PG';
+const teamHeading=(name,totalPG,count,cls)=>`<div class="h2h-team-heading ${cls}"><strong>${name}</strong><span class="team-count">${count} 人 · ${totalPG} Player-Games</span></div>`;
+const playerCard=(p)=>{const et=effectiveTeam(p);const teamColor=TEAM_COLORS[et]||'#5d6b82';return `<div class="pg h2h-roster-player" data-h2h-player="${esc(p.name)}"><strong>${esc(p.name)}</strong><small><span class="weekly-team-meta" style="--team-color:${teamColor}">${TEAMS[et]||et}</span>｜<span class="weekly-games-meta">${projGames(p)} games</span></small></div>`};
+let myPlayers=a.team.slice().sort((x,y)=>projGames(y)-projGames(x)).map(playerCard).join('');
+let opPlayers=oppTeam.slice().sort((x,y)=>projGames(y)-projGames(x)).map(playerCard).join('');
+const myPanel=`<div class="panel h2h-roster-panel"><div class="body"><div class="h2h-team-heading-wrap">${teamHeading('我的球隊',mine.totalPG,a.team.length,'mine')}</div><div class="projected-games h2h-roster-grid">${myPlayers||'<div class="muted">尚未選擇球員</div>'}</div></div></div>`;
+const oppPanel=`<div class="panel h2h-roster-panel"><div class="body"><div class="h2h-team-heading-wrap">${teamHeading('對手的球隊',opp.totalPG,oppTeam.length,'opp')}</div><div class="projected-games h2h-roster-grid">${opPlayers||(oppTeam.length?'':'<div class="muted">尚未輸入對手 roster</div>')}</div></div></div>`;
+document.getElementById('weeklyTop').innerHTML=myPanel+oppPanel+`<div class="weekly-dd-focus"><div class="weekly-dd-card"><b>${fmt1(mine.raw.DD)}</b><span>你的本週預估 DD</span></div><div class="weekly-dd-card"><b>${fmt1(opp.raw.DD)}</b><span>對手的本週預估 DD</span></div><div class="weekly-dd-card"><b>${Number.isFinite(mine.raw.DD)&&Number.isFinite(opp.raw.DD)?(mine.raw.DD-opp.raw.DD).toFixed(1):'—'}</b><span>DD 預估差距（你 − 對手）</span></div></div>`;
+// Desktop hover tooltip: no click required; mobile keeps the normal compact cards.
+let tip=document.getElementById('h2hPlayerTooltip');
+if(!tip){tip=document.createElement('div');tip.id='h2hPlayerTooltip';tip.className='h2h-player-tooltip';document.body.appendChild(tip);}
+const showTip=(card)=>{const name=card?.dataset?.h2hPlayer;if(!name)return;const p=players.find(x=>x.name===name);if(!p)return;const et=effectiveTeam(p);const pg=projGames(p);const ddg=Number.isFinite(p.dd)&&p.gp>0?p.dd/p.gp:null;const weeklyDD=Number.isFinite(ddg)?ddg*pg:null;tip.innerHTML=`<div class="tip-name">${esc(p.name)}</div><div class="tip-meta">${TEAMS[et]||et} · ${pg} games 本週預測${Number.isFinite(weeklyDD)?` · DD ≈ ${weeklyDD.toFixed(2)}`:''}</div><div class="tip-grid"><div class="tip-stat"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="tip-stat"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="tip-stat"><span>FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="tip-stat"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="tip-stat"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="tip-stat"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="tip-stat"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="tip-stat"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="tip-stat"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="tip-stat"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="tip-stat"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="tip-stat"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="tip-stat dd"><span>DD 季</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="tip-stat td"><span>TD 季</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div></div>`;tip.classList.add('show');const r=card.getBoundingClientRect();const tw=290;let left=Math.min(Math.max(10,r.left),window.innerWidth-tw-10);let top=r.bottom+8;if(top+tip.offsetHeight>window.innerHeight-10)top=Math.max(10,r.top-tip.offsetHeight-8);tip.style.left=left+'px';tip.style.top=top+'px';};
+const hideTip=()=>tip.classList.remove('show');
+document.querySelectorAll('#weeklyTop [data-h2h-player]').forEach(card=>{card.addEventListener('mouseenter',()=>showTip(card));card.addEventListener('mouseleave',hideTip);card.addEventListener('focus',()=>showTip(card));card.addEventListener('blur',hideTip);});
+const rows=[['FGM/A',fmt1(mine.raw.FGM)+' / '+fmt1(mine.raw.FGA),fmt1(opp.raw.FGM)+' / '+fmt1(opp.raw.FGA)],['FG%',pct(mine.raw.FG),pct(opp.raw.FG)],['FTM/A',fmt1(mine.raw.FTM)+' / '+fmt1(mine.raw.FTA),fmt1(opp.raw.FTM)+' / '+fmt1(opp.raw.FTA)],['FT%',pct(mine.raw.FT),pct(opp.raw.FT)],['FTM',fmt1(mine.raw.FTM),fmt1(opp.raw.FTM)],['3PTM/A',fmt1(mine.raw.P3M)+' / '+fmt1(mine.raw.P3A),fmt1(opp.raw.P3M)+' / '+fmt1(opp.raw.P3A)],['3P%',pct(mine.raw.P3),pct(opp.raw.P3)],['PTS',fmt1(mine.raw.PTS),fmt1(opp.raw.PTS)],['REB',fmt1(mine.raw.REB),fmt1(opp.raw.REB)],['AST',fmt1(mine.raw.AST),fmt1(opp.raw.AST)],['STL',fmt1(mine.raw.STL),fmt1(opp.raw.STL)],['BLK',fmt1(mine.raw.BLK),fmt1(opp.raw.BLK)],['TOV',fmt1(mine.raw.TOV),fmt1(opp.raw.TOV)],['DD（預估）',fmt1(mine.raw.DD),fmt1(opp.raw.DD)],['A/T',Number.isFinite(mine.raw.AT)?mine.raw.AT.toFixed(2):'—',Number.isFinite(opp.raw.AT)?opp.raw.AT.toFixed(2):'—']];
+let th='<div class="tablewrap"><table class="table matchup-table"><thead><tr><th style="text-align:left">Category</th><th>你</th><th>對手</th><th>H2H</th></tr></thead><tbody>';
+rows.forEach(r=>{let key=r[0]==='FTM'?'FTM':r[0].startsWith('FG')?'FG':r[0].startsWith('FT')?'FT':r[0].startsWith('3P%')?'P3':r[0]==='A/T'?'AT':r[0].startsWith('DD')?'DD':r[0];const c=compareCategory(key,mine.raw[key],opp.raw[key]);th+='<tr><td><strong>'+r[0]+'</strong></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="'+c.cls+'">'+c.txt+'</td></tr>';});
+th+='</tbody></table></div><div class="tiny" style="margin-top:7px"><b>DD 預測公式：</b>逐球員以「上一季 DD ÷ 上季 GP × 本週預測出賽場次」加總；因此本週 DD 是期望值，不是保證整數。TD 只在球員 Detail / 球員總表顯示，不進評分。</div>';document.getElementById('weeklyTotals').innerHTML=th;
+const catRows=[['FG%','FG'],['FT%','FT'],['FTM','FTM'],['3P%','P3'],['PTS','PTS'],['3PM','3PM'],['REB','REB'],['AST','AST'],['STL','STL'],['BLK','BLK'],['TOV','TOV'],['DD','DD'],['A/T','AT']];
+let cmp='<div class="tablewrap"><table class="table matchup-table"><thead><tr><th style="text-align:left">Category</th><th>你</th><th>對手</th><th>差距</th><th>預測</th></tr></thead><tbody>';
+catRows.forEach(([label,key])=>{const av=mine.raw[key],bv=opp.raw[key],c=compareCategory(key,av,bv);let diff=Number.isFinite(av)&&Number.isFinite(bv)?av-bv:null;if(key==='TOV'&&Number.isFinite(diff))diff=-diff;const diffText=Number.isFinite(diff)?(['FG','FT','P3'].includes(key)?(diff*100).toFixed(1):diff.toFixed(key==='AT'?2:1)):'—';cmp+='<tr><td><strong>'+label+'</strong></td><td class="'+(c.cls==='win'?'goodtxt':c.cls==='loss'?'badtxt':'')+'">'+fmtWeeklyCell(key,av)+'</td><td>'+fmtWeeklyCell(key,bv)+'</td><td>'+diffText+'</td><td class="'+c.cls+'">'+c.txt+'</td></tr>';});
+cmp+='</tbody></table></div><div class="tiny" style="margin-top:7px">H2H 每分類獨立計算；目前比較 10 個類別，FTM 為每週預估罰球命中總數，TOV 越低越好。這裡不把各分類再加成單一總分。</div>';document.getElementById('matchupComparison').innerHTML=cmp;
+const strategyCats=state.oppSelected.size?catRows.map(([label,key])=>({label,key,av:mine.raw[key],bv:opp.raw[key],c:compareCategory(key,mine.raw[key],opp.raw[key])})).filter(x=>Number.isFinite(x.av)&&Number.isFinite(x.bv)):[];
+const wins=strategyCats.filter(x=>x.c.cls==='win'),losses=strategyCats.filter(x=>x.c.cls==='loss'),ties=strategyCats.filter(x=>x.c.cls==='tie');
+const closeness=x=>Math.abs((x.av??0)-(x.bv??0))/(Math.abs(x.bv??0)||1);
+const nearLoss=losses.slice().sort((a,b)=>closeness(a)-closeness(b)).slice(0,2);
+const mainPressure=losses.slice().sort((a,b)=>closeness(b)-closeness(a)).slice(0,2);
+const strongWins=wins.slice().sort((a,b)=>closeness(b)-closeness(a)).slice(0,3);
+const fmtStrategyDiff=x=>{let d=x.av-x.bv;if(x.key==='TOV')d=-d;if(['FG','FT','P3'].includes(x.key))return (d>=0?'+':'')+(d*100).toFixed(1)+' 個百分點';return (d>=0?'+':'')+d.toFixed(x.key==='AT'?2:1)};
+const listNames=(arr,limit=3)=>arr.slice(0,limit).map(x=>`<span class="strategy-tag ${x.c.cls}">${x.label} ${fmtStrategyDiff(x)}</span>`).join('');
+let sh='';
+if(state.oppSelected.size){sh=`<div class="strategy-grid"><div class="strategy-card strategy-loss"><div class="strategy-title">🔴 主要壓力</div><div class="strategy-tags">${mainPressure.length?listNames(mainPressure,2):'<span class="muted">目前沒有明顯落後項目</span>'}</div><div class="strategy-copy">這些是目前相對對手落後較明顯的類別，若要改變本週 matchup，優先從這裡找補強方向。</div></div><div class="strategy-card strategy-flip"><div class="strategy-title">🟡 最接近翻盤</div><div class="strategy-tags">${nearLoss.length?listNames(nearLoss,2):'<span class="muted">沒有落後但接近的類別</span>'}</div><div class="strategy-copy">差距較小的落後類別，比「輸很多」的項目更可能透過少量陣容調整翻過來。</div></div><div class="strategy-card strategy-win"><div class="strategy-title">🟢 可以守住</div><div class="strategy-tags">${strongWins.length?listNames(strongWins,3):'<span class="muted">目前沒有明顯優勢</span>'}</div><div class="strategy-copy">這些項目目前站在你這邊，不需要為了這場 matchup 特別犧牲其他類別去追。</div></div></div><div class="strategy-summary"><b>📌 本週一句話：</b> ${wins.length} 項領先、${losses.length} 項落後${ties.length?`、${ties.length} 項接近`:''}。${nearLoss.length?`最值得先觀察 ${nearLoss.map(x=>x.label).join('、')}。`:''}${mainPressure.length?`主要壓力在 ${mainPressure.map(x=>x.label).join('、')}。`:''}${strongWins.length?`${strongWins.map(x=>x.label).join('、')} 可優先守住。`:''}</div>`;
+}else{
+  sh='<div class="strategy-summary"><b>🆚 先輸入對手 roster</b>：有對手後，這裡才會根據本週 matchup 自動整理主要壓力、最接近翻盤項目與可守住的優勢。</div>';
+}
+document.getElementById('weeklyStrength').innerHTML=sh;
+}
+function renderSchedule(){const selTeams=new Set(players.filter(p=>state.selected.has(p.name)).map(p=>effectiveTeam(p)));let h='<div class="tablewrap"><table class="table schedule-table"><thead><tr><th>Team</th><th>Total</th>';WEEKS.forEach((w,i)=>h+=`<th>${w[0]}<br><span>${w[1].split('–')[0]}</span></th>`);h+='</tr></thead><tbody>';Object.keys(SCHEDULE).forEach(t=>{h+=`<tr><td><strong>${t}</strong> <span class="muted">${TEAMS[t]}</span></td><td><strong>${SCHEDULE[t].reduce((a,b)=>a+b,0)}</strong></td>`;SCHEDULE[t].forEach((g,i)=>{const cls=selTeams.has(t)?'hl':'';const wt=g>=4?'heavy':(g<=1?'light':'');h+=`<td class="${cls}"><span class="${wt}">${g}</span>${selTeams.has(t)?'<div class="teammark">已選球員</div>':''}</td>`});h+='</tr>'});h+='</tbody></table></div>';document.getElementById('scheduleGrid').innerHTML=h}
+function renderPlayers(a){const q=state.playerSearch.trim().toLowerCase();let rows=players.filter(p=>!q||p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)).map(p=>({p,f:fit(p,a)}));rows.sort((x,y)=>state.sort==='pts'?y.p.pts-x.p.pts:state.sort==='reb'?y.p.reb-x.p.reb:state.sort==='ast'?y.p.ast-x.p.ast:state.sort==='ftm'?((y.p.ftm||0)-(x.p.ftm||0)):state.sort==='3p'?((y.p.p3||0)-(x.p.p3||0)):state.sort==='at'?((y.p.at||0)-(x.p.at||0)):y.f-x.f);rows=rows.slice(0,48);document.getElementById('playerGrid').innerHTML=`<div class="tablewrap"><table class="table"><thead><tr><th>Player</th><th>Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>DD</th><th>TD</th><th>A/T</th><th>3P%</th><th>Wk Games</th></tr></thead><tbody>${rows.map(x=>{const p=x.p,fi=fitIndex(x.f);return`<tr><td><span class="playerlink" data-detail="${esc(p.name)}">${esc(p.name)}</span> <span class="muted">${effectiveTeam(p)}</span></td><td class="${fi>=50?'goodtxt':'badtxt'}"><strong>${fi.toFixed(0)}</strong></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td><td>${SCHEDULE[effectiveTeam(p)]?.[state.week]??'—'}</td></tr>`}).join('')}</tbody></table></div>`;document.querySelectorAll('#playerGrid [data-detail]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detail;renderDetail(a)})}
+function renderDetail(a){const p=players.find(x=>x.name===state.detail),el=document.getElementById('detail');if(!p)return;const et=effectiveTeam(p);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(p.name)}</div><div class="muted" style="margin-top:3px">${p.isRookie?'🧑‍🎓 Rookie Projection · '+(p.school||'')+'｜':''}Projection：${esc(dataBasisLabel())}｜2025-26 baseline ${TEAMS[p.baselineTeam]||p.baselineTeam}｜2026-27 current ${TEAMS[et]||et} · GP ${p.gp}${p.baselineTeam&&p.baselineTeam!==et?` <span class="trade-badge">換隊 / 可手動覆寫</span>`:''}</div></div><span class="pill ${state.selected.has(p.name)?'good':''}">${state.selected.has(p.name)?'我的球員':state.oppSelected.has(p.name)?'對手球員':'候選球員'}</span></div><div class="detailgrid"><div class="dmetric"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="dmetric"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="dmetric"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>本週賽事</span><b>${SCHEDULE[et]?.[state.week]??'—'}</b></div><div class="dmetric stat-dd"><span>DD（整季）</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="dmetric"><span>DD/G（輔助）</span><b>${Number.isFinite(p.dd)?(p.dd/p.gp).toFixed(2):'—'}</b></div><div class="dmetric stat-td"><span>TD（整季）</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div><div class="dmetric"><span>本週預測</span><b>${projGames(p)} 場</b></div></div><div class="manual-team"><div><label class="tiny">手動指定 2026-27 隊伍</label><select id="manualTeam" class="control"><option value="">${TEAMS[et]||et}（目前）</option>${Object.entries(TEAMS).map(([k,v])=>`<option value="${k}" ${k===et?'selected':''}>${k} · ${v}</option>`).join('')}</select></div><button id="clearManualTeam" class="btn small">還原官方</button></div><div class="note" style="margin-top:12px">TD 只在球員 Detail 顯示，不進 Fantasy 評分；TD 本身也符合 DD 定義，因此不額外再加一次 DD。手動換隊只影響 2026-27 賽程與 weekly projection，不會修改歷史統計。</div>`;document.getElementById('manualTeam').onchange=e=>{const v=e.target.value;if(!v)delete state.teamOverrides[p.name];else state.teamOverrides[p.name]=v;save();renderDetail(a);renderSchedule();renderRosterTable(a);renderWeekly(a)};document.getElementById('clearManualTeam').onclick=()=>{delete state.teamOverrides[p.name];save();render()}}
+function dataBasisLabel(){return {'last':'2025-26 完整球季','current':'2026-27 本季至今（資料匣）','recent10':'近 10 場（資料匣）','recent5':'近 5 場（資料匣）','blend':'本季 60%＋上季 40%'}[state.dataBasis]||'2025-26 完整球季'}
+function renderDataStatus(){const sel=document.getElementById('dataBasis');if(sel)sel.value=state.dataBasis;const want=state.dataBasis,available=want==='last'||(want==='current'&&datasets.current.length)||(want==='blend'&&datasets.current.length);let msg='';if(available&&want==='current')msg=`可用：${datasets.current.length} 人｜2026-27 Season-to-Date`;else if(available&&want==='blend')msg=`可用：上季 ${datasets.last.length} + 本季 ${datasets.current.length} 人｜混合權重 ${(state.blend*100).toFixed(0)} / ${((1-state.blend)*100).toFixed(0)}`;else if(want==='last')msg=`基準：${datasets.last.length} 人｜完整 2025-26 baseline`;else msg=`目前此瀏覽器版沒有 ${want==='recent10'?'近10場':want==='recent5'?'近5場':'本季至今'} 的獨立 game-log feed，已安全 fallback 到 ${datasets.last.length} 人 baseline；正式雲端後端會接日期/Last-N 資料源。`;document.getElementById('dataStatus').textContent=msg}
+function rookieStatus(r){const verified=!!r.ncaa;return verified?'NCAA verified':'Metadata only'}
+function renderRookies(){
+ const q=(document.getElementById('rookieSearch')?.value||'').trim().toLowerCase(),f=document.getElementById('rookieFilter')?.value||'all';
+ let rows=ROOKIE_DB.filter(r=>{const txt=(r.name+' '+r.school+' '+(TEAMS[r.team]||r.team)).toLowerCase();if(q&&!txt.includes(q))return false;if(f==='lottery'&&r.pick>14)return false;if(f==='verified'&&!r.ncaa)return false;if(f==='model'&&r.pick>30)return false;return true});
+ document.getElementById('rookieGrid').innerHTML='<div class="tablewrap"><table class="table rookie-table"><thead><tr><th>Pick</th><th>Rookie</th><th>2026-27 Team</th><th>School</th><th>NCAA</th><th>NBA Projection</th><th>Status</th></tr></thead><tbody>'+rows.map(r=>{const n=r.ncaa||{},pr=rookieProjection(r);return `<tr class="rookie-click" data-rookie="${esc(r.name)}"><td>#${r.pick}</td><td><strong>${esc(r.name)}</strong><div class="tiny">${esc(r.position)}</div></td><td><strong>${r.team}</strong> <span class="muted">${TEAMS[r.team]||''}</span></td><td>${esc(r.school)}</td><td>${r.ncaa?`${fmt1(n.pts)} PTS · ${n.reb!=null?fmt1(n.reb):'—'} REB · ${n.ast!=null?fmt1(n.ast):'—'} AST`:'—'}</td><td>${fmt1(pr.pts)} PTS · ${fmt1(pr.reb)} REB · ${fmt1(pr.ast)} AST</td><td><span class="rookie-badge">ROOKIE</span> <span class="source-badge">${rookieStatus(r)}</span></td></tr>`}).join('')+'</tbody></table></div><div class="tiny" style="margin-top:8px">本版已列出 2026 Draft 60 位；NCAA 數字只在已驗證項目顯示。NBA projection 使用透明的 L7N Translation v0.1，數字是預估，不是官方預測。正式 NBA 實績出現後，rookie projection 會讓位給真實數據。</div>';
+ document.querySelectorAll('[data-rookie]').forEach(x=>x.onclick=()=>{state.rookieDetail=x.dataset.rookie;renderRookieDetail()});
+}
+function renderRookieDetail(){const r=ROOKIE_DB.find(x=>x.name===state.rookieDetail),el=document.getElementById('rookieDetail');if(!r)return;const n=r.ncaa||{},p=rookieProjection(r);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(r.name)} <span class="rookie-badge">ROOKIE</span></div><div class="muted" style="margin-top:3px">Pick #${r.pick} · ${TEAMS[r.team]||r.team} · ${esc(r.school)}</div></div><button id="addRookie" class="btn primary">加入我的球隊</button></div><div class="rookie-strip"><div><b>${n.pts!=null?fmt1(n.pts):'—'}</b><span>NCAA PTS/G</span></div><div><b>${n.reb!=null?fmt1(n.reb):'—'}</b><span>NCAA REB/G</span></div><div><b>${n.ast!=null?fmt1(n.ast):'—'}</b><span>NCAA AST/G</span></div><div><b>${n.fg!=null?pct(n.fg):'—'}</b><span>NCAA FG%</span></div><div><b>${n.p3!=null?pct(n.p3):'—'}</b><span>NCAA 3P%</span></div></div><div class="detailgrid"><div class="dmetric"><span>NBA PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>NBA REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>NBA AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>NBA STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>NBA BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>NBA 3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>NBA FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="dmetric"><span>NBA FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>NBA FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>NBA 3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>NBA TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>NBA A/T</span><b>${p.at.toFixed(2)}</b></div><div class="dmetric"><span>Projection confidence</span><b>${p.projectionConfidence.toUpperCase()}</b></div></div><div class="model-warn">${ROOKIE_SOURCE_INFO.projection}。預測不會直接進參考池；NCAA 與 NBA 數據分開。正式例行賽資料一旦有足夠 NBA GP，系統會優先使用實績來取代 projection。DD/TD 在 rookie 階段先不做假精準預測，等 NBA 實績進資料庫再接上。</div><div class="tiny" style="margin-top:10px">資料來源：${ROOKIE_SOURCE_INFO.draft}；${ROOKIE_SOURCE_INFO.ncaa}。</div>`;document.getElementById('addRookie').onclick=()=>{state.selected.add(r.name);save();render()};}
+
+function yahooMatchPlayer(name){const target=normalize(name);return players.find(p=>normalize(p.name)===target)||null}
+function renderYahoo(a){
+  const q=(document.getElementById('yahooSearch')?.value||'').trim().toLowerCase();
+  const sort=document.getElementById('yahooSort')?.value||'yahoo';
+  const rows=YAHOO_RANKINGS.map(r=>{const p=yahooMatchPlayer(r.name);const f=p?fit(p,a):null;return {...r,p,f}}).filter(r=>{if(!q)return true;const team=r.p?effectiveTeam(r.p):'';return String(r.rank).includes(q)||r.name.toLowerCase().includes(q)||String(team).toLowerCase().includes(q)||(team&&String(TEAMS[team]||team).toLowerCase().includes(q));});
+  if(sort==='fit')rows.sort((x,y)=>(y.f??-999)-(x.f??-999));
+  else if(sort==='pts')rows.sort((x,y)=>(y.p?.pts??-999)-(x.p?.pts??-999));
+  else if(sort==='reb')rows.sort((x,y)=>(y.p?.reb??-999)-(x.p?.reb??-999));
+  else if(sort==='ast')rows.sort((x,y)=>(y.p?.ast??-999)-(x.p?.ast??-999));
+  else if(sort==='3p')rows.sort((x,y)=>(y.p?.p3??-999)-(x.p?.p3??-999));
+  else if(sort==='at')rows.sort((x,y)=>(y.p?.at??-999)-(x.p?.at??-999));
+  else rows.sort((x,y)=>x.rank-y.rank);
+  const withFit=YAHOO_RANKINGS.map(r=>{const p=yahooMatchPlayer(r.name);return {...r,p,f:p?fit(p,a):null}}).filter(x=>Number.isFinite(x.f));
+  const fitRank=new Map([...withFit].sort((x,y)=>y.f-x.f).map((x,i)=>[normalize(x.name),i+1]));
+  const matched=YAHOO_RANKINGS.reduce((n,r)=>n+(yahooMatchPlayer(r.name)?1:0),0);
+  const meta=document.getElementById('yahooMeta');
+  if(meta)meta.textContent=`Yahoo Top 200：${matched}/200 已對應到目前 L7N 球員資料｜L7N Fit 只在你已選球隊後才有 Team Fit 意義；未載入/未匹配數據顯示「—」。`;
+  const pctCell=(p,k)=>p&&Number.isFinite(p[k])?pct(p[k]):'—';
+  const numCell=(p,k)=>p&&Number.isFinite(p[k])?fmt1(p[k]):'—';
+  document.getElementById('yahooGrid').innerHTML=`<div class="tablewrap"><table class="table yahoo-table"><thead><tr><th>Yahoo</th><th>Player</th><th>Team</th><th>Pos</th><th>L7N Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>A/T</th><th>3P%</th><th>DD</th><th>TD</th></tr></thead><tbody>${rows.map(r=>{const p=r.p,fr=fitRank.get(normalize(r.name));const gap=(fr!=null)?r.rank-fr:null;const gapTxt=gap==null?'—':(gap>0?`+${gap}`:String(gap));const gapCls=gap==null?'rank-neutral':(gap>0?'rank-up':gap<0?'rank-down':'rank-neutral');return `<tr class="${state.selected.has(r.name)?'yahoo-hit':''}"><td><span class="yahoo-rank">#${r.rank}</span></td><td><span class="yahoo-name">${esc(r.name)}</span>${p?.isRookie?'<span class="rookie-badge" style="margin-left:5px">ROOKIE</span>':''}</td><td>${p?esc(effectiveTeam(p)):'—'}<div class="yahoo-source">${p?esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p)):'L7N data 未匹配'}</div></td><td>${p?.position?esc(p.position):'—'}</td><td>${p&&Number.isFinite(r.f)?`<strong>${fitIndex(r.f).toFixed(0)}</strong><div class="tiny ${gapCls}">Gap ${gapTxt}</div>`:'—'}</td><td>${numCell(p,'pts')}</td><td>${numCell(p,'pm3')}</td><td>${numCell(p,'ftm')}</td><td>${numCell(p,'reb')}</td><td>${numCell(p,'ast')}</td><td>${numCell(p,'stl')}</td><td>${numCell(p,'blk')}</td><td>${pctCell(p,'fg')}</td><td>${pctCell(p,'ft')}</td><td>${numCell(p,'tov')}</td><td>${p&&Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pctCell(p,'p3')}</td><td>${p&&Number.isFinite(p.dd)?p.dd:'—'}</td><td>${p&&Number.isFinite(p.td)?p.td:'—'}</td></tr>`}).join('')}</tbody></table></div>`;
+  document.querySelectorAll('#yahooGrid [data-detail]').forEach(x=>x.onclick=()=>{});
+}
+
+function renderMobileQuickSearch(){
+  const input=document.getElementById('mobileTeamSearch'), box=document.getElementById('mobileTeamResults'), chips=document.getElementById('mobileSelectedChips');
+  if(!input||!box||!chips)return;
+  const q=input.value.trim().toLowerCase();
+  chips.innerHTML=[...state.selected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-mobile-rem="${esc(p.name)}">×</button></span>`:''}).join('');
+  chips.querySelectorAll('[data-mobile-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.mobileRem);save();render()});
+  if(!q){box.classList.add('hidden');box.innerHTML='';return}
+  const rows=players.filter(p=>!state.selected.has(p.name)&&!state.oppSelected.has(p.name)&&(p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)||p.team.toLowerCase().includes(q))).slice(0,15);
+  box.innerHTML=rows.map(p=>`<div class="result" data-mobile-add="${esc(p.name)}"><div><div class="nm">${esc(p.name)} ${p.isRookie?'<span class="rookie-badge">ROOKIE</span>':''}</div><div class="tm">${TEAMS[effectiveTeam(p)]||effectiveTeam(p)} · ${p.isRookie?('Pick #'+p.draftPick):('PTS '+fmt1(p.pts)+' · REB '+fmt1(p.reb)+' · AST '+fmt1(p.ast))}</div></div><button class="btn small">加入</button></div>`).join('')||'<div class="result"><div class="muted">找不到球員</div></div>';
+  box.classList.remove('hidden');
+  box.querySelectorAll('[data-mobile-add]').forEach(r=>r.onclick=()=>{state.selected.add(r.dataset.mobileAdd);save();input.value='';box.classList.add('hidden');render()});
+}
+function render(){renderLeagueManager();const ml=document.getElementById('mobileLeagueMini');if(ml&&state.leagueId){const lg=state.leagues?.find(x=>x.id===state.leagueId);ml.textContent=lg?.name||'我的聯盟';}renderMobileQuickSearch();renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
+function switchTab(tab){state.tab=tab;document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!==`tab-${tab}`));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}
+function initWeeks(){const s=document.getElementById('weekSelect');s.innerHTML=WEEKS.map((w,i)=>`<option value="${i}">${w[0]} · ${w[1]}</option>`).join('');state.week=Math.min(24,Math.max(0,Number(state.week)||0));s.value=state.week}
+function setStatus(ok,msg){document.getElementById('dot').className='dot'+(ok?' ok':'');document.getElementById('status').textContent=msg;const b=document.getElementById('dataBadge');if(b)b.textContent=dataBasisLabel()}
+function setMobileModelOpen(open){
+  const layout=document.querySelector('.layout');
+  const btn=document.getElementById('mobileModelBtn');
+  const backdrop=document.getElementById('mobileModelBackdrop');
+  const close=document.getElementById('mobileModelClose');
+  if(layout) layout.classList.toggle('mobile-settings-open',!!open);
+  if(btn) btn.setAttribute('aria-expanded',String(!!open));
+  if(btn) btn.classList.toggle('is-open',!!open);
+  if(backdrop) backdrop.classList.toggle('hidden',!open);
+  document.body.classList.toggle('mobile-drawer-active',!!open);
+  if(open) setTimeout(()=>document.getElementById('minGP')?.focus(),80);
+}
+document.getElementById('mobileModelBtn')?.addEventListener('click',()=>setMobileModelOpen(true));
+document.getElementById('mobileModelClose')?.addEventListener('click',()=>setMobileModelOpen(false));
+document.getElementById('mobileModelBackdrop')?.addEventListener('click',()=>setMobileModelOpen(false));
+document.getElementById('mobileLeagueSelect')?.addEventListener('change',e=>switchLeague(e.target.value));
+document.getElementById('mobileTeamSearch')?.addEventListener('input',renderMobileQuickSearch);
+document.getElementById('mobileAddClear')?.addEventListener('click',()=>{const i=document.getElementById('mobileTeamSearch');if(i)i.value='';renderMobileQuickSearch();i?.focus()});
+
+const helpModal=document.getElementById('helpModal');
+function setHelpOpen(open){if(!helpModal)return;helpModal.classList.toggle('hidden',!open);document.body.classList.toggle('help-open',!!open);if(open)setTimeout(()=>document.getElementById('helpClose')?.focus(),60);}
+document.getElementById('helpBtn')?.addEventListener('click',()=>setHelpOpen(true));
+document.getElementById('mobileHelpBtn')?.addEventListener('click',()=>setHelpOpen(true));
+document.getElementById('helpClose')?.addEventListener('click',()=>setHelpOpen(false));
+helpModal?.addEventListener('click',e=>{if(e.target===helpModal)setHelpOpen(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpModal?.classList.contains('hidden'))setHelpOpen(false)});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('candSort').onchange=e=>{state.candSort=e.target.value;save();render()};document.getElementById('candAvailableOnly').onchange=e=>{state.candAvailableOnly=e.target.checked;save();render()};document.getElementById('clearDraftMarks').onclick=()=>{state.draftUnavailable.clear();save();render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(1,Math.min(82,Number(e.target.value)||10));save();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='top200'?'top200':'league';save();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=e.target.value;save();render()};document.getElementById('importData').onclick=async()=>{const file=document.getElementById('dataImportFile').files?.[0];const k=document.getElementById('dataImportTarget').value;if(!file){alert('請先選擇 CSV');return;}try{const ps=fromCsv(await file.text());if(ps.length<10)throw new Error('可辨識球員不足（需要至少 10 筆）');storeDataset(k,ps,'import');datasets[k]=ps;if(k==='last')state.dataBasis='last';else state.dataBasis=k;save();players=getActiveDataset().players;render();alert(`已匯入 ${ps.length} 位球員，套用：${dataBasisLabel()}`)}catch(err){alert('CSV 匯入失敗：'+err.message)}};document.getElementById('clearImportedData').onclick=()=>{const k=document.getElementById('dataImportTarget').value;localStorage.removeItem(customKey(k));localStorage.removeItem('fb_dataset_source_'+k);datasets[k]=k==='last'?demo():[];if(state.dataBasis===k)state.dataBasis='last';save();players=getActiveDataset().players;render();};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};state.draftUnavailable.clear();save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
+state.weights={...DEFAULTS,...state.weights};
+initWeeks();
+syncControlsFromState();
+// Synchronous startup: no Promise/remote loading step, so the UI is immediately interactive.
+datasets={last:loadStoredDataset('last').length?loadStoredDataset('last'):demo(),current:loadStoredDataset('current'),recent10:loadStoredDataset('recent10'),recent5:loadStoredDataset('recent5')};
+players=getActiveDataset().players;
+state.selected=new Set([...state.selected].filter(n=>players.some(p=>p.name===n)));
+state.oppSelected=new Set([...state.oppSelected].filter(n=>players.some(p=>p.name===n)));
+setStatus(true,`${players.length} 位球員｜本機資料已就緒｜2026-27 schedule snapshot`);
+render();
+fetchFullBaseline();
+// V3.9 Multi-League: shared engine + shared data, league-scoped runtime settings. All league profiles use the same functions and schema.
+</script></body></html>
