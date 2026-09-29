@@ -3,7 +3,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
-<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V4.0.7</title>
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V4.0.12</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
@@ -500,8 +500,21 @@ header .status{position:relative;z-index:3}
 /* V4.0.7: What-if H2H win/loss summary follows the same per-league selected H2H categories; no analysis engine changes. */
 #tab-weekly .h2h-cat-check{margin-right:5px;vertical-align:-1px;accent-color:#1677d2}
 </style>
+<style>
+.my-rank-panel{margin:10px 0 12px;border:1px solid #dcd7ef;border-radius:12px;background:#fcfbff;overflow:hidden}.my-rank-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 11px;border-bottom:1px solid #e7e3f3;background:#f7f5ff}.my-rank-head strong{font-size:13px}.my-rank-list{padding:8px}.my-rank-empty{padding:10px 11px;border:1px dashed #cfd5e1;border-radius:9px;background:#fff;color:#68758a;font-size:10px}.my-rank-item{display:grid;grid-template-columns:22px 30px minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px 8px;background:#fff;border:1px solid #e4e7ee;border-radius:9px;margin-bottom:6px;cursor:grab;touch-action:none}.my-rank-item:last-child{margin-bottom:0}.my-rank-item.dragging{opacity:.55}.my-rank-item.drag-over{border-color:#a99bf5;background:#f6f3ff}.my-rank-handle{font-size:14px;color:#8b94a6;text-align:center;user-select:none;touch-action:none;cursor:grab}.my-rank-num{font-weight:1000;color:#5636ce;text-align:center}.my-rank-player{min-width:0;display:flex;align-items:baseline;gap:7px}.my-rank-player strong{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.my-rank-player span{font-size:9px;color:#7b8495;white-space:nowrap}.my-rank-actions{display:flex;gap:4px}.my-rank-actions .btn{min-height:30px;padding:4px 7px;font-size:9px}.my-rank-actions .btn:disabled{opacity:.38;cursor:default}.my-rank-mini{display:inline-flex;align-items:center;justify-content:center;min-width:30px;padding:2px 5px;border-radius:999px;background:#f1efff;border:1px solid #d9d1ff;color:#5636ce;font-size:9px;font-weight:950}.table.yahoo-table td,.table.yahoo-table th{vertical-align:middle}.table.yahoo-table th:last-child,.table.yahoo-table td:last-child{white-space:nowrap}.table.yahoo-table td:last-child .btn{min-height:29px;padding:4px 8px;font-size:9px}@media(max-width:760px){.my-rank-head{align-items:flex-start}.my-rank-head .helper{display:block;margin:3px 0 0!important}.my-rank-item{grid-template-columns:20px 26px minmax(0,1fr) auto;padding:7px 6px}.my-rank-actions .btn{min-width:30px;padding:4px 5px}.my-rank-player{display:block}.my-rank-player strong{font-size:11px;display:block}.my-rank-player span{display:block;margin-top:2px}.table.yahoo-table th,.table.yahoo-table td{padding:6px 6px}.table.yahoo-table{min-width:1700px}.my-rank-mini{font-size:8.5px}}
+</style>
+<style>
+/* V4.0.12: persistent visible horizontal rail for wide data tables. UI/scroll layer only. */
+.l7n-global-hscroll{position:fixed;left:12px;right:12px;bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:1000;height:18px;padding:0;border:1px solid rgba(203,210,224,.95);border-radius:10px;background:rgba(255,255,255,.98);box-shadow:0 5px 18px rgba(30,41,59,.12);overflow:hidden;overscroll-behavior-x:contain;touch-action:none;-webkit-user-select:none;user-select:none}
+.l7n-global-hscroll.hidden{display:none}
+.l7n-global-hscroll-track{position:relative;width:100%;height:100%;background:#f0f3f7;border-radius:9px}
+.l7n-global-hscroll-thumb{position:absolute;top:2px;bottom:2px;left:0;min-width:58px;width:20%;border-radius:999px;background:#7f8b9d;box-shadow:0 1px 2px rgba(30,41,59,.16);cursor:grab}
+.l7n-global-hscroll-thumb:active{cursor:grabbing}
+body.l7n-hscroll-visible main{padding-bottom:52px}
+@media (max-width:760px){.l7n-global-hscroll{left:8px;right:8px;bottom:calc(var(--mobile-nav-h) + max(8px,env(safe-area-inset-bottom,0px)));height:20px}body.l7n-hscroll-visible main{padding-bottom:58px}}
+</style>
 </head><body>
-<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V4.0.7｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
+<header><div class="wrap head"><div><div><div class="title">🏀 Fantasy Basketball H2H Analyzer <span class="creator">L7N製 · H2H Fantasy Lab · 2026 Edition</span><span class="engine-badge">● Engine Calibrated · Robust</span></div><div class="subtitle">L7N H2H Fantasy Lab V4.0.12｜Multi-League Draft Strength × Weekly H2H Projection × Schedule × Rookie Bridge × Yahoo Reference × Engine Calibrated</div><div id="activeLeagueHeader" class="league-pill" style="margin-top:7px"><span class="league-dot"></span><span>我的聯盟</span></div></div><div class="head-actions"><button class="btn small" id="shareBtn">🔗 分享目前設定</button><button class="btn small help-btn" id="helpBtn" type="button">❔ 使用說明</button></div></div><div class="status"><span id="dot" class="dot"></span><span id="status">本機資料就緒中…</span><span id="dataBadge" class="data-badge">Baseline</span></div></div></header>
 <div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="help-card">
     <div class="help-head">
@@ -586,7 +599,7 @@ header .status{position:relative;z-index:3}
 <div class="section"><div class="sectionhead"><h4>📊 我的球隊：Per-Game Strength</h4><span class="helper">50 = 同條件參考池中性；50 為基準，越高代表對應分類越強 · 參考池會排除深 bench 並做極端值校正</span></div><div id="draftMetrics" class="metrics"></div></div>
 <div class="section"><div class="sectionhead"><h4>👥 已選球員：個人數據總覽</h4><span class="helper">橫向比較每位球員；綠＝相對優勢、紅＝相對弱勢，依目前資料基準判定</span></div><div id="rosterPlayerStats"></div></div>
 <div class="section"><div class="sectionhead"><h4>🧭 分類強弱與目前缺口</h4><span id="draftHint" class="helper"></span></div><div id="strength" class="strength-grid"></div></div>
-<div class="section"><div class="sectionhead"><h4>🎯 Candidate Fit <span class="cn-label">適合球隊的候選球員</span></h4><span class="helper">Yahoo Rank 導航＋L7N Fit 動態判斷；原始數據完整保留</span></div><div class="draft-board-toolbar"><div class="searchbig draft-search"><input id="candSearch" class="control" placeholder="搜尋球員 / 球隊 / Yahoo Rank"><button class="btn soft" id="clearCand">清除</button></div><div class="draft-board-controls"><label class="draft-toggle"><input id="candAvailableOnly" type="checkbox"> <span>只看目前可選</span></label><button class="btn small" id="clearDraftMarks">清除已選標記</button><span id="candStatus" class="draft-status"></span><select id="candSort" class="control cand-sort"><option value="yahoo">Yahoo Rank</option><option value="teamfit">Team Fit</option><option value="basefit">Base Fit</option><option value="pts">PTS/G</option><option value="3pm">3PM/G</option><option value="ftm">FTM/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="stl">STL/G</option><option value="blk">BLK/G</option><option value="fg">FG%</option><option value="ft">FT%</option><option value="tov">TOV/G（低→高）</option><option value="dd">DD</option><option value="at">A/T</option><option value="3p">3P%</option></select></div></div><div id="candidates"></div></div>
+<div class="section"><div class="sectionhead"><h4>🎯 Candidate Fit <span class="cn-label">適合球隊的候選球員</span></h4><span class="helper">Yahoo Rank 導航＋L7N Fit 動態判斷；原始數據完整保留</span></div><div class="draft-board-toolbar"><div class="searchbig draft-search"><input id="candSearch" class="control" placeholder="搜尋球員 / 球隊 / Yahoo Rank"><button class="btn soft" id="clearCand">清除</button></div><div class="draft-board-controls"><label class="draft-toggle"><input id="candAvailableOnly" type="checkbox"> <span>只看目前可選</span></label><button class="btn small" id="clearDraftMarks">清除已選標記</button><span id="candStatus" class="draft-status"></span><select id="candSort" class="control cand-sort"><option value="yahoo">Yahoo Rank</option><option value="myrank">我的順位</option><option value="teamfit">Team Fit</option><option value="basefit">Base Fit</option><option value="pts">PTS/G</option><option value="3pm">3PM/G</option><option value="ftm">FTM/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="stl">STL/G</option><option value="blk">BLK/G</option><option value="fg">FG%</option><option value="ft">FT%</option><option value="tov">TOV/G（低→高）</option><option value="dd">DD</option><option value="at">A/T</option><option value="3p">3P%</option></select></div></div><div id="candidates"></div></div>
 <div class="section"><div class="sectionhead"><h4>🔄 What-if <span class="cn-label">加入／移除球員模擬</span></h4><span class="helper">最多 4 人移除＋4 人加入，模擬加入前後的球隊數據變化，不會修改正式 roster</span></div><div id="whatif" class="detail"><div class="muted">從 Candidate Fit 點球員即可加入模擬；也可以在下方選擇要移除的球員。</div></div></div>
 </div>
 <div id="tab-weekly" class="hidden">
@@ -616,11 +629,13 @@ header .status{position:relative;z-index:3}
 <div id="tab-yahoo" class="hidden">
 <div class="section"><div class="sectionhead"><h4>🟣 Yahoo Fantasy 2026-27 Salary Cap Rankings</h4><span class="helper">Salary Cap · Top 200 · Yahoo current Default Pre-Draft order</span></div>
 <div class="note" style="margin-bottom:12px"><b>Yahoo Rank 是外部市場參考，不會直接改變 L7N Fantasy Engine。</b> 目前以 Yahoo Fantasy Basketball 的即時「Default Player Rankings / Top 200 Default Rankings - Salary Cap」作為 Rank 來源；這份排名可隨 Yahoo 更新而重新校正。Yahoo Rank 只作外部市場參考，不直接改變 L7N Fantasy Engine。<span class="source-badge" style="margin-left:6px">Verified 2026-09-23</span> <a href="https://basketball.fantasysports.yahoo.com/nba/public_prerank" target="_blank" rel="noopener" style="margin-left:8px;font-weight:800">查看 Yahoo 原始排名 ↗</a></div>
-<div class="searchbig"><input id="yahooSearch" class="control" placeholder="搜尋球員 / Yahoo Rank / 球隊"><select id="yahooSort" class="control" style="max-width:190px"><option value="yahoo">Yahoo Rank</option><option value="fit">L7N Fit</option><option value="pts">PTS/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="ftm">FTM/G</option><option value="3p">3P%</option><option value="at">A/T</option></select></div>
-<div id="yahooMeta" class="tiny" style="margin:8px 0"></div><div id="yahooGrid"></div></div>
+<div class="searchbig"><input id="yahooSearch" class="control" placeholder="搜尋球員 / Yahoo Rank / 球隊"><select id="yahooSort" class="control" style="max-width:190px"><option value="yahoo">Yahoo Rank</option><option value="myrank">我的順位</option><option value="fit">L7N Fit</option><option value="pts">PTS/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="ftm">FTM/G</option><option value="3p">3P%</option><option value="at">A/T</option></select></div>
+<div id="yahooMeta" class="tiny" style="margin:8px 0"></div>
+<div class="my-rank-panel"><div class="my-rank-head"><div><strong>⭐ 我的選人順位</strong><span class="helper" style="margin-left:8px">可加入、拖曳排序；每個聯盟會各自記住</span></div><button class="btn small soft" id="clearMyRank">清空我的順位</button></div><div id="myRankList" class="my-rank-list"></div></div>
+<div id="yahooGrid"></div></div>
 </div>
 
-</section><div class="tiny" style="margin-top:20px;text-align:center">L7N · H2H Fantasy Lab · 2026 Edition 3.9｜本工具為個人研究用途；資料更新以外部來源與最後更新時間為準。</div></div></div></main>
+</section><div class="tiny" style="margin-top:20px;text-align:center">L7N · H2H Fantasy Lab · 2026 Edition 4.0.10｜本工具為個人研究用途；資料更新以外部來源與最後更新時間為準。</div></div></div></main>
 <script>
 // Yahoo current Salary Cap Top 200 verified 2026-09-23 from Yahoo public pre-draft rankings page.
 const SCHEDULE={"ATL":[3,4,4,3,3,2,2,1,4,3,3,4,3,4,3,4,4,2,3,3,4,4,3,4,3],"BKN":[3,3,4,2,3,4,2,1,4,4,3,4,4,3,4,3,4,1,2,4,3,4,3,4,4],"BOS":[2,4,4,3,4,3,2,1,4,2,4,3,3,4,4,4,4,2,2,3,4,3,4,4,3],"CHA":[3,4,3,3,2,3,2,1,4,4,4,4,3,3,4,4,3,2,3,2,4,3,4,4,4],"CHI":[3,3,3,3,4,3,2,1,4,3,3,5,3,3,4,3,4,2,2,4,3,3,4,4,4],"CLE":[2,4,4,4,3,3,2,1,4,3,4,3,4,3,4,4,4,2,2,3,4,3,2,4,4],"DAL":[3,3,4,4,3,2,2,0,4,3,3,4,3,4,4,4,3,2,3,2,4,4,4,4,4],"DEN":[2,3,3,3,4,3,2,1,3,4,4,3,5,3,4,4,4,1,2,3,4,4,3,4,4],"DET":[3,3,3,3,4,3,2,1,4,4,3,4,3,3,4,4,3,2,2,3,4,3,4,4,4],"GSW":[3,4,3,3,4,3,1,1,4,4,3,3,4,4,3,4,3,2,1,4,4,3,4,4,4],"HOU":[3,4,3,4,3,3,2,1,4,2,4,3,4,4,4,3,4,2,2,4,3,3,4,4,3],"IND":[3,4,3,4,3,3,2,1,3,4,3,4,4,3,3,3,4,3,2,3,3,4,3,4,4],"LAC":[3,3,3,3,3,4,2,1,3,4,4,3,3,4,3,4,4,2,2,3,4,3,4,4,4],"LAL":[3,4,4,3,3,3,2,0,4,4,4,3,4,4,4,3,3,2,2,4,3,4,3,3,4],"MEM":[3,3,3,4,4,4,2,1,4,4,2,4,3,3,3,3,3,3,2,3,4,4,4,3,4],"MIA":[3,3,4,3,3,3,2,1,4,4,3,4,4,3,3,4,4,2,2,3,4,3,3,4,4],"MIL":[3,3,4,4,3,4,2,1,4,3,4,3,4,3,3,3,4,2,2,3,3,3,4,4,4],"MIN":[3,4,4,2,4,4,2,1,3,4,4,3,3,4,4,4,2,2,2,3,4,2,4,4,4],"NOP":[3,3,4,4,4,3,2,1,4,3,4,4,2,2,4,4,4,2,2,4,4,4,3,2,4],"NYK":[3,3,3,4,4,3,2,1,3,4,3,3,4,4,3,4,3,2,3,3,3,3,4,4,4],"OKC":[3,3,4,4,3,3,2,1,3,4,4,3,3,4,4,4,3,2,2,3,4,3,4,3,4],"ORL":[3,3,3,3,4,3,1,1,4,4,4,4,4,3,4,3,4,2,2,3,3,4,4,3,4],"PHI":[4,3,4,3,3,4,2,1,2,4,3,4,3,4,4,4,3,2,2,4,3,4,4,3,3],"PHX":[2,2,4,4,3,4,2,1,4,3,4,4,2,4,4,3,4,2,2,3,4,4,4,4,3],"POR":[2,3,4,3,4,4,2,1,3,4,2,4,4,4,3,3,5,2,2,4,3,4,3,4,3],"SAC":[3,3,4,3,3,3,2,1,3,3,4,4,4,3,4,3,4,1,3,3,4,4,3,4,4],"SAS":[3,3,4,4,3,4,2,1,4,4,4,3,2,3,3,4,3,3,2,3,3,4,3,4,4],"TOR":[3,3,3,4,3,3,2,1,4,3,4,4,4,3,4,4,3,2,2,3,3,4,4,3,4],"UTA":[3,3,4,4,4,3,2,1,4,3,3,4,4,4,3,4,2,2,2,4,3,3,4,3,4],"WAS":[3,3,4,4,4,2,2,1,4,4,3,3,4,4,3,3,4,2,2,4,3,3,4,3,4]};
@@ -689,13 +704,13 @@ const ACTIVE_LEAGUE_KEY='l7n_h2h_active_league_v1';
 const LEGACY_KEYS={team:'fb_final_team',opp:'fb_opp_team',weights:'fb_weights',week:'fb_week',dataBasis:'fb_data_basis',overrides:'fb_final_overrides',teamOverrides:'fb_team_overrides',minGP:'fb_min_gp',refMode:'fb_ref_mode'};
 function uid(){return 'lg_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
 function makeLeague(name='我的聯盟'){
-  return {id:uid(),name,selected:[],oppSelected:[],weights:{...DEFAULTS},h2hCategories:[...DEFAULT_H2H_CATS],tab:'draft',week:0,cand:'',playerSearch:'',oppSearch:'',rookieSearch:'',rookieFilter:'all',sort:'fit',candSort:'yahoo',candAvailableOnly:false,draftUnavailable:[],what:null,whatIn:[],whatOut:[],overrides:{},teamOverrides:{},detail:null,rookieDetail:null,dataBasis:'last',minGP:20,refMode:'top200'}
+  return {id:uid(),name,selected:[],oppSelected:[],weights:{...DEFAULTS},h2hCategories:[...DEFAULT_H2H_CATS],myRank:[],tab:'draft',week:0,cand:'',playerSearch:'',oppSearch:'',rookieSearch:'',rookieFilter:'all',sort:'fit',candSort:'yahoo',candAvailableOnly:false,draftUnavailable:[],what:null,whatIn:[],whatOut:[],overrides:{},teamOverrides:{},detail:null,rookieDetail:null,dataBasis:'last',minGP:20,refMode:'top200'}
 }
 function normalizeLeagueProfile(p){
   const d=makeLeague(p?.name||'我的聯盟');
   const o={...d,...(p||{})};
   o.id=p?.id||d.id; o.name=String(p?.name||d.name).slice(0,80); o.schemaVersion=2;
-  o.selected=Array.isArray(p?.selected)?p.selected:[]; o.oppSelected=Array.isArray(p?.oppSelected)?p.oppSelected:[]; o.h2hCategories=Array.isArray(p?.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):[...DEFAULT_H2H_CATS]; o.candSort=typeof p?.candSort==='string'?p.candSort:'yahoo'; o.candAvailableOnly=!!p?.candAvailableOnly; o.draftUnavailable=Array.isArray(p?.draftUnavailable)?p.draftUnavailable:[]; o.whatIn=Array.isArray(p?.whatIn)?p.whatIn:(p?.what?[p.what]:[]); o.whatOut=Array.isArray(p?.whatOut)?p.whatOut:[];
+  o.selected=Array.isArray(p?.selected)?p.selected:[]; o.oppSelected=Array.isArray(p?.oppSelected)?p.oppSelected:[]; o.h2hCategories=Array.isArray(p?.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):[...DEFAULT_H2H_CATS]; o.myRank=Array.isArray(p?.myRank)?p.myRank.filter(n=>typeof n==='string'&&n):[]; o.candSort=typeof p?.candSort==='string'?p.candSort:'yahoo'; o.candAvailableOnly=!!p?.candAvailableOnly; o.draftUnavailable=Array.isArray(p?.draftUnavailable)?p.draftUnavailable:[]; o.whatIn=Array.isArray(p?.whatIn)?p.whatIn:(p?.what?[p.what]:[]); o.whatOut=Array.isArray(p?.whatOut)?p.whatOut:[];
   o.weights={...DEFAULTS,...(p?.weights||{})}; o.overrides=p?.overrides||{}; o.teamOverrides=p?.teamOverrides||{};
   o.minGP=Number.isFinite(Number(p?.minGP))?Math.max(20,Math.min(82,Number(p.minGP))):20;
   o.refMode=(Number(p?.schemaVersion)>=2 && p?.refMode==='league')?'league':'top200';
@@ -723,7 +738,7 @@ function loadLeagueProfiles(){
   return [normalizeLeagueProfile(legacy)];
 }
 function toRuntimeState(p){
-  return {...p,selected:new Set(p.selected||[]),oppSelected:new Set(p.oppSelected||[]),h2hCategories:new Set(Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):DEFAULT_H2H_CATS),draftUnavailable:new Set(p.draftUnavailable||[]),weights:{...DEFAULTS,...(p.weights||{})},overrides:{...(p.overrides||{})},teamOverrides:{...(p.teamOverrides||{})}};
+  return {...p,selected:new Set(p.selected||[]),oppSelected:new Set(p.oppSelected||[]),h2hCategories:new Set(Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):DEFAULT_H2H_CATS),myRank:Array.isArray(p.myRank)?[...p.myRank]:[],draftUnavailable:new Set(p.draftUnavailable||[]),weights:{...DEFAULTS,...(p.weights||{})},overrides:{...(p.overrides||{})},teamOverrides:{...(p.teamOverrides||{})}};
 }
 let leagueProfiles=loadLeagueProfiles();
 let activeLeagueId=localStorage.getItem(ACTIVE_LEAGUE_KEY);
@@ -731,7 +746,7 @@ if(!leagueProfiles.some(p=>p.id===activeLeagueId)){activeLeagueId=leagueProfiles
 let state=toRuntimeState(leagueProfiles.find(p=>p.id===activeLeagueId)||leagueProfiles[0]);
 function runtimeToProfile(){
   const p={...state};
-  p.selected=[...state.selected]; p.oppSelected=[...state.oppSelected]; p.h2hCategories=[...state.h2hCategories].filter(k=>DEFAULT_H2H_CATS.includes(k)); p.draftUnavailable=[...state.draftUnavailable]; p.candSort=state.candSort||'yahoo'; p.candAvailableOnly=!!state.candAvailableOnly;
+  p.selected=[...state.selected]; p.oppSelected=[...state.oppSelected]; p.h2hCategories=[...state.h2hCategories].filter(k=>DEFAULT_H2H_CATS.includes(k)); p.myRank=[...new Set((state.myRank||[]).filter(n=>typeof n==='string'&&n))]; p.draftUnavailable=[...state.draftUnavailable]; p.candSort=state.candSort||'yahoo'; p.candAvailableOnly=!!state.candAvailableOnly;
   p.weights={...state.weights}; p.overrides={...state.overrides}; p.teamOverrides={...state.teamOverrides};
   p.minGP=Math.max(1,Math.min(82,Number(document.getElementById('minGP')?.value||state.minGP||10)));
   p.refMode=document.getElementById('refMode')?.value==='top200'?'top200':'league';
@@ -890,19 +905,19 @@ function weekly(a){const w=weeklyForTeam(a.team);const pool=refPool(),rb=refStat
 function neutralIndex(v,ref,dir=1,scale=1){if(!Number.isFinite(v)||!Number.isFinite(ref)||ref<=0)return 50;const ratio=dir<0?(v>0?ref/v:4):(v/ref);const q=Math.log(Math.max(.25,Math.min(4,ratio)));return Math.max(0,Math.min(100,50+20*Math.tanh(q/1.2*scale)))}
 function pctIndex(v,ref,scale){if(!Number.isFinite(v)||!Number.isFinite(ref))return 50;return Math.max(0,Math.min(100,50+18*Math.tanh(((v-ref)/scale)*2)))}
 function weeklyStrengthFor(team){const w=weeklyForTeam(team),r=w.raw,ref=refStats(refPool()),pool=refPool(),npg=Math.max(1,w.totalPG),avg=(k)=>pool.reduce((s,p)=>s+(p[k]||0),0)/(pool.length||1);return{PTS:neutralIndex(r.PTS,avg('pts')*npg), '3PM':neutralIndex(r['3PM'],avg('pm3')*npg),FTM:neutralIndex(r.FTM,avg('ftm')*npg),REB:neutralIndex(r.REB,avg('reb')*npg),AST:neutralIndex(r.AST,avg('ast')*npg),STL:neutralIndex(r.STL,avg('stl')*npg),BLK:neutralIndex(r.BLK,avg('blk')*npg),TOV:neutralIndex(r.TOV,avg('tov')*npg,-1),DD:neutralIndex(r.DD,ref.ddG*npg), 'FG%':pctIndex(r.FG,ref.fg,.035), 'FT%':pctIndex(r.FT,ref.ft,.06), '3P%':pctIndex(r.P3,ref.p3,.04), 'A/T':neutralIndex(r.AT,ref.at,1,.75)}}
-function encodeShare(){const payload={version:4,leagueName:state.name,team:[...state.selected],opp:[...state.oppSelected],weights:state.weights,h2hCategories:[...state.h2hCategories],week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode};return btoa(unescape(encodeURIComponent(JSON.stringify(payload))))}
+function encodeShare(){const payload={version:4,leagueName:state.name,team:[...state.selected],opp:[...state.oppSelected],weights:state.weights,h2hCategories:[...state.h2hCategories],myRank:[...(state.myRank||[])],week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode};return btoa(unescape(encodeURIComponent(JSON.stringify(payload))))}
 function shareUrl(){return location.href.split('#')[0]+'#share='+encodeShare()}
 function applyShare(){try{
   const m=location.hash.match(/^#share=(.+)$/);if(!m)return false;
   const p=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
   const base=makeLeague((String(p.leagueName||'分享聯盟').slice(0,60))+' · Shared');
-  base.selected=p.team||[]; base.oppSelected=p.opp||[]; base.weights={...DEFAULTS,...(p.weights||{})}; base.h2hCategories=Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):[...DEFAULT_H2H_CATS]; base.week=Number.isFinite(p.week)?p.week:0; base.dataBasis=p.dataBasis||'last'; base.overrides=p.overrides||{}; base.teamOverrides=p.teamOverrides||{}; base.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):20; base.refMode=p.refMode==='top200'?'top200':'league';
+  base.selected=p.team||[]; base.oppSelected=p.opp||[]; base.weights={...DEFAULTS,...(p.weights||{})}; base.h2hCategories=Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):[...DEFAULT_H2H_CATS]; base.myRank=Array.isArray(p.myRank)?p.myRank.filter(n=>typeof n==='string'&&n):[]; base.week=Number.isFinite(p.week)?p.week:0; base.dataBasis=p.dataBasis||'last'; base.overrides=p.overrides||{}; base.teamOverrides=p.teamOverrides||{}; base.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):20; base.refMode=p.refMode==='top200'?'top200':'league';
   leagueProfiles.push(base);activeLeagueId=base.id;state=toRuntimeState(base);persistProfiles();history.replaceState(null,'',location.href.split('#')[0]);return true;
 }catch(e){return false}}
 function shareNow(){const url=shareUrl();if(navigator.clipboard)navigator.clipboard.writeText(url);else{const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}alert(location.protocol==='file:'?'已複製設定連結，但目前是本機 file:// 網址；要讓朋友真的打開，先把整個資料夾部署到公開靜態網址（GitHub Pages / Netlify 等），之後再按一次分享即可。':'分享連結已複製；朋友打開同一個公開網址即可載入你的 roster、對手、權重、Week 與隊伍覆寫。')}
 function downloadJson(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function exportConfig(){downloadJson('L7N_Fantasy_'+String(state.name||'League').replace(/[^a-zA-Z0-9_-]+/g,'_')+'_Config.json',{version:4,leagueName:state.name,selected:[...state.selected],opponent:[...state.oppSelected],weights:state.weights,h2hCategories:[...state.h2hCategories],week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode})}
-async function importConfigFile(file){const p=JSON.parse(await file.text());state.selected=new Set(p.selected||p.team||[]);state.oppSelected=new Set(p.opponent||p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.h2hCategories=new Set(Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):DEFAULT_H2H_CATS);state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};state.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):state.minGP;state.refMode=p.refMode==='top200'?'top200':state.refMode;save();syncControlsFromState();render()}
+function exportConfig(){downloadJson('L7N_Fantasy_'+String(state.name||'League').replace(/[^a-zA-Z0-9_-]+/g,'_')+'_Config.json',{version:4,leagueName:state.name,selected:[...state.selected],opponent:[...state.oppSelected],weights:state.weights,h2hCategories:[...state.h2hCategories],myRank:[...(state.myRank||[])],week:state.week,dataBasis:state.dataBasis,overrides:state.overrides,teamOverrides:state.teamOverrides,minGP:state.minGP,refMode:state.refMode})}
+async function importConfigFile(file){const p=JSON.parse(await file.text());state.selected=new Set(p.selected||p.team||[]);state.oppSelected=new Set(p.opponent||p.opp||[]);state.weights={...DEFAULTS,...(p.weights||{})};state.h2hCategories=new Set(Array.isArray(p.h2hCategories)?p.h2hCategories.filter(k=>DEFAULT_H2H_CATS.includes(k)):DEFAULT_H2H_CATS);state.myRank=Array.isArray(p.myRank)?p.myRank.filter(n=>typeof n==='string'&&n):[];state.week=Number.isFinite(p.week)?p.week:state.week;state.dataBasis=p.dataBasis||state.dataBasis;state.overrides=p.overrides||{};state.teamOverrides=p.teamOverrides||{};state.minGP=Number.isFinite(Number(p.minGP))?Number(p.minGP):state.minGP;state.refMode=p.refMode==='top200'?'top200':state.refMode;save();syncControlsFromState();render()}
 function customKey(k){return 'fb_custom_dataset_'+k}
 function storeDataset(k,ps,source='import'){try{localStorage.setItem(customKey(k),JSON.stringify(ps));localStorage.setItem('fb_dataset_source_'+k,source)}catch(e){}}
 function loadStoredDataset(k){try{const x=JSON.parse(localStorage.getItem(customKey(k))||'null');return Array.isArray(x)?x:[]}catch(e){return []}}
@@ -991,7 +1006,11 @@ function toggleWhatOut(name){
 }
 function clearWhatif(){state.whatIn=[];state.whatOut=[];state.what=null;save();render()}
 function yahooRankOf(name){const hit=YAHOO_RANKINGS.find(r=>normalize(r.name)===normalize(name));return hit?.rank??9999}
-function candSortValue(row,key){const p=row.p;switch(key){case'yahoo':return yahooRankOf(p.name);case'teamfit':return row.teamFit;case'basefit':return row.baseFit;case'pts':return p.pts;case'3pm':return p.pm3;case'ftm':return p.ftm;case'reb':return p.reb;case'ast':return p.ast;case'stl':return p.stl;case'blk':return p.blk;case'fg':return p.fg;case'ft':return p.ft;case'tov':return p.tov;case'dd':return p.dd;case'at':return p.at;case'3p':return p.p3;default:return yahooRankOf(p.name)}}
+function myRankPosition(name){const i=(state.myRank||[]).indexOf(name);return i>=0?i+1:null}
+function toggleMyRank(name){if(!name)return;const idx=(state.myRank||[]).indexOf(name);if(idx>=0)state.myRank.splice(idx,1);else state.myRank.push(name);save();render();}
+function moveMyRank(from,to){const arr=state.myRank||[];if(from<0||to<0||from>=arr.length||to>=arr.length||from===to)return;const [item]=arr.splice(from,1);arr.splice(to,0,item);save();render()}
+function clearMyRank(){state.myRank=[];save();render()}
+function candSortValue(row,key){const p=row.p;switch(key){case'yahoo':return yahooRankOf(p.name);case'myrank':return myRankPosition(p.name)??9999;case'teamfit':return row.teamFit;case'basefit':return row.baseFit;case'pts':return p.pts;case'3pm':return p.pm3;case'ftm':return p.ftm;case'reb':return p.reb;case'ast':return p.ast;case'stl':return p.stl;case'blk':return p.blk;case'fg':return p.fg;case'ft':return p.ft;case'tov':return p.tov;case'dd':return p.dd;case'at':return p.at;case'3p':return p.p3;default:return yahooRankOf(p.name)}}
 function candDisplay(v,key){if(!Number.isFinite(v))return'—';if(['fg','ft','3p'].includes(key))return pct(v);if(key==='at')return v.toFixed(2);if(['pts','pm3','ftm','reb','ast','stl','blk','tov'].includes(key))return fmt1(v);return String(v)}
 function fitToneClass(v){return v>=58?'fit-strong':(v<47?'fit-weak':'fit-mid')}
 function renderCandidates(a){
@@ -999,13 +1018,13 @@ function renderCandidates(a){
  let rows=players.filter(p=>!state.selected.has(p.name)&&(!q||p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)||String(yahooRankOf(p.name)).includes(q))).map(p=>{const baseVal=fitIndex(baseFit(p,a));const teamVal=fitIndex(fit(p,a));return{p,baseFit:baseVal,teamFit:teamVal,available:!state.draftUnavailable.has(p.name)}});
  if(state.candAvailableOnly)rows=rows.filter(r=>r.available);
  const key=state.candSort||'yahoo';
- rows.sort((x,y)=>{const xv=candSortValue(x,key),yv=candSortValue(y,key);if(key==='yahoo')return xv-yv;return (Number.isFinite(yv)?yv:-Infinity)-(Number.isFinite(xv)?xv:-Infinity)});
+ rows.sort((x,y)=>{const xv=candSortValue(x,key),yv=candSortValue(y,key);if(key==='yahoo')return xv-yv;if(key==='myrank')return (xv-yv)||(yahooRankOf(x.p.name)-yahooRankOf(y.p.name));return (Number.isFinite(yv)?yv:-Infinity)-(Number.isFinite(xv)?xv:-Infinity)});
  rows=rows.slice(0,200);
  const shown=rows.length;
  const meta=document.getElementById('candStatus');if(meta)meta.textContent=`${state.candAvailableOnly?'可選':'候選池'} ${shown} 人｜暫標已選 ${state.draftUnavailable.size} 人`;
- const header=(k,label)=>`<th class="cand-sort-head ${state.candSort===k?'active':''}" data-candsort="${k}">${label}<span>${state.candSort===k?(k==='yahoo'?'↑':'↓'):'↕'}</span></th>`;
- const desktop=`<div class="candidate-viewport candidate-desktop"><div class="tablewrap"><table class="table candidate-table"><thead><tr><th>狀態</th>${header('yahoo','Yahoo')}<th>Player</th>${header('basefit','Base Fit')}${header('teamfit','Team Fit')}<th>Team</th>${header('pts','PTS/G')}${header('3pm','3PM/G')}${header('ftm','FTM/G')}${header('reb','REB/G')}${header('ast','AST/G')}${header('stl','STL/G')}${header('blk','BLK/G')}${header('fg','FG%')}${header('ft','FT%')}${header('tov','TOV/G')}<th>DD</th><th>TD</th>${header('at','A/T')}${header('3p','3P%')}</tr></thead><tbody>${rows.map(r=>{const p=r.p,un=!r.available;return `<tr class="candidate-row ${un?'draft-unavailable':''}"><td><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button></td><td><span class="cand-rank">#${yahooRankOf(p.name)===9999?'—':yahooRankOf(p.name)}</span></td><td><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span>${p.isRookie?'<span class="rookie-badge" style="margin-left:4px">R</span>':''}</td><td><span class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</span></td><td><span class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</span></td><td>${esc(effectiveTeam(p))}<div class="tiny">${esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p))}</div></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td></tr>`}).join('')}</tbody></table></div></div>`;
- const mobile=`<div class="candidate-viewport candidate-mobile">${rows.map(r=>{const p=r.p,un=!r.available,rank=yahooRankOf(p.name);return `<article class="candidate-card ${un?'draft-unavailable':''}"><div class="candidate-card-top"><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button><div><span class="cand-rank">#${rank===9999?'—':rank}</span><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span><span class="cand-team">${esc(effectiveTeam(p))}</span></div></div><div class="candidate-fitline"><span>Base Fit <b class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</b></span><span>Team Fit <b class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</b></span></div><div class="candidate-stats-grid"><span><i>PTS</i><b>${fmt1(p.pts)}</b></span><span><i>3PM</i><b>${fmt1(p.pm3)}</b></span><span><i>FTM</i><b>${fmt1(p.ftm)}</b></span><span><i>REB</i><b>${fmt1(p.reb)}</b></span><span><i>AST</i><b>${fmt1(p.ast)}</b></span><span><i>STL</i><b>${fmt1(p.stl)}</b></span><span><i>BLK</i><b>${fmt1(p.blk)}</b></span><span><i>FG%</i><b>${pct(p.fg)}</b></span><span><i>FT%</i><b>${pct(p.ft)}</b></span><span><i>TOV</i><b>${fmt1(p.tov)}</b></span><span><i>DD</i><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></span><span><i>TD</i><b>${Number.isFinite(p.td)?p.td:'—'}</b></span><span><i>A/T</i><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></span><span><i>3P%</i><b>${pct(p.p3)}</b></span></div></article>`}).join('')}</div>`;
+ const header=(k,label)=>`<th class="cand-sort-head ${state.candSort===k?'active':''}" data-candsort="${k}">${label}<span>${state.candSort===k?((k==='yahoo'||k==='myrank')?'↑':'↓'):'↕'}</span></th>`;
+ const desktop=`<div class="candidate-viewport candidate-desktop"><div class="tablewrap"><table class="table candidate-table"><thead><tr><th>狀態</th>${header('yahoo','Yahoo')}${header('myrank','我的順位')}<th>Player</th>${header('basefit','Base Fit')}${header('teamfit','Team Fit')}<th>Team</th>${header('pts','PTS/G')}${header('3pm','3PM/G')}${header('ftm','FTM/G')}${header('reb','REB/G')}${header('ast','AST/G')}${header('stl','STL/G')}${header('blk','BLK/G')}${header('fg','FG%')}${header('ft','FT%')}${header('tov','TOV/G')}<th>DD</th><th>TD</th>${header('at','A/T')}${header('3p','3P%')}</tr></thead><tbody>${rows.map(r=>{const p=r.p,un=!r.available;return `<tr class="candidate-row ${un?'draft-unavailable':''}"><td><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button></td><td><span class="cand-rank">#${yahooRankOf(p.name)===9999?'—':yahooRankOf(p.name)}</span></td><td><span class="my-rank-mini">${myRankPosition(p.name)?'#'+myRankPosition(p.name):'—'}</span></td><td><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span>${p.isRookie?'<span class="rookie-badge" style="margin-left:4px">R</span>':''}</td><td><span class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</span></td><td><span class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</span></td><td>${esc(effectiveTeam(p))}<div class="tiny">${esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p))}</div></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td></tr>`}).join('')}</tbody></table></div></div>`;
+ const mobile=`<div class="candidate-viewport candidate-mobile">${rows.map(r=>{const p=r.p,un=!r.available,rank=yahooRankOf(p.name);return `<article class="candidate-card ${un?'draft-unavailable':''}"><div class="candidate-card-top"><button class="draft-mark-btn ${un?'marked':''}" data-draft-mark="${esc(p.name)}"><input type="checkbox" ${un?'checked':''}>${un?'已選走':'已被選'}</button><div><span class="cand-rank">#${rank===9999?'—':rank}</span><span class="playerlink" data-candidate="${esc(p.name)}">${esc(p.name)}</span><span class="cand-team">${esc(effectiveTeam(p))}</span></div></div><div class="candidate-fitline"><span>我的順位 <b class="my-rank-mini">${myRankPosition(p.name)?'#'+myRankPosition(p.name):'—'}</b></span><span>Base Fit <b class="fit-pill ${fitToneClass(r.baseFit)}">${r.baseFit.toFixed(0)}</b></span><span>Team Fit <b class="fit-pill ${fitToneClass(r.teamFit)}">${r.teamFit.toFixed(0)}</b></span></div><div class="candidate-stats-grid"><span><i>PTS</i><b>${fmt1(p.pts)}</b></span><span><i>3PM</i><b>${fmt1(p.pm3)}</b></span><span><i>FTM</i><b>${fmt1(p.ftm)}</b></span><span><i>REB</i><b>${fmt1(p.reb)}</b></span><span><i>AST</i><b>${fmt1(p.ast)}</b></span><span><i>STL</i><b>${fmt1(p.stl)}</b></span><span><i>BLK</i><b>${fmt1(p.blk)}</b></span><span><i>FG%</i><b>${pct(p.fg)}</b></span><span><i>FT%</i><b>${pct(p.ft)}</b></span><span><i>TOV</i><b>${fmt1(p.tov)}</b></span><span><i>DD</i><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></span><span><i>TD</i><b>${Number.isFinite(p.td)?p.td:'—'}</b></span><span><i>A/T</i><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></span><span><i>3P%</i><b>${pct(p.p3)}</b></span></div></article>`}).join('')}</div>`;
  document.getElementById('candidates').innerHTML=desktop+mobile;
  document.querySelectorAll('[data-candsort]').forEach(x=>x.onclick=()=>{state.candSort=x.dataset.candsort;save();render()});
  document.querySelectorAll('[data-draft-mark]').forEach(x=>x.onclick=()=>{const n=x.dataset.draftMark;if(state.draftUnavailable.has(n))state.draftUnavailable.delete(n);else state.draftUnavailable.add(n);save();render()});
@@ -1144,11 +1163,54 @@ function renderRookies(){
 function renderRookieDetail(){const r=ROOKIE_DB.find(x=>x.name===state.rookieDetail),el=document.getElementById('rookieDetail');if(!r)return;const n=r.ncaa||{},p=rookieProjection(r);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(r.name)} <span class="rookie-badge">ROOKIE</span></div><div class="muted" style="margin-top:3px">Pick #${r.pick} · ${TEAMS[r.team]||r.team} · ${esc(r.school)}</div></div><button id="addRookie" class="btn primary">加入我的球隊</button></div><div class="rookie-strip"><div><b>${n.pts!=null?fmt1(n.pts):'—'}</b><span>NCAA PTS/G</span></div><div><b>${n.reb!=null?fmt1(n.reb):'—'}</b><span>NCAA REB/G</span></div><div><b>${n.ast!=null?fmt1(n.ast):'—'}</b><span>NCAA AST/G</span></div><div><b>${n.fg!=null?pct(n.fg):'—'}</b><span>NCAA FG%</span></div><div><b>${n.p3!=null?pct(n.p3):'—'}</b><span>NCAA 3P%</span></div></div><div class="detailgrid"><div class="dmetric"><span>NBA PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>NBA REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>NBA AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>NBA STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>NBA BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>NBA 3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>NBA FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="dmetric"><span>NBA FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>NBA FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>NBA 3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>NBA TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>NBA A/T</span><b>${p.at.toFixed(2)}</b></div><div class="dmetric"><span>Projection confidence</span><b>${p.projectionConfidence.toUpperCase()}</b></div></div><div class="model-warn">${ROOKIE_SOURCE_INFO.projection}。預測不會直接進參考池；NCAA 與 NBA 數據分開。正式例行賽資料一旦有足夠 NBA GP，系統會優先使用實績來取代 projection。DD/TD 在 rookie 階段先不做假精準預測，等 NBA 實績進資料庫再接上。</div><div class="tiny" style="margin-top:10px">資料來源：${ROOKIE_SOURCE_INFO.draft}；${ROOKIE_SOURCE_INFO.ncaa}。</div>`;document.getElementById('addRookie').onclick=()=>{state.selected.add(r.name);save();render()};}
 
 function yahooMatchPlayer(name){const target=normalize(name);return players.find(p=>normalize(p.name)===target)||null}
+function renderMyRankList(){
+  const el=document.getElementById('myRankList'); if(!el)return;
+  const names=(state.myRank||[]).slice();
+  if(!names.length){el.innerHTML='<div class="my-rank-empty">還沒有我的選人順位。到下方 Yahoo 名單按「加入」後，再拖曳調整順序。</div>';return;}
+  el.innerHTML=names.map((name,i)=>{const r=YAHOO_RANKINGS.find(x=>normalize(x.name)===normalize(name));const p=yahooMatchPlayer(name);const team=p?effectiveTeam(p):(r?.team||'—');return `<div class="my-rank-item" draggable="true" data-myrank-drag="${esc(name)}" data-myrank-index="${i}"><span class="my-rank-handle" title="拖曳排序">☰</span><span class="my-rank-num">${i+1}</span><div class="my-rank-player"><strong>${esc(name)}</strong><span>${r?`Yahoo #${r.rank}`:''}${team&&team!=='—'?` · ${esc(team)}`:''}</span></div><div class="my-rank-actions"><button class="btn small soft" data-myrank-up="${i}" ${i===0?'disabled':''}>↑</button><button class="btn small soft" data-myrank-down="${i}" ${i===names.length-1?'disabled':''}>↓</button><button class="btn small soft" data-myrank-remove="${esc(name)}">移除</button></div></div>`}).join('');
+  let dragIndex=-1; let pointerDragIndex=-1;
+  const clearDragVisuals=()=>{el.querySelectorAll('.my-rank-item').forEach(x=>{x.classList.remove('dragging');x.classList.remove('drag-over')});dragIndex=-1;pointerDragIndex=-1};
+  el.querySelectorAll('[data-myrank-drag]').forEach(item=>{
+    item.addEventListener('dragstart',e=>{dragIndex=Number(item.dataset.myrankIndex);item.classList.add('dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move';});
+    item.addEventListener('dragend',clearDragVisuals);
+    item.addEventListener('dragover',e=>{e.preventDefault();item.classList.add('drag-over');if(e.dataTransfer)e.dataTransfer.dropEffect='move';});
+    item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
+    item.addEventListener('drop',e=>{e.preventDefault();const from=dragIndex;const to=Number(item.dataset.myrankIndex);clearDragVisuals();if(from>=0&&to>=0&&from!==to)moveMyRank(from,to);});
+    const handle=item.querySelector('.my-rank-handle');
+    handle?.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse')return;
+      pointerDragIndex=Number(item.dataset.myrankIndex);
+      item.classList.add('dragging');
+      try{handle.setPointerCapture(e.pointerId)}catch(_){}
+      e.preventDefault();
+    });
+    handle?.addEventListener('pointermove',e=>{
+      if(pointerDragIndex<0)return;
+      e.preventDefault();
+      const under=document.elementFromPoint(e.clientX,e.clientY)?.closest('.my-rank-item');
+      el.querySelectorAll('.my-rank-item').forEach(x=>x.classList.remove('drag-over'));
+      if(under&&under!==item)under.classList.add('drag-over');
+    });
+    handle?.addEventListener('pointerup',e=>{
+      if(pointerDragIndex<0)return;
+      const from=pointerDragIndex;
+      const under=document.elementFromPoint(e.clientX,e.clientY)?.closest('.my-rank-item');
+      const to=under?Number(under.dataset.myrankIndex):from;
+      clearDragVisuals();
+      if(to!==from)moveMyRank(from,to);
+    });
+    handle?.addEventListener('pointercancel',clearDragVisuals);
+  });
+  el.querySelectorAll('[data-myrank-up]').forEach(b=>b.onclick=()=>moveMyRank(Number(b.dataset.myrankUp),Number(b.dataset.myrankUp)-1));
+  el.querySelectorAll('[data-myrank-down]').forEach(b=>b.onclick=()=>moveMyRank(Number(b.dataset.myrankDown),Number(b.dataset.myrankDown)+1));
+  el.querySelectorAll('[data-myrank-remove]').forEach(b=>b.onclick=()=>toggleMyRank(b.dataset.myrankRemove));
+}
 function renderYahoo(a){
   const q=(document.getElementById('yahooSearch')?.value||'').trim().toLowerCase();
   const sort=document.getElementById('yahooSort')?.value||'yahoo';
   const rows=YAHOO_RANKINGS.map(r=>{const p=yahooMatchPlayer(r.name);const f=p?fit(p,a):null;return {...r,p,f}}).filter(r=>{if(!q)return true;const team=r.p?effectiveTeam(r.p):'';return String(r.rank).includes(q)||r.name.toLowerCase().includes(q)||String(team).toLowerCase().includes(q)||(team&&String(TEAMS[team]||team).toLowerCase().includes(q));});
-  if(sort==='fit')rows.sort((x,y)=>(y.f??-999)-(x.f??-999));
+  if(sort==='myrank')rows.sort((x,y)=>(myRankPosition(x.name)??9999)-(myRankPosition(y.name)??9999)||x.rank-y.rank);
+  else if(sort==='fit')rows.sort((x,y)=>(y.f??-999)-(x.f??-999));
   else if(sort==='pts')rows.sort((x,y)=>(y.p?.pts??-999)-(x.p?.pts??-999));
   else if(sort==='reb')rows.sort((x,y)=>(y.p?.reb??-999)-(x.p?.reb??-999));
   else if(sort==='ast')rows.sort((x,y)=>(y.p?.ast??-999)-(x.p?.ast??-999));
@@ -1158,12 +1220,14 @@ function renderYahoo(a){
   const withFit=YAHOO_RANKINGS.map(r=>{const p=yahooMatchPlayer(r.name);return {...r,p,f:p?fit(p,a):null}}).filter(x=>Number.isFinite(x.f));
   const fitRank=new Map([...withFit].sort((x,y)=>y.f-x.f).map((x,i)=>[normalize(x.name),i+1]));
   const matched=YAHOO_RANKINGS.reduce((n,r)=>n+(yahooMatchPlayer(r.name)?1:0),0);
+  const rankedCount=state.myRank?.length||0;
   const meta=document.getElementById('yahooMeta');
-  if(meta)meta.textContent=`Yahoo Top 200：${matched}/200 已對應到目前 L7N 球員資料｜L7N Fit 只在你已選球隊後才有 Team Fit 意義；未載入/未匹配數據顯示「—」。`;
+  if(meta)meta.textContent=`Yahoo Top 200：${matched}/200 已對應到目前 L7N 球員資料｜我的順位目前 ${rankedCount} 人｜可當成額外排序參考，不會改變 Yahoo Rank 或 L7N Engine。`;
   const pctCell=(p,k)=>p&&Number.isFinite(p[k])?pct(p[k]):'—';
   const numCell=(p,k)=>p&&Number.isFinite(p[k])?fmt1(p[k]):'—';
-  document.getElementById('yahooGrid').innerHTML=`<div class="tablewrap"><table class="table yahoo-table"><thead><tr><th>Yahoo</th><th>Player</th><th>Team</th><th>Pos</th><th>L7N Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>A/T</th><th>3P%</th><th>DD</th><th>TD</th></tr></thead><tbody>${rows.map(r=>{const p=r.p,fr=fitRank.get(normalize(r.name));const gap=(fr!=null)?r.rank-fr:null;const gapTxt=gap==null?'—':(gap>0?`+${gap}`:String(gap));const gapCls=gap==null?'rank-neutral':(gap>0?'rank-up':gap<0?'rank-down':'rank-neutral');return `<tr class="${state.selected.has(r.name)?'yahoo-hit':''}"><td><span class="yahoo-rank">#${r.rank}</span></td><td><span class="yahoo-name">${esc(r.name)}</span>${p?.isRookie?'<span class="rookie-badge" style="margin-left:5px">ROOKIE</span>':''}</td><td>${p?esc(effectiveTeam(p)):'—'}<div class="yahoo-source">${p?esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p)):'L7N data 未匹配'}</div></td><td>${p?.position?esc(p.position):'—'}</td><td>${p&&Number.isFinite(r.f)?`<strong>${fitIndex(r.f).toFixed(0)}</strong><div class="tiny ${gapCls}">Gap ${gapTxt}</div>`:'—'}</td><td>${numCell(p,'pts')}</td><td>${numCell(p,'pm3')}</td><td>${numCell(p,'ftm')}</td><td>${numCell(p,'reb')}</td><td>${numCell(p,'ast')}</td><td>${numCell(p,'stl')}</td><td>${numCell(p,'blk')}</td><td>${pctCell(p,'fg')}</td><td>${pctCell(p,'ft')}</td><td>${numCell(p,'tov')}</td><td>${p&&Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pctCell(p,'p3')}</td><td>${p&&Number.isFinite(p.dd)?p.dd:'—'}</td><td>${p&&Number.isFinite(p.td)?p.td:'—'}</td></tr>`}).join('')}</tbody></table></div>`;
-  document.querySelectorAll('#yahooGrid [data-detail]').forEach(x=>x.onclick=()=>{});
+  document.getElementById('yahooGrid').innerHTML=`<div class="tablewrap"><table class="table yahoo-table"><thead><tr><th>操作</th><th>Yahoo</th><th>我的順位</th><th>Player</th><th>Team</th><th>Pos</th><th>L7N Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>A/T</th><th>3P%</th><th>DD</th><th>TD</th></tr></thead><tbody>${rows.map(r=>{const p=r.p,fr=fitRank.get(normalize(r.name));const gap=(fr!=null)?r.rank-fr:null;const gapTxt=gap==null?'—':(gap>0?`+${gap}`:String(gap));const gapCls=gap==null?'rank-neutral':(gap>0?'rank-up':'rank-down');const mp=myRankPosition(r.name);const inRank=mp!=null;return `<tr class="${state.selected.has(r.name)?'yahoo-hit':''}"><td><button class="btn small ${inRank?'soft':''}" data-myrank-toggle="${esc(r.name)}">${inRank?'移除':'加入'}</button></td><td><span class="yahoo-rank">#${r.rank}</span></td><td><span class="my-rank-mini">${inRank?'#'+mp:'—'}</span></td><td><span class="yahoo-name">${esc(r.name)}</span>${p?.isRookie?'<span class="rookie-badge" style="margin-left:5px">ROOKIE</span>':''}</td><td>${p?esc(effectiveTeam(p)):'—'}<div class="yahoo-source">${p?esc(TEAMS[effectiveTeam(p)]||effectiveTeam(p)):'L7N data 未匹配'}</div></td><td>${p?.position?esc(p.position):'—'}</td><td>${p&&Number.isFinite(r.f)?`<strong>${fitIndex(r.f).toFixed(0)}</strong><div class="tiny ${gapCls}">Gap ${gapTxt}</div>`:'—'}</td><td>${numCell(p,'pts')}</td><td>${numCell(p,'pm3')}</td><td>${numCell(p,'ftm')}</td><td>${numCell(p,'reb')}</td><td>${numCell(p,'ast')}</td><td>${numCell(p,'stl')}</td><td>${numCell(p,'blk')}</td><td>${pctCell(p,'fg')}</td><td>${pctCell(p,'ft')}</td><td>${numCell(p,'tov')}</td><td>${p&&Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pctCell(p,'p3')}</td><td>${p&&Number.isFinite(p.dd)?p.dd:'—'}</td><td>${p&&Number.isFinite(p.td)?p.td:'—'}</td></tr>`}).join('')}</tbody></table></div>`;
+  document.querySelectorAll('#yahooGrid [data-myrank-toggle]').forEach(b=>b.onclick=()=>toggleMyRank(b.dataset.myrankToggle));
+  renderMyRankList();
 }
 
 function renderMobileQuickSearch(){
@@ -1213,7 +1277,7 @@ document.getElementById('mobileHelpBtn')?.addEventListener('click',()=>setHelpOp
 document.getElementById('helpClose')?.addEventListener('click',()=>setHelpOpen(false));
 helpModal?.addEventListener('click',e=>{if(e.target===helpModal)setHelpOpen(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpModal?.classList.contains('hidden'))setHelpOpen(false)});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));applyShare();state.cand='';syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('candSort').onchange=e=>{state.candSort=e.target.value;save();render()};document.getElementById('candAvailableOnly').onchange=e=>{state.candAvailableOnly=e.target.checked;save();render()};document.getElementById('clearDraftMarks').onclick=()=>{state.draftUnavailable.clear();save();render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(20,Math.min(82,Number(e.target.value)||20));save();invalidateModel();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='league'?'league':'top200';save();invalidateModel();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=['last','current','recent10'].includes(e.target.value)?e.target.value:'last';save();players=getActiveDataset().players;invalidateModel();render()};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();invalidateModel();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};state.draftUnavailable.clear();save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));document.getElementById('clearMyRank')?.addEventListener('click',clearMyRank);applyShare();state.cand='';syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('candSort').onchange=e=>{state.candSort=e.target.value;save();render()};document.getElementById('candAvailableOnly').onchange=e=>{state.candAvailableOnly=e.target.checked;save();render()};document.getElementById('clearDraftMarks').onclick=()=>{state.draftUnavailable.clear();save();render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;render()};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(20,Math.min(82,Number(e.target.value)||20));save();invalidateModel();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='league'?'league':'top200';save();invalidateModel();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=['last','current','recent10'].includes(e.target.value)?e.target.value:'last';save();players=getActiveDataset().players;invalidateModel();render()};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();invalidateModel();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};state.draftUnavailable.clear();save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
 state.weights={...DEFAULTS,...state.weights};
 initWeeks();
 syncControlsFromState();
@@ -1226,4 +1290,233 @@ setStatus(true,`${players.length} 位球員｜本機資料已就緒｜2026-27 sc
 render();
 fetchFullBaseline();
 // V3.9 Multi-League: shared engine + shared data, league-scoped runtime settings. All league profiles use the same functions and schema.
-</script></body></html>
+</script>
+<script>
+// V4.0.12: persistent visible horizontal rail. This only controls horizontal
+// scrolling of wide data tables; fantasy/data calculations are untouched.
+(function(){
+  function init(){
+    if(document.getElementById('l7nGlobalHScroll')) return;
+    const sc=document.createElement('div'); sc.id='l7nGlobalHScroll'; sc.className='l7n-global-hscroll hidden'; sc.setAttribute('aria-label','資料表左右滑動');
+    sc.innerHTML='<div id="l7nGlobalHScrollTrack" class="l7n-global-hscroll-track"><div id="l7nGlobalHScrollThumb" class="l7n-global-hscroll-thumb"></div></div>';
+    document.body.appendChild(sc);
+    const track=sc.querySelector('#l7nGlobalHScrollTrack'); const thumb=sc.querySelector('#l7nGlobalHScrollThumb');
+    let active=null,raf=0,lastPointerTarget=null,dragging=false,dragPointerId=null,dragStartX=0,dragStartScroll=0;
+    function targets(){return [...document.querySelectorAll('.tablewrap, .candidate-viewport')].filter(el=>el.scrollWidth>el.clientWidth+3&&!el.closest('#l7nGlobalHScroll'));}
+    function visible(el){const r=el.getBoundingClientRect();return !(r.bottom<=0||r.top>=window.innerHeight||r.right<=0||r.left>=window.innerWidth);}
+    function fromTarget(target){if(!target)return null;return target.closest?.('.candidate-viewport, .tablewrap')||null;}
+    function usable(el){return !!el&&el.scrollWidth>el.clientWidth+3&&visible(el);}
+    function pick(fallbackTarget=null){const ts=targets(),preferred=fromTarget(fallbackTarget)||fromTarget(lastPointerTarget)||active;if(usable(preferred))return preferred;const midY=window.innerHeight*.55;let best=null,bestScore=Infinity;ts.forEach(el=>{if(!visible(el))return;const r=el.getBoundingClientRect();const overlap=Math.max(0,Math.min(r.bottom,window.innerHeight)-Math.max(r.top,0));const center=Math.abs(((r.top+r.bottom)/2)-midY);const score=center-overlap*.15;if(score<bestScore){bestScore=score;best=el;}});return best;}
+    function updateThumb(){
+      if(!active||!usable(active)){sc.classList.add('hidden');document.body.classList.remove('l7n-hscroll-visible');return;}
+      const max=active.scrollWidth-active.clientWidth,trackW=track.clientWidth;
+      const ratio=Math.max(.10,Math.min(1,active.clientWidth/Math.max(active.scrollWidth,1)));
+      const thumbW=Math.max(58,Math.min(trackW,trackW*ratio)),travel=Math.max(0,trackW-thumbW);
+      const pos=max>0?(active.scrollLeft/max)*travel:0;
+      thumb.style.width=thumbW+'px'; thumb.style.transform=`translateX(${Math.max(0,Math.min(travel,pos))}px)`;
+      sc.classList.remove('hidden'); document.body.classList.add('l7n-hscroll-visible');
+    }
+    function refresh(preferred=null){const next=pick(preferred);if(!next){active=null;sc.classList.add('hidden');document.body.classList.remove('l7n-hscroll-visible');return;}active=next;updateThumb();}
+    function schedule(preferred=null){if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{raf=0;refresh(preferred);});}
+    function setTarget(el){if(usable(el)){active=el;updateThumb();}else schedule(el);}
+    function syncFromTarget(el){if(el&&usable(el)){active=el;updateThumb();}else updateThumb();}
+    window.__l7nHScroll={setTarget,syncFromTarget,refresh};
+    function scrollFromRailX(clientX){if(!active||!usable(active))return;const rect=track.getBoundingClientRect(),trackW=rect.width,max=active.scrollWidth-active.clientWidth,thumbW=thumb.getBoundingClientRect().width,travel=Math.max(1,trackW-thumbW),x=Math.max(0,Math.min(travel,clientX-rect.left-thumbW/2));active.scrollLeft=(x/travel)*max;updateThumb();}
+    sc.addEventListener('pointerdown',e=>{if(e.target.closest('.l7n-global-hscroll-thumb')){if(!active){refresh();if(!active)return;}dragging=true;dragPointerId=e.pointerId;dragStartX=e.clientX;dragStartScroll=active.scrollLeft;sc.setPointerCapture?.(e.pointerId);e.preventDefault();}else{if(!active){refresh();if(!active)return;}scrollFromRailX(e.clientX);dragging=true;dragPointerId=e.pointerId;dragStartX=e.clientX;dragStartScroll=active.scrollLeft;sc.setPointerCapture?.(e.pointerId);e.preventDefault();}});
+    sc.addEventListener('pointermove',e=>{if(!dragging||dragPointerId!==e.pointerId||!active)return;const trackW=track.clientWidth,thumbW=thumb.getBoundingClientRect().width,travel=Math.max(1,trackW-thumbW),max=active.scrollWidth-active.clientWidth;active.scrollLeft=Math.max(0,Math.min(max,dragStartScroll+(e.clientX-dragStartX)*max/travel));updateThumb();});
+    const stop=e=>{if(dragging&&(e==null||e.pointerId===dragPointerId)){dragging=false;dragPointerId=null;}}; sc.addEventListener('pointerup',stop); sc.addEventListener('pointercancel',stop); sc.addEventListener('lostpointercapture',()=>{dragging=false;dragPointerId=null;});
+    function bind(el){if(el.dataset.l7nHBound==='1')return;el.dataset.l7nHBound='1';el.addEventListener('scroll',()=>{if(active!==el)active=el;lastPointerTarget=el;updateThumb();},{passive:true});}
+    function bindAll(){targets().forEach(bind);}
+    document.addEventListener('pointerdown',e=>{const t=fromTarget(e.target);if(t){lastPointerTarget=t;bind(t);schedule(t);}},{passive:true,capture:true});
+    document.addEventListener('touchstart',e=>{const t=fromTarget(e.target);if(t){lastPointerTarget=t;bind(t);schedule(t);}},{passive:true,capture:true});
+    document.addEventListener('wheel',e=>{const t=fromTarget(e.target);if(t){lastPointerTarget=t;bind(t);schedule(t);}else schedule();},{passive:true,capture:true});
+    document.addEventListener('scroll',e=>{const t=fromTarget(e.target);if(t){lastPointerTarget=t;bind(t);syncFromTarget(t);}else schedule();},{passive:true,capture:true});
+    window.addEventListener('resize',()=>{bindAll();schedule(active);},{passive:true});
+    new MutationObserver(()=>{bindAll();schedule();}).observe(document.body,{childList:true,subtree:true});
+    bindAll();schedule();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+<style id="v411-data-pin">
+/* V4.0.12: Player Data viewport-pinned horizontal rail + viewport-pinned header.
+   UI/layout only. Fantasy Engine, model, projections and data calculations untouched. */
+.l7n-data-sticky-head{
+  position:fixed;
+  left:0; top:0;
+  width:0; height:0;
+  z-index:60;
+  display:none;
+  pointer-events:none;
+  overflow:hidden;
+  background:#f8fafc;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 3px 10px rgba(30,41,59,.08);
+}
+.l7n-data-sticky-head .pin-first,
+.l7n-data-sticky-head .pin-rest{
+  position:absolute;
+  top:0;
+  height:100%;
+  overflow:hidden;
+  background:#f8fafc;
+}
+.l7n-data-sticky-head .pin-first{
+  left:0;
+  z-index:2;
+  border-right:1px solid var(--line);
+}
+.l7n-data-sticky-head .pin-rest{right:0;}
+.l7n-data-sticky-head table{
+  border-collapse:collapse;
+  table-layout:fixed;
+  margin:0;
+  height:100%;
+  background:#f8fafc;
+}
+.l7n-data-sticky-head th{
+  background:#f8fafc;
+  color:#637088;
+  font-size:11px;
+  font-weight:900;
+  text-align:right;
+  white-space:nowrap;
+  border-bottom:0;
+  padding:6px 7px;
+  height:100%;
+}
+.l7n-data-sticky-head .pin-first th{text-align:left;}
+.l7n-data-sticky-head .pin-rest-inner{height:100%;will-change:transform;}
+@media(max-width:760px){
+  .l7n-data-sticky-head th{font-size:10.5px;padding:6px 6px}
+}
+</style>
+<script>
+// V4.0.12: data-page layout layer only.
+// 1) Forces the existing viewport-fixed H-scroll rail to follow Player Data.
+// 2) Pins the Player Data column labels under the app header while vertically scrolling.
+// No fantasy/data calculations are modified here.
+(function(){
+  function init(){
+    const grid=document.getElementById('playerGrid');
+    const tab=document.getElementById('tab-players');
+    if(!grid||!tab)return;
+
+    let sticky=null, firstBox=null, restBox=null, restInner=null;
+    let activeTable=null, syncing=false, raf=0;
+
+    function hidden(el){return !el || el.classList.contains('hidden') || getComputedStyle(el).display==='none';}
+    function getTableWrap(){
+      const wrap=grid.querySelector('.tablewrap');
+      if(!wrap || !wrap.querySelector('.player-stats-table')) return null;
+      return wrap.scrollWidth>wrap.clientWidth+3 ? wrap : null;
+    }
+    function headerMetrics(wrap){
+      const table=wrap?.querySelector('.player-stats-table');
+      const head=table?.querySelector('thead tr');
+      if(!table||!head)return null;
+      const cells=[...head.children];
+      if(!cells.length)return null;
+      const widths=cells.map(c=>c.getBoundingClientRect().width);
+      const rowRect=head.getBoundingClientRect();
+      const firstWidth=widths[0]||0;
+      const totalWidth=Math.max(table.scrollWidth, widths.reduce((a,b)=>a+b,0));
+      return {table,head,cells,widths,firstWidth,totalWidth,height:Math.max(30,rowRect.height)};
+    }
+    function buildSticky(wrap,m){
+      if(!sticky){
+        sticky=document.createElement('div');
+        sticky.className='l7n-data-sticky-head';
+        sticky.innerHTML='<div class="pin-first"></div><div class="pin-rest"><div class="pin-rest-inner"></div></div>';
+        document.body.appendChild(sticky);
+        firstBox=sticky.querySelector('.pin-first');
+        restBox=sticky.querySelector('.pin-rest');
+        restInner=sticky.querySelector('.pin-rest-inner');
+      }
+      sticky.style.height=m.height+'px';
+      sticky.style.left=wrap.getBoundingClientRect().left+'px';
+      sticky.style.width=wrap.clientWidth+'px';
+      sticky.style.top=(document.querySelector('header')?.getBoundingClientRect().bottom||0)+'px';
+
+      const firstTable=document.createElement('table');
+      firstTable.style.width=m.firstWidth+'px';
+      const firstHead=document.createElement('thead');
+      const firstRow=document.createElement('tr');
+      const firstCell=m.cells[0].cloneNode(true);
+      firstCell.style.width=m.firstWidth+'px';
+      firstRow.appendChild(firstCell); firstHead.appendChild(firstRow); firstTable.appendChild(firstHead);
+      firstBox.innerHTML=''; firstBox.style.width=m.firstWidth+'px'; firstBox.appendChild(firstTable);
+
+      const restTable=document.createElement('table');
+      const restWidth=Math.max(m.totalWidth-m.firstWidth,1);
+      restTable.style.width=restWidth+'px';
+      const restHead=document.createElement('thead');
+      const restRow=document.createElement('tr');
+      m.cells.slice(1).forEach((c,i)=>{
+        const cell=c.cloneNode(true);
+        cell.style.width=(m.widths[i+1]||0)+'px';
+        restRow.appendChild(cell);
+      });
+      restHead.appendChild(restRow); restTable.appendChild(restHead);
+      restInner.innerHTML=''; restInner.appendChild(restTable);
+      restInner.style.width=restWidth+'px';
+      restBox.style.left=m.firstWidth+'px';
+      restBox.style.width=Math.max(wrap.clientWidth-m.firstWidth,0)+'px';
+      restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
+      sticky.style.display='block';
+    }
+    function hideSticky(){if(sticky)sticky.style.display='none';}
+    function updateSticky(){
+      const wrap=getTableWrap();
+      if(hidden(tab)||!wrap){hideSticky();return;}
+      const r=wrap.getBoundingClientRect();
+      const headerBottom=document.querySelector('header')?.getBoundingClientRect().bottom||0;
+      const m=headerMetrics(wrap);
+      if(!m){hideSticky();return;}
+      const shouldShow=r.top<headerBottom && r.bottom>headerBottom+m.height;
+      if(!shouldShow){hideSticky();return;}
+      buildSticky(wrap,m);
+      restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
+    }
+    function updateRail(){
+      const sc=document.getElementById('l7nGlobalHScroll');
+      const track=document.getElementById('l7nGlobalHScrollTrack');
+      const wrap=getTableWrap();
+      if(!sc||!track)return;
+      if(hidden(tab)||!wrap){return;}
+      activeTable=wrap;
+      if(window.__l7nHScroll){window.__l7nHScroll.setTarget(wrap);}
+      sc.classList.remove('hidden');
+      sc.style.display='block';
+      document.body.classList.add('l7n-hscroll-visible');
+    }
+    function bindTable(wrap){
+      if(!wrap||wrap.dataset.l7n411==='1')return;
+      wrap.dataset.l7n411='1';
+      wrap.addEventListener('scroll',()=>{
+        if(activeTable!==wrap)activeTable=wrap;
+        if(sticky&&sticky.style.display!=='none'){
+          restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
+        }
+        const sc=document.getElementById('l7nGlobalHScroll');
+        if(sc&&window.__l7nHScroll){window.__l7nHScroll.syncFromTarget(wrap);}
+      },{passive:true});
+    }
+    function schedule(){
+      if(raf)cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(()=>{raf=0;const wrap=getTableWrap();bindTable(wrap);updateRail();updateSticky();});
+    }
+    window.addEventListener('scroll',schedule,{passive:true});
+    window.addEventListener('resize',schedule,{passive:true});
+    document.addEventListener('scroll',schedule,{passive:true,capture:true});
+    new MutationObserver(schedule).observe(grid,{childList:true,subtree:true});
+    const tabs=document.querySelectorAll('.tab'); tabs.forEach(t=>t.addEventListener('click',schedule));
+    schedule();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+</body></html>
