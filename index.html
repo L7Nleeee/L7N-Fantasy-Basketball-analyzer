@@ -3,7 +3,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="l7n-logo.png"><link rel="apple-touch-icon" href="l7n-logo.png">
-<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V4.0.12</title>
+<title>Fantasy Basketball H2H Analyzer — L7N H2H Fantasy Lab V4.0.14</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--ink:#182234;--muted:#68758a;--line:#dfe5ef;--accent:#6d45ff;--accent2:#4e7cff;--good:#16885e;--bad:#cf3f4e;--warn:#b77b00;--soft:#f0edff;--soft2:#eef4ff;--shadow:0 8px 28px rgba(40,53,80,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}.wrap{max-width:1500px;margin:auto;padding:0 16px}
@@ -628,7 +628,7 @@ body.l7n-hscroll-visible main{padding-bottom:52px}
 </div>
 <div id="tab-yahoo" class="hidden">
 <div class="section"><div class="sectionhead"><h4>🟣 Yahoo Fantasy 2026-27 Salary Cap Rankings</h4><span class="helper">Salary Cap · Top 200 · Yahoo current Default Pre-Draft order</span></div>
-<div class="note" style="margin-bottom:12px"><b>Yahoo Rank 是外部市場參考，不會直接改變 L7N Fantasy Engine。</b> 目前以 Yahoo Fantasy Basketball 的即時「Default Player Rankings / Top 200 Default Rankings - Salary Cap」作為 Rank 來源；這份排名可隨 Yahoo 更新而重新校正。Yahoo Rank 只作外部市場參考，不直接改變 L7N Fantasy Engine。<span class="source-badge" style="margin-left:6px">Verified 2026-09-23</span> <a href="https://basketball.fantasysports.yahoo.com/nba/public_prerank" target="_blank" rel="noopener" style="margin-left:8px;font-weight:800">查看 Yahoo 原始排名 ↗</a></div>
+<div class="note" style="margin-bottom:12px"><b>Yahoo Rank 是外部市場參考，不會直接改變 L7N Fantasy Engine。</b> 目前以 Yahoo Fantasy Basketball 的即時「Default Player Rankings / Top 200 Default Rankings - Salary Cap」作為 Rank 來源；這份排名可隨 Yahoo 更新而重新校正。Yahoo Rank 只作外部市場參考，不直接改變 L7N Fantasy Engine。<span class="source-badge" style="margin-left:6px">Verified 2026-10-11</span> <a href="https://basketball.fantasysports.yahoo.com/nba/public_prerank" target="_blank" rel="noopener" style="margin-left:8px;font-weight:800">查看 Yahoo 原始排名 ↗</a></div>
 <div class="searchbig"><input id="yahooSearch" class="control" placeholder="搜尋球員 / Yahoo Rank / 球隊"><select id="yahooSort" class="control" style="max-width:190px"><option value="yahoo">Yahoo Rank</option><option value="myrank">我的順位</option><option value="fit">L7N Fit</option><option value="pts">PTS/G</option><option value="reb">REB/G</option><option value="ast">AST/G</option><option value="ftm">FTM/G</option><option value="3p">3P%</option><option value="at">A/T</option></select></div>
 <div id="yahooMeta" class="tiny" style="margin:8px 0"></div>
 <div class="my-rank-panel"><div class="my-rank-head"><div><strong>⭐ 我的選人順位</strong><span class="helper" style="margin-left:8px">可加入、拖曳排序；每個聯盟會各自記住</span></div><button class="btn small soft" id="clearMyRank">清空我的順位</button></div><div id="myRankList" class="my-rank-list"></div></div>
@@ -640,9 +640,7 @@ body.l7n-hscroll-visible main{padding-bottom:52px}
 // Yahoo current Salary Cap Top 200 verified 2026-09-23 from Yahoo public pre-draft rankings page.
 const SCHEDULE={"ATL":[3,4,4,3,3,2,2,1,4,3,3,4,3,4,3,4,4,2,3,3,4,4,3,4,3],"BKN":[3,3,4,2,3,4,2,1,4,4,3,4,4,3,4,3,4,1,2,4,3,4,3,4,4],"BOS":[2,4,4,3,4,3,2,1,4,2,4,3,3,4,4,4,4,2,2,3,4,3,4,4,3],"CHA":[3,4,3,3,2,3,2,1,4,4,4,4,3,3,4,4,3,2,3,2,4,3,4,4,4],"CHI":[3,3,3,3,4,3,2,1,4,3,3,5,3,3,4,3,4,2,2,4,3,3,4,4,4],"CLE":[2,4,4,4,3,3,2,1,4,3,4,3,4,3,4,4,4,2,2,3,4,3,2,4,4],"DAL":[3,3,4,4,3,2,2,0,4,3,3,4,3,4,4,4,3,2,3,2,4,4,4,4,4],"DEN":[2,3,3,3,4,3,2,1,3,4,4,3,5,3,4,4,4,1,2,3,4,4,3,4,4],"DET":[3,3,3,3,4,3,2,1,4,4,3,4,3,3,4,4,3,2,2,3,4,3,4,4,4],"GSW":[3,4,3,3,4,3,1,1,4,4,3,3,4,4,3,4,3,2,1,4,4,3,4,4,4],"HOU":[3,4,3,4,3,3,2,1,4,2,4,3,4,4,4,3,4,2,2,4,3,3,4,4,3],"IND":[3,4,3,4,3,3,2,1,3,4,3,4,4,3,3,3,4,3,2,3,3,4,3,4,4],"LAC":[3,3,3,3,3,4,2,1,3,4,4,3,3,4,3,4,4,2,2,3,4,3,4,4,4],"LAL":[3,4,4,3,3,3,2,0,4,4,4,3,4,4,4,3,3,2,2,4,3,4,3,3,4],"MEM":[3,3,3,4,4,4,2,1,4,4,2,4,3,3,3,3,3,3,2,3,4,4,4,3,4],"MIA":[3,3,4,3,3,3,2,1,4,4,3,4,4,3,3,4,4,2,2,3,4,3,3,4,4],"MIL":[3,3,4,4,3,4,2,1,4,3,4,3,4,3,3,3,4,2,2,3,3,3,4,4,4],"MIN":[3,4,4,2,4,4,2,1,3,4,4,3,3,4,4,4,2,2,2,3,4,2,4,4,4],"NOP":[3,3,4,4,4,3,2,1,4,3,4,4,2,2,4,4,4,2,2,4,4,4,3,2,4],"NYK":[3,3,3,4,4,3,2,1,3,4,3,3,4,4,3,4,3,2,3,3,3,3,4,4,4],"OKC":[3,3,4,4,3,3,2,1,3,4,4,3,3,4,4,4,3,2,2,3,4,3,4,3,4],"ORL":[3,3,3,3,4,3,1,1,4,4,4,4,4,3,4,3,4,2,2,3,3,4,4,3,4],"PHI":[4,3,4,3,3,4,2,1,2,4,3,4,3,4,4,4,3,2,2,4,3,4,4,3,3],"PHX":[2,2,4,4,3,4,2,1,4,3,4,4,2,4,4,3,4,2,2,3,4,4,4,4,3],"POR":[2,3,4,3,4,4,2,1,3,4,2,4,4,4,3,3,5,2,2,4,3,4,3,4,3],"SAC":[3,3,4,3,3,3,2,1,3,3,4,4,4,3,4,3,4,1,3,3,4,4,3,4,4],"SAS":[3,3,4,4,3,4,2,1,4,4,4,3,2,3,3,4,3,3,2,3,3,4,3,4,4],"TOR":[3,3,3,4,3,3,2,1,4,3,4,4,4,3,4,4,3,2,2,3,3,4,4,3,4],"UTA":[3,3,4,4,4,3,2,1,4,3,3,4,4,4,3,4,2,2,2,4,3,3,4,3,4],"WAS":[3,3,4,4,4,2,2,1,4,4,3,3,4,4,3,3,4,2,2,4,3,3,4,3,4]};
 const WEEKS=[["W1","10/19–10/25"],["W2","10/26–11/1"],["W3","11/2–11/8"],["W4","11/9–11/15"],["W5","11/16–11/22"],["W6","11/23–11/29"],["W7","11/30–12/6"],["W8","12/7–12/13"],["W9","12/14–12/20"],["W10","12/21–12/27"],["W11","12/28–1/3"],["W12","1/4–1/10"],["W13","1/11–1/17"],["W14","1/18–1/24"],["W15","1/25–1/31"],["W16","2/1–2/7"],["W17","2/8–2/14"],["W18","2/15–2/21"],["W19","2/22–2/28"],["W20","3/1–3/7"],["W21","3/8–3/14"],["W22","3/15–3/21"],["W23","3/22–3/28"],["W24","3/29–4/4"],["W25","4/5–4/11"]];
-const YAHOO_RANKINGS = [
-{"rank":1,"name":"Victor Wembanyama"},{"rank":2,"name":"Nikola Jokić"},{"rank":3,"name":"Luka Dončić"},{"rank":4,"name":"Shai Gilgeous-Alexander"},{"rank":5,"name":"Cade Cunningham"},{"rank":6,"name":"Tyrese Maxey"},{"rank":7,"name":"Anthony Edwards"},{"rank":8,"name":"Jayson Tatum"},{"rank":9,"name":"Giannis Antetokounmpo"},{"rank":10,"name":"Jalen Johnson"},{"rank":11,"name":"Donovan Mitchell"},{"rank":12,"name":"Tyrese Haliburton"},{"rank":13,"name":"Cooper Flagg"},{"rank":14,"name":"Scottie Barnes"},{"rank":15,"name":"Kevin Durant"},{"rank":16,"name":"Karl-Anthony Towns"},{"rank":17,"name":"Jamal Murray"},{"rank":18,"name":"Josh Giddey"},{"rank":19,"name":"Trae Young"},{"rank":20,"name":"Austin Reaves"},{"rank":21,"name":"Amen Thompson"},{"rank":22,"name":"Domantas Sabonis"},{"rank":23,"name":"LaMelo Ball"},{"rank":24,"name":"Devin Booker"},{"rank":25,"name":"Alperen Şengün"},{"rank":26,"name":"Stephen Curry"},{"rank":27,"name":"Chet Holmgren"},{"rank":28,"name":"Evan Mobley"},{"rank":29,"name":"Jalen Brunson"},{"rank":30,"name":"James Harden"},{"rank":31,"name":"Jaylen Brown"},{"rank":32,"name":"Bam Adebayo"},{"rank":33,"name":"Kawhi Leonard"},{"rank":34,"name":"Lauri Markkanen"},{"rank":35,"name":"Trey Murphy III"},{"rank":36,"name":"Jalen Duren"},{"rank":37,"name":"Walker Kessler"},{"rank":38,"name":"Jalen Williams"},{"rank":39,"name":"Donovan Clingan"},{"rank":40,"name":"Brandon Miller"},{"rank":41,"name":"Derrick White"},{"rank":42,"name":"LeBron James"},{"rank":43,"name":"Jaren Jackson Jr."},{"rank":44,"name":"Anthony Davis"},{"rank":45,"name":"Kon Knueppel"},{"rank":46,"name":"Desmond Bane"},{"rank":47,"name":"Deni Avdija"},{"rank":48,"name":"Kyrie Irving"},{"rank":49,"name":"Franz Wagner"},{"rank":50,"name":"Onyeka Okongwu"},{"rank":51,"name":"Keyonte George"},{"rank":52,"name":"Paolo Banchero"},{"rank":53,"name":"Michael Porter Jr."},{"rank":54,"name":"Nickeil Alexander-Walker"},{"rank":55,"name":"Brandon Ingram"},{"rank":56,"name":"Naz Reid"},{"rank":57,"name":"Cameron Boozer"},{"rank":58,"name":"Damian Lillard"},{"rank":59,"name":"Joel Embiid"},{"rank":60,"name":"Dyson Daniels"},{"rank":61,"name":"Darius Garland"},{"rank":62,"name":"Pascal Siakam"},{"rank":63,"name":"Ivica Zubac"},{"rank":64,"name":"Dejounte Murray"},{"rank":65,"name":"Jarrett Allen"},{"rank":66,"name":"Zach Edey"},{"rank":67,"name":"Tyler Herro"},{"rank":68,"name":"Alex Sarr"},{"rank":69,"name":"Kel'el Ware"},{"rank":70,"name":"Ryan Rollins"},{"rank":71,"name":"OG Anunoby"},{"rank":72,"name":"Rudy Gobert"},{"rank":73,"name":"De'Aaron Fox"},{"rank":74,"name":"Payton Pritchard"},{"rank":75,"name":"Julius Randle"},{"rank":76,"name":"Paul George"},{"rank":77,"name":"Stephon Castle"},{"rank":78,"name":"Mikal Bridges"},{"rank":79,"name":"VJ Edgecombe"},{"rank":80,"name":"Matas Buzelis"},{"rank":81,"name":"Cedric Coward"},{"rank":82,"name":"Caleb Wilson"},{"rank":83,"name":"Coby White"},{"rank":84,"name":"Zion Williamson"},{"rank":85,"name":"Norman Powell"},{"rank":86,"name":"Nic Claxton"},{"rank":87,"name":"Day'Ron Sharpe"},{"rank":88,"name":"Ty Jerome"},{"rank":89,"name":"Immanuel Quickley"},{"rank":90,"name":"Jaden McDaniels"},{"rank":91,"name":"Ausar Thompson"},{"rank":92,"name":"Dylan Harper"},{"rank":93,"name":"Derik Queen"},{"rank":94,"name":"Andrew Wiggins"},{"rank":95,"name":"Jabari Smith Jr."},{"rank":96,"name":"AJ Dybantsa"},{"rank":97,"name":"Zach LaVine"},{"rank":98,"name":"Toumani Camara"},{"rank":99,"name":"Isaiah Hartenstein"},{"rank":100,"name":"Ja Morant"},{"rank":101,"name":"Jalen Suggs"},{"rank":102,"name":"Wendell Carter Jr."},{"rank":103,"name":"Mark Williams"},{"rank":104,"name":"Kristaps Porziņģis"},{"rank":105,"name":"Miles Bridges"},{"rank":106,"name":"Myles Turner"},{"rank":107,"name":"Josh Hart"},{"rank":108,"name":"Andrew Nembhard"},{"rank":109,"name":"Jusuf Nurkić"},{"rank":110,"name":"CJ McCollum"},{"rank":111,"name":"Peyton Watson"},{"rank":112,"name":"Davion Mitchell"},{"rank":113,"name":"Ayo Dosunmu"},{"rank":114,"name":"Collin Murray-Boyles"},{"rank":115,"name":"John Collins"},{"rank":116,"name":"Kevin Porter Jr."},{"rank":117,"name":"Sandro Mamukelashvili"},{"rank":118,"name":"Darryn Peterson"},{"rank":119,"name":"Jakob Poeltl"},{"rank":120,"name":"Khaman Maluach"},{"rank":121,"name":"Brandin Podziemski"},{"rank":122,"name":"Darius Acuff Jr."},{"rank":123,"name":"Reed Sheppard"},{"rank":124,"name":"Neemias Queta"},{"rank":125,"name":"Aaron Gordon"},{"rank":126,"name":"Kyshawn George"},{"rank":127,"name":"Jaime Jaquez Jr."},{"rank":128,"name":"Keegan Murray"},{"rank":129,"name":"Fred VanVleet"},{"rank":130,"name":"Devin Vassell"},{"rank":131,"name":"Yaxel Lendeborg"},{"rank":132,"name":"Jalen Green"},{"rank":133,"name":"Cason Wallace"},{"rank":134,"name":"Tre Jones"},{"rank":135,"name":"Ajay Mitchell"},{"rank":136,"name":"RJ Barrett"},{"rank":137,"name":"Jrue Holiday"},{"rank":138,"name":"Jimmy Butler III"},{"rank":139,"name":"Maxime Raynaud"},{"rank":140,"name":"Collin Gillespie"},{"rank":141,"name":"Paul Reed"},{"rank":142,"name":"Tari Eason"},{"rank":143,"name":"Bobby Portis"},{"rank":144,"name":"Draymond Green"},{"rank":145,"name":"Christian Braun"},{"rank":146,"name":"Nikola Vučević"},{"rank":147,"name":"Moussa Diabaté"},{"rank":148,"name":"Saddiq Bey"},{"rank":149,"name":"Aaron Nesmith"},{"rank":150,"name":"Tobias Harris"},{"rank":151,"name":"Herbert Jones"},{"rank":152,"name":"Dillon Brooks"},{"rank":153,"name":"P.J. Washington"},{"rank":154,"name":"Ace Bailey"},{"rank":155,"name":"Anthony Black"},{"rank":156,"name":"Daniss Jenkins"},{"rank":157,"name":"Jeremiah Fears"},{"rank":158,"name":"Kelly Oubre Jr."},{"rank":159,"name":"Quentin Grimes"},{"rank":160,"name":"Morez Johnson Jr."},{"rank":161,"name":"Grayson Allen"},{"rank":162,"name":"Collin Sexton"},{"rank":163,"name":"Bennedict Mathurin"},{"rank":164,"name":"Jerami Grant"},{"rank":165,"name":"Egor Dëmin"},{"rank":166,"name":"Brook Lopez"},{"rank":167,"name":"Yves Missi"},{"rank":168,"name":"Sam Hauser"},{"rank":169,"name":"Isaiah Stewart"},{"rank":170,"name":"Scoot Henderson"},{"rank":171,"name":"Daniel Gafford"},{"rank":172,"name":"Oso Ighodaro"},{"rank":173,"name":"Cameron Johnson"},{"rank":174,"name":"Santi Aldama"},{"rank":175,"name":"Jordan Poole"},{"rank":176,"name":"Dereck Lively II"},{"rank":177,"name":"Kyle Filipowski"},{"rank":178,"name":"De'Andre Hunter"},{"rank":179,"name":"Mitchell Robinson"},{"rank":180,"name":"Julian Champagnie"},{"rank":181,"name":"Kyle Kuzma"},{"rank":182,"name":"Anfernee Simons"},{"rank":183,"name":"Andre Drummond"},{"rank":184,"name":"Deandre Ayton"},{"rank":185,"name":"Max Strus"},{"rank":186,"name":"Jaylen Wells"},{"rank":187,"name":"Rui Hachimura"},{"rank":188,"name":"Aaron Wiggins"},{"rank":189,"name":"Brayden Burries"},{"rank":190,"name":"De'Anthony Melton"},{"rank":191,"name":"Bilal Coulibaly"},{"rank":192,"name":"Scotty Pippen Jr."},{"rank":193,"name":"Klay Thompson"},{"rank":194,"name":"Cam Whitmore"},{"rank":195,"name":"Obi Toppin"},{"rank":196,"name":"Miles McBride"},{"rank":197,"name":"Luguentz Dort"},{"rank":198,"name":"T.J. McConnell"},{"rank":199,"name":"Keldon Johnson"},{"rank":200,"name":"Jalen Smith"}
-];
+const YAHOO_RANKINGS = [{"rank":1,"name":"Nikola Jokić"},{"rank":2,"name":"Victor Wembanyama"},{"rank":3,"name":"Luka Dončić"},{"rank":4,"name":"Shai Gilgeous-Alexander"},{"rank":5,"name":"Cade Cunningham"},{"rank":6,"name":"Giannis Antetokounmpo"},{"rank":7,"name":"Jayson Tatum"},{"rank":8,"name":"Tyrese Maxey"},{"rank":9,"name":"Anthony Edwards"},{"rank":10,"name":"Tyrese Haliburton"},{"rank":11,"name":"Cooper Flagg"},{"rank":12,"name":"Jalen Johnson"},{"rank":13,"name":"Donovan Mitchell"},{"rank":14,"name":"Kevin Durant"},{"rank":15,"name":"Scottie Barnes"},{"rank":16,"name":"Karl-Anthony Towns"},{"rank":17,"name":"Jamal Murray"},{"rank":18,"name":"Trae Young"},{"rank":19,"name":"Josh Giddey"},{"rank":20,"name":"Amen Thompson"},{"rank":21,"name":"Austin Reaves"},{"rank":22,"name":"Alperen Şengün"},{"rank":23,"name":"LaMelo Ball"},{"rank":24,"name":"Devin Booker"},{"rank":25,"name":"Stephen Curry"},{"rank":26,"name":"Bam Adebayo"},{"rank":27,"name":"Evan Mobley"},{"rank":28,"name":"Trey Murphy III"},{"rank":29,"name":"Jalen Brunson"},{"rank":30,"name":"Lauri Markkanen"},{"rank":31,"name":"Chet Holmgren"},{"rank":32,"name":"Jalen Duren"},{"rank":33,"name":"James Harden"},{"rank":34,"name":"Domantas Sabonis"},{"rank":35,"name":"Brandon Miller"},{"rank":36,"name":"Kawhi Leonard"},{"rank":37,"name":"Jalen Williams"},{"rank":38,"name":"Walker Kessler"},{"rank":39,"name":"Derrick White"},{"rank":40,"name":"Jaren Jackson Jr."},{"rank":41,"name":"Kyrie Irving"},{"rank":42,"name":"Deni Avdija"},{"rank":43,"name":"LeBron James"},{"rank":44,"name":"Donovan Clingan"},{"rank":45,"name":"Anthony Davis"},{"rank":46,"name":"Keyonte George"},{"rank":47,"name":"Jaylen Brown"},{"rank":48,"name":"Desmond Bane"},{"rank":49,"name":"Onyeka Okongwu"},{"rank":50,"name":"Franz Wagner"},{"rank":51,"name":"Paolo Banchero"},{"rank":52,"name":"Joel Embiid"},{"rank":53,"name":"Darius Garland"},{"rank":54,"name":"Ivica Zubac"},{"rank":55,"name":"Cameron Boozer"},{"rank":56,"name":"Alex Sarr"},{"rank":57,"name":"Dejounte Murray"},{"rank":58,"name":"Nickeil Alexander-Walker"},{"rank":59,"name":"Pascal Siakam"},{"rank":60,"name":"Ryan Rollins"},{"rank":61,"name":"Michael Porter Jr."},{"rank":62,"name":"Dyson Daniels"},{"rank":63,"name":"Kon Knueppel"},{"rank":64,"name":"Matas Buzelis"},{"rank":65,"name":"Naz Reid"},{"rank":66,"name":"Zach Edey"},{"rank":67,"name":"Damian Lillard"},{"rank":68,"name":"Tyler Herro"},{"rank":69,"name":"OG Anunoby"},{"rank":70,"name":"De'Aaron Fox"},{"rank":71,"name":"Julius Randle"},{"rank":72,"name":"Jarrett Allen"},{"rank":73,"name":"Ausar Thompson"},{"rank":74,"name":"Kel'el Ware"},{"rank":75,"name":"Cedric Coward"},{"rank":76,"name":"Paul George"},{"rank":77,"name":"Stephon Castle"},{"rank":78,"name":"Rudy Gobert"},{"rank":79,"name":"Mikal Bridges"},{"rank":80,"name":"Payton Pritchard"},{"rank":81,"name":"Zion Williamson"},{"rank":82,"name":"Caleb Wilson"},{"rank":83,"name":"Brandon Ingram"},{"rank":84,"name":"VJ Edgecombe"},{"rank":85,"name":"Dylan Harper"},{"rank":86,"name":"Coby White"},{"rank":87,"name":"Immanuel Quickley"},{"rank":88,"name":"Ty Jerome"},{"rank":89,"name":"Norman Powell"},{"rank":90,"name":"Day'Ron Sharpe"},{"rank":91,"name":"Andrew Wiggins"},{"rank":92,"name":"Jaden McDaniels"},{"rank":93,"name":"AJ Dybantsa"},{"rank":94,"name":"Ja Morant"},{"rank":95,"name":"Jalen Suggs"},{"rank":96,"name":"Jabari Smith Jr."},{"rank":97,"name":"Miles Bridges"},{"rank":98,"name":"Collin Murray-Boyles"},{"rank":99,"name":"Zach LaVine"},{"rank":100,"name":"Isaiah Hartenstein"},{"rank":101,"name":"Wendell Carter Jr."},{"rank":102,"name":"DeMar DeRozan"},{"rank":103,"name":"Mark Williams"},{"rank":104,"name":"John Collins"},{"rank":105,"name":"Josh Hart"},{"rank":106,"name":"Keegan Murray"},{"rank":107,"name":"Derik Queen"},{"rank":108,"name":"Brandin Podziemski"},{"rank":109,"name":"CJ McCollum"},{"rank":110,"name":"Neemias Queta"},{"rank":111,"name":"Ayo Dosunmu"},{"rank":112,"name":"Kristaps Porziņģis"},{"rank":113,"name":"Toumani Camara"},{"rank":114,"name":"Nic Claxton"},{"rank":115,"name":"Andrew Nembhard"},{"rank":116,"name":"Davion Mitchell"},{"rank":117,"name":"Kevin Porter Jr."},{"rank":118,"name":"Sandro Mamukelashvili"},{"rank":119,"name":"Khaman Maluach"},{"rank":120,"name":"Darryn Peterson"},{"rank":121,"name":"Jusuf Nurkić"},{"rank":122,"name":"Collin Gillespie"},{"rank":123,"name":"Darius Acuff Jr."},{"rank":124,"name":"Jakob Poeltl"},{"rank":125,"name":"Myles Turner"},{"rank":126,"name":"Rui Hachimura"},{"rank":127,"name":"Peyton Watson"},{"rank":128,"name":"Kyshawn George"},{"rank":129,"name":"Aaron Gordon"},{"rank":130,"name":"Daniel Gafford"},{"rank":131,"name":"Jaime Jaquez Jr."},{"rank":132,"name":"Reed Sheppard"},{"rank":133,"name":"Fred VanVleet"},{"rank":134,"name":"Jalen Green"},{"rank":135,"name":"Cason Wallace"},{"rank":136,"name":"Ajay Mitchell"},{"rank":137,"name":"Yves Missi"},{"rank":138,"name":"RJ Barrett"},{"rank":139,"name":"Yaxel Lendeborg"},{"rank":140,"name":"Quentin Grimes"},{"rank":141,"name":"Jonathan Kuminga"},{"rank":142,"name":"P.J. Washington"},{"rank":143,"name":"Tre Jones"},{"rank":144,"name":"Jrue Holiday"},{"rank":145,"name":"Dillon Brooks"},{"rank":146,"name":"Egor Dëmin"},{"rank":147,"name":"Moussa Diabaté"},{"rank":148,"name":"Jimmy Butler III"},{"rank":149,"name":"Cameron Johnson"},{"rank":150,"name":"Ace Bailey"},{"rank":151,"name":"Anthony Black"},{"rank":152,"name":"Gui Santos"},{"rank":153,"name":"Saddiq Bey"},{"rank":154,"name":"Draymond Green"},{"rank":155,"name":"Pelle Larsson"},{"rank":156,"name":"Christian Braun"},{"rank":157,"name":"Aaron Nesmith"},{"rank":158,"name":"Mikel Brown Jr."},{"rank":159,"name":"Tobias Harris"},{"rank":160,"name":"Tari Eason"},{"rank":161,"name":"Bennedict Mathurin"},{"rank":162,"name":"Maxime Raynaud"},{"rank":163,"name":"Herbert Jones"},{"rank":164,"name":"Devin Vassell"},{"rank":165,"name":"Jake LaRavia"},{"rank":166,"name":"Jalen Smith"},{"rank":167,"name":"Scotty Pippen Jr."},{"rank":168,"name":"Nikola Vučević"},{"rank":169,"name":"Jerami Grant"},{"rank":170,"name":"Isaiah Jackson"},{"rank":171,"name":"Jared McCain"},{"rank":172,"name":"Brook Lopez"},{"rank":173,"name":"Bobby Portis Jr."},{"rank":174,"name":"Julian Champagnie"},{"rank":175,"name":"Isaiah Stewart"},{"rank":176,"name":"Jaylen Wells"},{"rank":177,"name":"Mitchell Robinson"},{"rank":178,"name":"Grayson Allen"},{"rank":179,"name":"Oso Ighodaro"},{"rank":180,"name":"Kelly Oubre Jr."},{"rank":181,"name":"Scoot Henderson"},{"rank":182,"name":"Paul Reed"},{"rank":183,"name":"Joan Beringer"},{"rank":184,"name":"Dereck Lively II"},{"rank":185,"name":"Daniss Jenkins"},{"rank":186,"name":"Jeremiah Fears"},{"rank":187,"name":"Isaiah Collier"},{"rank":188,"name":"Deandre Ayton"},{"rank":189,"name":"Dennis Schröder"},{"rank":190,"name":"Kris Dunn"},{"rank":191,"name":"Jordan Poole"},{"rank":192,"name":"De'Andre Hunter"},{"rank":193,"name":"Sam Hauser"},{"rank":194,"name":"Tim Hardaway Jr."},{"rank":195,"name":"Miles McBride"},{"rank":196,"name":"Robert Williams III"},{"rank":197,"name":"Kyle Kuzma"},{"rank":198,"name":"Naji Marshall"},{"rank":199,"name":"Kevin Huerter"},{"rank":200,"name":"Terrence Shannon Jr."}];
 const TEAMS={ATL:'Atlanta Hawks',BKN:'Brooklyn Nets',BOS:'Boston Celtics',CHA:'Charlotte Hornets',CHI:'Chicago Bulls',CLE:'Cleveland Cavaliers',DAL:'Dallas Mavericks',DEN:'Denver Nuggets',DET:'Detroit Pistons',GSW:'Golden State Warriors',HOU:'Houston Rockets',IND:'Indiana Pacers',LAC:'LA Clippers',LAL:'Los Angeles Lakers',MEM:'Memphis Grizzlies',MIA:'Miami Heat',MIL:'Milwaukee Bucks',MIN:'Minnesota Timberwolves',NOP:'New Orleans Pelicans',NYK:'New York Knicks',OKC:'Oklahoma City Thunder',ORL:'Orlando Magic',PHI:'Philadelphia 76ers',PHX:'Phoenix Suns',POR:'Portland Trail Blazers',SAC:'Sacramento Kings',SAS:'San Antonio Spurs',TOR:'Toronto Raptors',UTA:'Utah Jazz',WAS:'Washington Wizards'};
 const TEAM_COLORS={ATL:'#C8102E',BKN:'#111111',BOS:'#007A33',CHA:'#00788C',CHI:'#CE1141',CLE:'#860038',DAL:'#00538C',DEN:'#243B6B',DET:'#C8102E',GSW:'#D9A400',HOU:'#CE1141',IND:'#8A6500',LAC:'#C8102E',LAL:'#552583',MEM:'#5D76A9',MIA:'#98002E',MIL:'#00471B',MIN:'#236192',NOP:'#0C2340',NYK:'#006BB6',OKC:'#007AC1',ORL:'#0077C0',PHI:'#006BB6',PHX:'#E56020',POR:'#C8102E',SAC:'#5A2D81',SAS:'#4B5563',TOR:'#CE1141',UTA:'#315A86',WAS:'#002B5C'};
 // 2026-27 current-team snapshot checked against NBA.com official 2026 offseason transactions / league roster (updated through 2026-09-16).
@@ -931,7 +929,7 @@ async function fetchFullBaseline(){
     const text=await res.text(); const ps=fromCsv(text);
     if(ps.length<400) throw new Error('baseline rows '+ps.length);
     datasets.last=ps; invalidateModel(); storeDataset('last',ps,'remote');
-    players=getActiveDataset().players;players.forEach(p=>{p._searchName=p.name.toLowerCase();p._searchTeam=effectiveTeam(p).toLowerCase()});
+    players=getActiveDataset().players;
     state.selected=new Set([...state.selected].filter(n=>players.some(p=>p.name===n)));
     state.oppSelected=new Set([...state.oppSelected].filter(n=>players.some(p=>p.name===n)));
     setStatus(true,`${players.length} 位球員｜完整 baseline 已同步｜可直接使用`);
@@ -941,7 +939,7 @@ async function fetchFullBaseline(){
   }
 }
 
-async function importDataFile(k,file){const ps=fromCsv(await file.text());if(ps.length<20)throw new Error('CSV rows不足或欄位格式不符');datasets[k]=ps;storeDataset(k,ps);players=getActiveDataset().players;players.forEach(p=>{p._searchName=p.name.toLowerCase();p._searchTeam=effectiveTeam(p).toLowerCase()});render();updateDataCenterInfo();updateDataDiagnostic()}
+async function importDataFile(k,file){const ps=fromCsv(await file.text());if(ps.length<20)throw new Error('CSV rows不足或欄位格式不符');datasets[k]=ps;storeDataset(k,ps);players=getActiveDataset().players;render();updateDataCenterInfo();updateDataDiagnostic()}
 function save(){const idx=leagueProfiles.findIndex(p=>p.id===activeLeagueId);if(idx<0)return;leagueProfiles[idx]=runtimeToProfile();state.name=leagueProfiles[idx].name;state.minGP=leagueProfiles[idx].minGP;state.refMode=leagueProfiles[idx].refMode;persistProfiles()}
 function renderWeights(){const el=document.getElementById('weights');el.innerHTML=Object.keys(CATS).filter(k=>CATS[k].score).map(k=>`<div class="weight ${state.weights[k]===0?'off':''}"><span>${k}</span><input type="number" min="0" step="0.25" value="${state.weights[k]}" data-w="${k}"></div>`).join('');el.querySelectorAll('[data-w]').forEach(i=>i.onchange=()=>{state.weights[i.dataset.w]=Math.max(0,Number(i.value)||0);save();render()})}
 function renderChips(){const el=document.getElementById('chips');el.innerHTML=[...state.selected].map(n=>{const p=players.find(x=>x.name===n);return p?`<span class="chip">${esc(p.name)} <small>${effectiveTeam(p)}</small><button data-rem="${esc(p.name)}">×</button></span>`:''}).join('');el.querySelectorAll('[data-rem]').forEach(b=>b.onclick=()=>{state.selected.delete(b.dataset.rem);save();render()})}
@@ -969,7 +967,7 @@ function renderRosterPlayerStats(a){
     return `<td class="${statClass(a,p,label)}${extra}">${value}</td>`;
   }).join('')}</tr>`).join('');
   el.innerHTML=`<div class="tablewrap"><table class="table player-stats-table"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><div class="player-stats-note">這裡是「球員本身」的資料，不是整隊總和。PTS/3PM/FTM/REB/AST/STL/BLK/TOV 為每場平均；FG%/FT%/3P% 為命中率；A/T＝AST÷TOV；<b>DD、TD 為上一季整季總數；FTM 為每場平均且可作為第 10 個 H2H 類別；DD 會進 Fantasy 評分、TD 不進評分。</b></div>`;
-  document.querySelectorAll('[data-detail-roster]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detailRoster;renderDetail(a);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.querySelector('[data-tab="players"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!=='tab-players'));});
+  document.querySelectorAll('[data-detail-roster]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detailRoster;renderDetail(a);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.querySelector('[data-tab="players"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!=='tab-players'));});  window.__l7nRosterStickyRefresh?.();
 }
 
 function renderDraft(a){
@@ -1149,45 +1147,8 @@ if(!catRows.length){
 document.getElementById('weeklyStrength').innerHTML=sh;
 }
 function renderSchedule(){const selTeams=new Set(players.filter(p=>state.selected.has(p.name)).map(p=>effectiveTeam(p)));let h='<div class="tablewrap"><table class="table schedule-table"><thead><tr><th>Team</th><th>Total</th>';WEEKS.forEach((w,i)=>h+=`<th>${w[0]}<br><span>${w[1].split('–')[0]}</span></th>`);h+='</tr></thead><tbody>';Object.keys(SCHEDULE).forEach(t=>{h+=`<tr><td><strong>${t}</strong> <span class="muted">${TEAMS[t]}</span></td><td><strong>${SCHEDULE[t].reduce((a,b)=>a+b,0)}</strong></td>`;SCHEDULE[t].forEach((g,i)=>{const cls=selTeams.has(t)?'hl':'';const wt=g>=4?'heavy':(g<=1?'light':'');h+=`<td class="${cls}"><span class="${wt}">${g}</span>${selTeams.has(t)?'<div class="teammark">已選球員</div>':''}</td>`});h+='</tr>'});h+='</tbody></table></div>';document.getElementById('scheduleGrid').innerHTML=h}
-let playerSearchFrame=0;
-function renderPlayers(a){
-  const q=state.playerSearch.trim().toLowerCase();
-  // Search only filters the player table. Do not call the global render() path here:
-  // that path rebuilds Draft/Weekly/Schedule/Rookie/Yahoo sections on every keystroke.
-  let rows=players.filter(p=>{
-    if(!q)return true;
-    const name=(p._searchName||p.name.toLowerCase());
-    const team=(p._searchTeam||effectiveTeam(p).toLowerCase());
-    return name.includes(q)||team.includes(q);
-  }).map(p=>({p,f:fit(p,a)}));
-
-  rows.sort((x,y)=>
-    state.sort==='pts'?y.p.pts-x.p.pts:
-    state.sort==='reb'?y.p.reb-x.p.reb:
-    state.sort==='ast'?y.p.ast-x.p.ast:
-    state.sort==='ftm'?((y.p.ftm||0)-(x.p.ftm||0)):
-    state.sort==='3p'?((y.p.p3||0)-(x.p.p3||0)):
-    state.sort==='at'?((y.p.at||0)-(x.p.at||0)):
-    y.f-x.f
-  );
-  rows=rows.slice(0,48);
-
-  const grid=document.getElementById('playerGrid');
-  grid.innerHTML=`<div class="tablewrap"><table class="table"><thead><tr><th>Player</th><th>Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>DD</th><th>TD</th><th>A/T</th><th>3P%</th><th>Wk Games</th></tr></thead><tbody>${rows.map(x=>{
-    const p=x.p,fi=fitIndex(x.f),et=effectiveTeam(p);
-    return`<tr><td><span class="playerlink" data-detail="${esc(p.name)}">${esc(p.name)}</span> <span class="muted">${et}</span></td><td class="${fi>=50?'goodtxt':'badtxt'}"><strong>${fi.toFixed(0)}</strong></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td><td>${SCHEDULE[et]?.[state.week]??'—'}</td></tr>`;
-  }).join('')}</tbody></table></div>`;
-
-  grid.querySelectorAll('[data-detail]').forEach(x=>x.onclick=()=>{
-    state.detail=x.dataset.detail;
-    renderDetail(a);
-  });
-}
-function schedulePlayerSearchRender(){
-  cancelAnimationFrame(playerSearchFrame);
-  playerSearchFrame=requestAnimationFrame(()=>renderPlayers(model()));
-}
-function renderDetail(a){const p=players.find(x=>x.name===state.detail),el=document.getElementById('detail');if(!p)return;const et=effectiveTeam(p);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(p.name)}</div><div class="muted" style="margin-top:3px">${p.isRookie?'🧑‍🎓 Rookie Projection · '+(p.school||'')+'｜':''}Projection：${esc(dataBasisLabel())}｜2025-26 baseline ${TEAMS[p.baselineTeam]||p.baselineTeam}｜2026-27 current ${TEAMS[et]||et} · GP ${p.gp}${p.baselineTeam&&p.baselineTeam!==et?` <span class="trade-badge">換隊 / 可手動覆寫</span>`:''}</div></div><span class="pill ${state.selected.has(p.name)?'good':''}">${state.selected.has(p.name)?'我的球員':state.oppSelected.has(p.name)?'對手球員':'候選球員'}</span></div><div class="detailgrid"><div class="dmetric"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="dmetric"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="dmetric"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>本週賽事</span><b>${SCHEDULE[et]?.[state.week]??'—'}</b></div><div class="dmetric stat-dd"><span>DD（整季）</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="dmetric"><span>DD/G（輔助）</span><b>${Number.isFinite(p.dd)?(p.dd/p.gp).toFixed(2):'—'}</b></div><div class="dmetric stat-td"><span>TD（整季）</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div><div class="dmetric"><span>本週預測</span><b>${projGames(p)} 場</b></div></div><div class="manual-team"><div><label class="tiny">手動指定 2026-27 隊伍</label><select id="manualTeam" class="control"><option value="">${TEAMS[et]||et}（目前）</option>${Object.entries(TEAMS).map(([k,v])=>`<option value="${k}" ${k===et?'selected':''}>${k} · ${v}</option>`).join('')}</select></div><button id="clearManualTeam" class="btn small">還原官方</button></div><div class="note" style="margin-top:12px">TD 只在球員 Detail 顯示，不進 Fantasy 評分；TD 本身也符合 DD 定義，因此不額外再加一次 DD。手動換隊只影響 2026-27 賽程與 weekly projection，不會修改歷史統計。</div>`;document.getElementById('manualTeam').onchange=e=>{const v=e.target.value;if(!v)delete state.teamOverrides[p.name];else state.teamOverrides[p.name]=v;save();renderDetail(a);renderSchedule();renderRosterTable(a);renderWeekly(a)};document.getElementById('clearManualTeam').onclick=()=>{delete state.teamOverrides[p.name];save();render()}}
+function renderPlayers(a){const q=state.playerSearch.trim().toLowerCase();let rows=players.filter(p=>!q||p.name.toLowerCase().includes(q)||effectiveTeam(p).toLowerCase().includes(q)).map(p=>({p,f:fit(p,a)}));rows.sort((x,y)=>state.sort==='pts'?y.p.pts-x.p.pts:state.sort==='reb'?y.p.reb-x.p.reb:state.sort==='ast'?y.p.ast-x.p.ast:state.sort==='ftm'?((y.p.ftm||0)-(x.p.ftm||0)):state.sort==='3p'?((y.p.p3||0)-(x.p.p3||0)):state.sort==='at'?((y.p.at||0)-(x.p.at||0)):y.f-x.f);rows=rows.slice(0,48);document.getElementById('playerGrid').innerHTML=`<div class="tablewrap"><table class="table"><thead><tr><th>Player</th><th>Fit</th><th>PTS/G</th><th>3PM/G</th><th>FTM/G</th><th>REB/G</th><th>AST/G</th><th>STL/G</th><th>BLK/G</th><th>FG%</th><th>FT%</th><th>TOV/G</th><th>DD</th><th>TD</th><th>A/T</th><th>3P%</th><th>Wk Games</th></tr></thead><tbody>${rows.map(x=>{const p=x.p,fi=fitIndex(x.f);return`<tr><td><span class="playerlink" data-detail="${esc(p.name)}">${esc(p.name)}</span> <span class="muted">${effectiveTeam(p)}</span></td><td class="${fi>=50?'goodtxt':'badtxt'}"><strong>${fi.toFixed(0)}</strong></td><td>${fmt1(p.pts)}</td><td>${fmt1(p.pm3)}</td><td>${fmt1(p.ftm)}</td><td>${fmt1(p.reb)}</td><td>${fmt1(p.ast)}</td><td>${fmt1(p.stl)}</td><td>${fmt1(p.blk)}</td><td>${pct(p.fg)}</td><td>${pct(p.ft)}</td><td>${fmt1(p.tov)}</td><td>${Number.isFinite(p.dd)?p.dd:'—'}</td><td>${Number.isFinite(p.td)?p.td:'—'}</td><td>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</td><td>${pct(p.p3)}</td><td>${SCHEDULE[effectiveTeam(p)]?.[state.week]??'—'}</td></tr>`}).join('')}</tbody></table></div>`;document.querySelectorAll('#playerGrid [data-detail]').forEach(x=>x.onclick=()=>{state.detail=x.dataset.detail;renderDetail(a)})}
+function renderDetail(a){const p=players.find(x=>x.name===state.detail),el=document.getElementById('detail');if(!p)return;const et=effectiveTeam(p);el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><div style="font-size:22px;font-weight:900">${esc(p.name)}</div><div class="muted" style="margin-top:3px">${p.isRookie?'🧑‍🎓 Rookie Projection · '+(p.school||'')+'｜':''}Projection：${esc(dataBasisLabel())}｜2025-26 baseline ${TEAMS[p.baselineTeam]||p.baselineTeam}｜2026-27 current ${TEAMS[et]||et} · GP ${p.gp}${p.baselineTeam&&p.baselineTeam!==et?` <span class="trade-badge">換隊 / 可手動覆寫</span>`:''}</div></div><span class="pill ${state.selected.has(p.name)?'good':''}">${state.selected.has(p.name)?'我的球員':state.oppSelected.has(p.name)?'對手球員':'候選球員'}</span></div><div class="detailgrid"><div class="dmetric"><span>PTS/G</span><b>${fmt1(p.pts)}</b></div><div class="dmetric"><span>3PM/G</span><b>${fmt1(p.pm3)}</b></div><div class="dmetric"><span>FTM/G</span><b>${fmt1(p.ftm)}</b></div><div class="dmetric"><span>REB/G</span><b>${fmt1(p.reb)}</b></div><div class="dmetric"><span>AST/G</span><b>${fmt1(p.ast)}</b></div><div class="dmetric"><span>STL/G</span><b>${fmt1(p.stl)}</b></div><div class="dmetric"><span>BLK/G</span><b>${fmt1(p.blk)}</b></div><div class="dmetric"><span>FG%</span><b>${pct(p.fg)}</b></div><div class="dmetric"><span>FT%</span><b>${pct(p.ft)}</b></div><div class="dmetric"><span>TOV/G</span><b>${fmt1(p.tov)}</b></div><div class="dmetric"><span>A/T</span><b>${Number.isFinite(p.at)?p.at.toFixed(2):'—'}</b></div><div class="dmetric"><span>3P%</span><b>${pct(p.p3)}</b></div><div class="dmetric"><span>本週賽事</span><b>${SCHEDULE[et]?.[state.week]??'—'}</b></div><div class="dmetric stat-dd"><span>DD（整季）</span><b>${Number.isFinite(p.dd)?p.dd:'—'}</b></div><div class="dmetric"><span>DD/G（輔助）</span><b>${Number.isFinite(p.dd)?(p.dd/p.gp).toFixed(2):'—'}</b></div><div class="dmetric stat-td"><span>TD（整季）</span><b>${Number.isFinite(p.td)?p.td:'—'}</b></div><div class="dmetric"><span>本週預測</span><b>${projGames(p)} 場</b></div></div><div class="manual-team"><div><label class="tiny">手動指定 2026-27 隊伍</label><select id="manualTeam" class="control"><option value="">${TEAMS[et]||et}（目前）</option>${Object.entries(TEAMS).map(([k,v])=>`<option value="${k}" ${k===et?'selected':''}>${k} · ${v}</option>`).join('')}</select></div><button id="clearManualTeam" class="btn small">還原官方</button></div><div class="note" style="margin-top:12px">TD 只在球員 Detail 顯示，不進 Fantasy 評分；TD 本身也符合 DD 定義，因此不額外再加一次 DD。手動換隊只影響 2026-27 賽程與 weekly projection，不會修改歷史統計。</div>`;document.getElementById('manualTeam').onchange=e=>{const v=e.target.value;if(!v)delete state.teamOverrides[p.name];else state.teamOverrides[p.name]=v;save();render()};document.getElementById('clearManualTeam').onclick=()=>{delete state.teamOverrides[p.name];save();render()}}
 function dataBasisLabel(){return {'last':'2025-26 完整球季','current':'2026-27 開季至今','recent10':'2026-27 近 10 場'}[state.dataBasis]||'2025-26 完整球季'}
 function renderDataStatus(){const sel=document.getElementById('dataBasis');if(sel)sel.value=state.dataBasis;const want=state.dataBasis;const available=want==='last'||(want==='current'&&datasets.current.length)||(want==='recent10'&&datasets.recent10.length);let msg='';if(want==='last')msg=`基準：${datasets.last.length} 人｜2025-26 完整球季`;else if(available&&want==='current')msg=`可用：${datasets.current.length} 人｜2026-27 開季至今`;else if(available&&want==='recent10')msg=`可用：${datasets.recent10.length} 人｜2026-27 近 10 場`;else msg=`目前尚未載入「${dataBasisLabel()}」，安全 fallback 到 2025-26 baseline，不把缺資料當成 0。`;document.getElementById('dataStatus').textContent=msg}
 function rookieStatus(r){const verified=!!r.ncaa;return verified?'NCAA verified':'Metadata only'}
@@ -1280,7 +1241,18 @@ function renderMobileQuickSearch(){
   box.querySelectorAll('[data-mobile-add]').forEach(r=>r.onclick=()=>{state.selected.add(r.dataset.mobileAdd);save();input.value='';box.classList.add('hidden');render()});
 }
 function render(){renderLeagueManager();const ml=document.getElementById('mobileLeagueMini');if(ml&&state.leagueId){const lg=state.leagues?.find(x=>x.id===state.leagueId);ml.textContent=lg?.name||'我的聯盟';}renderMobileQuickSearch();renderWeights();renderChips();renderOppChips();renderSearch();renderDataStatus();const a=model();renderDraft(a);renderRosterPlayerStats(a);renderRosterTable(a);renderCandidates(a);renderWhatif(a);renderWeekly(a);renderSchedule();renderPlayers(a);renderRookies();renderYahoo(a);if(state.detail)renderDetail(a);if(state.rookieDetail)renderRookieDetail();}
-function switchTab(tab){state.tab=tab;document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!==`tab-${tab}`));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}
+function switchTab(tab){
+  // Tab navigation is presentation-only. All state-changing actions already refresh
+  // their affected views, so do not rerender every page just to switch visibility.
+  state.tab=tab;
+  document.querySelectorAll('[id^="tab-"]').forEach(e=>e.classList.toggle('hidden',e.id!==`tab-${tab}`));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  // Recalculate only viewport-dependent helpers after the newly visible panel lays out.
+  requestAnimationFrame(()=>{
+    window.__l7nHScroll?.refresh?.();
+    window.__l7nRosterStickyRefresh?.();
+  });
+}
 function initWeeks(){const s=document.getElementById('weekSelect');s.innerHTML=WEEKS.map((w,i)=>`<option value="${i}">${w[0]} · ${w[1]}</option>`).join('');state.week=Math.min(24,Math.max(0,Number(state.week)||0));s.value=state.week}
 function setStatus(ok,msg){document.getElementById('dot').className='dot'+(ok?' ok':'');document.getElementById('status').textContent=msg;const b=document.getElementById('dataBadge');if(b)b.textContent=dataBasisLabel()}
 function setMobileModelOpen(open){
@@ -1314,14 +1286,14 @@ document.getElementById('mobileHelpBtn')?.addEventListener('click',()=>setHelpOp
 document.getElementById('helpClose')?.addEventListener('click',()=>setHelpOpen(false));
 helpModal?.addEventListener('click',e=>{if(e.target===helpModal)setHelpOpen(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpModal?.classList.contains('hidden'))setHelpOpen(false)});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));document.getElementById('clearMyRank')?.addEventListener('click',clearMyRank);applyShare();state.cand='';syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;render()};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('candSort').onchange=e=>{state.candSort=e.target.value;save();render()};document.getElementById('candAvailableOnly').onchange=e=>{state.candAvailableOnly=e.target.checked;save();render()};document.getElementById('clearDraftMarks').onclick=()=>{state.draftUnavailable.clear();save();render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;schedulePlayerSearchRender()};
-document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;renderPlayers(model())};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(20,Math.min(82,Number(e.target.value)||20));save();invalidateModel();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='league'?'league':'top200';save();invalidateModel();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=['last','current','recent10'].includes(e.target.value)?e.target.value:'last';save();players=getActiveDataset().players;players.forEach(p=>{p._searchName=p.name.toLowerCase();p._searchTeam=effectiveTeam(p).toLowerCase()});invalidateModel();render()};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();invalidateModel();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};state.draftUnavailable.clear();save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
+let candidateSearchDebounce=null, playerDataSearchDebounce=null;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{setMobileModelOpen(false);switchTab(b.dataset.tab)});document.getElementById('shareBtn')?.addEventListener('click',shareNow);document.getElementById('rookieSearch')?.addEventListener('input',renderRookies);document.getElementById('rookieFilter')?.addEventListener('change',renderRookies);document.getElementById('yahooSearch')?.addEventListener('input',()=>renderYahoo(model()));document.getElementById('yahooSort')?.addEventListener('change',()=>renderYahoo(model()));document.getElementById('clearMyRank')?.addEventListener('click',clearMyRank);applyShare();state.cand='';syncControlsFromState();document.getElementById('teamSearch').oninput=renderSearch;document.getElementById('oppSearch').oninput=renderOppSearch;document.getElementById('clearOpp').onclick=()=>{state.oppSelected.clear();save();render()};document.getElementById('candSearch').oninput=e=>{state.cand=e.target.value;if(candidateSearchDebounce)clearTimeout(candidateSearchDebounce);candidateSearchDebounce=setTimeout(()=>renderCandidates(model()),85)};document.getElementById('clearCand').onclick=()=>{state.cand='';document.getElementById('candSearch').value='';render()};document.getElementById('candSort').onchange=e=>{state.candSort=e.target.value;save();render()};document.getElementById('candAvailableOnly').onchange=e=>{state.candAvailableOnly=e.target.checked;save();render()};document.getElementById('clearDraftMarks').onclick=()=>{state.draftUnavailable.clear();save();render()};document.getElementById('playerSearch').oninput=e=>{state.playerSearch=e.target.value;if(playerDataSearchDebounce)clearTimeout(playerDataSearchDebounce);playerDataSearchDebounce=setTimeout(()=>renderPlayers(model()),70)};document.getElementById('playerSort').onchange=e=>{state.sort=e.target.value;render()};document.getElementById('minGP').onchange=e=>{state.minGP=Math.max(20,Math.min(82,Number(e.target.value)||20));save();invalidateModel();render()};document.getElementById('refMode').onchange=e=>{state.refMode=e.target.value==='league'?'league':'top200';save();invalidateModel();render()};document.getElementById('dataBasis').onchange=e=>{state.dataBasis=['last','current','recent10'].includes(e.target.value)?e.target.value:'last';save();players=getActiveDataset().players;invalidateModel();render()};document.getElementById('reset').onclick=()=>{state.weights={...DEFAULTS};save();invalidateModel();render()};document.getElementById('clear').onclick=()=>{state.selected.clear();state.overrides={};state.draftUnavailable.clear();save();render()};document.getElementById('weekSelect').onchange=e=>{state.week=Number(e.target.value)||0;save();render()};document.addEventListener('click',e=>{if(!e.target.closest('.team-search')){document.getElementById('results').classList.add('hidden');document.getElementById('oppResults').classList.add('hidden')}});
 state.weights={...DEFAULTS,...state.weights};
 initWeeks();
 syncControlsFromState();
 // Synchronous startup: no Promise/remote loading step, so the UI is immediately interactive.
 datasets={last:loadStoredDataset('last').length?loadStoredDataset('last'):demo(),current:loadStoredDataset('current'),recent10:loadStoredDataset('recent10')};
-players=getActiveDataset().players;players.forEach(p=>{p._searchName=p.name.toLowerCase();p._searchTeam=effectiveTeam(p).toLowerCase()});
+players=getActiveDataset().players;
 state.selected=new Set([...state.selected].filter(n=>players.some(p=>p.name===n)));
 state.oppSelected=new Set([...state.oppSelected].filter(n=>players.some(p=>p.name===n)));
 setStatus(true,`${players.length} 位球員｜本機資料已就緒｜2026-27 schedule snapshot`);
@@ -1377,184 +1349,69 @@ fetchFullBaseline();
 })();
 </script>
 
-<style id="v411-data-pin">
-/* V4.0.12: Player Data viewport-pinned horizontal rail + viewport-pinned header.
-   UI/layout only. Fantasy Engine, model, projections and data calculations untouched. */
-.l7n-data-sticky-head{
-  position:fixed;
-  left:0; top:0;
-  width:0; height:0;
-  z-index:60;
-  display:none;
-  pointer-events:none;
-  overflow:hidden;
-  background:#f8fafc;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  box-shadow:0 3px 10px rgba(30,41,59,.08);
-}
-.l7n-data-sticky-head .pin-first,
-.l7n-data-sticky-head .pin-rest{
-  position:absolute;
-  top:0;
-  height:100%;
-  overflow:hidden;
-  background:#f8fafc;
-}
-.l7n-data-sticky-head .pin-first{
-  left:0;
-  z-index:2;
-  border-right:1px solid var(--line);
-}
-.l7n-data-sticky-head .pin-rest{right:0;}
-.l7n-data-sticky-head table{
-  border-collapse:collapse;
-  table-layout:fixed;
-  margin:0;
-  height:100%;
-  background:#f8fafc;
-}
-.l7n-data-sticky-head th{
-  background:#f8fafc;
-  color:#637088;
-  font-size:11px;
-  font-weight:900;
-  text-align:right;
-  white-space:nowrap;
-  border-bottom:0;
-  padding:6px 7px;
-  height:100%;
-}
-.l7n-data-sticky-head .pin-first th{text-align:left;}
-.l7n-data-sticky-head .pin-rest-inner{height:100%;will-change:transform;}
-@media(max-width:760px){
-  .l7n-data-sticky-head th{font-size:10.5px;padding:6px 6px}
-}
+<style id="v414-roster-sticky">
+/* V4.0.14: stable viewport-pinned roster comparison header. */
+.l7n-roster-sticky{position:fixed;display:none;overflow:hidden;z-index:60;background:#f8fafc;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 3px 10px rgba(30,41,59,.08);pointer-events:none}
+.l7n-roster-sticky .first,.l7n-roster-sticky .rest{position:absolute;top:0;bottom:0;overflow:hidden;background:#f8fafc}
+.l7n-roster-sticky .first{left:0;z-index:2;border-right:1px solid var(--line)}
+.l7n-roster-sticky .rest{right:0}
+.l7n-roster-sticky table{border-collapse:collapse;table-layout:fixed;margin:0;background:#f8fafc}
+.l7n-roster-sticky th{background:#f8fafc;color:#637088;font-size:10px;font-weight:900;text-align:right;white-space:nowrap;border:0;padding:8px 8px;height:100%}
+.l7n-roster-sticky .first th{text-align:left}
+.l7n-roster-sticky .rest-inner{height:100%;will-change:transform}
+@media(max-width:760px){.l7n-roster-sticky th{font-size:9.5px;padding:7px 6px}}
 </style>
 <script>
-// V4.0.12: data-page layout layer only.
-// 1) Forces the existing viewport-fixed H-scroll rail to follow Player Data.
-// 2) Pins the Player Data column labels under the app header while vertically scrolling.
-// No fantasy/data calculations are modified here.
+// V4.0.14: lightweight sticky header controller. Build only on render/resize; scroll only repositions.
 (function(){
   function init(){
-    const grid=document.getElementById('playerGrid');
-    const tab=document.getElementById('tab-players');
+    const grid=document.getElementById('rosterPlayerStats');
+    const tab=document.getElementById('tab-draft');
     if(!grid||!tab)return;
-
-    let sticky=null, firstBox=null, restBox=null, restInner=null;
-    let activeTable=null, syncing=false, raf=0;
-
-    function hidden(el){return !el || el.classList.contains('hidden') || getComputedStyle(el).display==='none';}
-    function getTableWrap(){
-      const wrap=grid.querySelector('.tablewrap');
-      if(!wrap || !wrap.querySelector('.player-stats-table')) return null;
-      return wrap.scrollWidth>wrap.clientWidth+3 ? wrap : null;
+    let sticky=null,first=null,rest=null,restInner=null,boundWrap=null,raf=0;
+    let cached={wrap:null,height:0,firstWidth:0,totalWidth:0};
+    const header=()=>document.querySelector('header');
+    const hidden=el=>!el||el.classList.contains('hidden')||getComputedStyle(el).display==='none';
+    const getWrap=()=>{const w=grid.querySelector('.tablewrap');return w&&w.querySelector('.player-stats-table')?w:null};
+    function ensure(){
+      if(sticky)return;
+      sticky=document.createElement('div');sticky.className='l7n-roster-sticky';
+      sticky.innerHTML='<div class="first"></div><div class="rest"><div class="rest-inner"></div></div>';
+      document.body.appendChild(sticky);first=sticky.querySelector('.first');rest=sticky.querySelector('.rest');restInner=sticky.querySelector('.rest-inner');
     }
-    function headerMetrics(wrap){
-      const table=wrap?.querySelector('.player-stats-table');
-      const head=table?.querySelector('thead tr');
-      if(!table||!head)return null;
-      const cells=[...head.children];
-      if(!cells.length)return null;
-      const widths=cells.map(c=>c.getBoundingClientRect().width);
-      const rowRect=head.getBoundingClientRect();
-      const firstWidth=widths[0]||0;
-      const totalWidth=Math.max(table.scrollWidth, widths.reduce((a,b)=>a+b,0));
-      return {table,head,cells,widths,firstWidth,totalWidth,height:Math.max(30,rowRect.height)};
+    function build(wrap){
+      const table=wrap?.querySelector('.player-stats-table'),row=table?.querySelector('thead tr');
+      if(!table||!row)return false;
+      const cells=[...row.children];
+      const widths=cells.map(c=>Math.round(c.getBoundingClientRect().width));
+      const height=Math.max(30,Math.round(row.getBoundingClientRect().height));
+      const firstWidth=widths[0]||170,totalWidth=Math.max(Math.round(table.scrollWidth),widths.reduce((a,b)=>a+b,0)),restWidth=Math.max(1,totalWidth-firstWidth);
+      ensure();first.innerHTML='';restInner.innerHTML='';
+      const ft=document.createElement('table');ft.style.width=firstWidth+'px';
+      const ftr=document.createElement('tr');const fth=cells[0].cloneNode(true);fth.style.width=firstWidth+'px';ftr.appendChild(fth);ft.appendChild(document.createElement('thead')).appendChild(ftr);first.appendChild(ft);
+      const rt=document.createElement('table');rt.style.width=restWidth+'px';
+      const rtr=document.createElement('tr');cells.slice(1).forEach((c,i)=>{const th=c.cloneNode(true);th.style.width=(widths[i+1]||0)+'px';rtr.appendChild(th)});rt.appendChild(document.createElement('thead')).appendChild(rtr);restInner.appendChild(rt);restInner.style.width=restWidth+'px';
+      cached={wrap,height,firstWidth,totalWidth};return true;
     }
-    function buildSticky(wrap,m){
-      if(!sticky){
-        sticky=document.createElement('div');
-        sticky.className='l7n-data-sticky-head';
-        sticky.innerHTML='<div class="pin-first"></div><div class="pin-rest"><div class="pin-rest-inner"></div></div>';
-        document.body.appendChild(sticky);
-        firstBox=sticky.querySelector('.pin-first');
-        restBox=sticky.querySelector('.pin-rest');
-        restInner=sticky.querySelector('.pin-rest-inner');
-      }
-      sticky.style.height=m.height+'px';
-      sticky.style.left=wrap.getBoundingClientRect().left+'px';
-      sticky.style.width=wrap.clientWidth+'px';
-      sticky.style.top=(document.querySelector('header')?.getBoundingClientRect().bottom||0)+'px';
-
-      const firstTable=document.createElement('table');
-      firstTable.style.width=m.firstWidth+'px';
-      const firstHead=document.createElement('thead');
-      const firstRow=document.createElement('tr');
-      const firstCell=m.cells[0].cloneNode(true);
-      firstCell.style.width=m.firstWidth+'px';
-      firstRow.appendChild(firstCell); firstHead.appendChild(firstRow); firstTable.appendChild(firstHead);
-      firstBox.innerHTML=''; firstBox.style.width=m.firstWidth+'px'; firstBox.appendChild(firstTable);
-
-      const restTable=document.createElement('table');
-      const restWidth=Math.max(m.totalWidth-m.firstWidth,1);
-      restTable.style.width=restWidth+'px';
-      const restHead=document.createElement('thead');
-      const restRow=document.createElement('tr');
-      m.cells.slice(1).forEach((c,i)=>{
-        const cell=c.cloneNode(true);
-        cell.style.width=(m.widths[i+1]||0)+'px';
-        restRow.appendChild(cell);
-      });
-      restHead.appendChild(restRow); restTable.appendChild(restHead);
-      restInner.innerHTML=''; restInner.appendChild(restTable);
-      restInner.style.width=restWidth+'px';
-      restBox.style.left=m.firstWidth+'px';
-      restBox.style.width=Math.max(wrap.clientWidth-m.firstWidth,0)+'px';
-      restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
-      sticky.style.display='block';
+    function position(){
+      const wrap=cached.wrap?.isConnected?cached.wrap:getWrap();
+      if(hidden(tab)||!wrap){if(sticky)sticky.style.display='none';return;}
+      if(wrap!==cached.wrap||!cached.height){if(!build(wrap)){if(sticky)sticky.style.display='none';return;}}
+      const r=wrap.getBoundingClientRect(),hb=header()?.getBoundingClientRect().bottom||0,h=cached.height;
+      if(!(r.top<hb&&r.bottom>hb+h)){sticky.style.display='none';return;}
+      sticky.style.left=Math.round(r.left)+'px';sticky.style.top=Math.round(hb)+'px';sticky.style.width=Math.round(wrap.clientWidth)+'px';sticky.style.height=h+'px';
+      first.style.width=cached.firstWidth+'px';rest.style.left=cached.firstWidth+'px';rest.style.width=Math.max(0,Math.round(wrap.clientWidth-cached.firstWidth))+'px';restInner.style.transform=`translate3d(${-Math.round(wrap.scrollLeft)}px,0,0)`;sticky.style.display='block';
     }
-    function hideSticky(){if(sticky)sticky.style.display='none';}
-    function updateSticky(){
-      const wrap=getTableWrap();
-      if(hidden(tab)||!wrap){hideSticky();return;}
-      const r=wrap.getBoundingClientRect();
-      const headerBottom=document.querySelector('header')?.getBoundingClientRect().bottom||0;
-      const m=headerMetrics(wrap);
-      if(!m){hideSticky();return;}
-      const shouldShow=r.top<headerBottom && r.bottom>headerBottom+m.height;
-      if(!shouldShow){hideSticky();return;}
-      buildSticky(wrap,m);
-      restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
-    }
-    function updateRail(){
-      const sc=document.getElementById('l7nGlobalHScroll');
-      const track=document.getElementById('l7nGlobalHScrollTrack');
-      const wrap=getTableWrap();
-      if(!sc||!track)return;
-      if(hidden(tab)||!wrap){return;}
-      activeTable=wrap;
-      if(window.__l7nHScroll){window.__l7nHScroll.setTarget(wrap);}
-      sc.classList.remove('hidden');
-      sc.style.display='block';
-      document.body.classList.add('l7n-hscroll-visible');
-    }
-    function bindTable(wrap){
-      if(!wrap||wrap.dataset.l7n411==='1')return;
-      wrap.dataset.l7n411='1';
-      wrap.addEventListener('scroll',()=>{
-        if(activeTable!==wrap)activeTable=wrap;
-        if(sticky&&sticky.style.display!=='none'){
-          restInner.style.transform=`translateX(${-wrap.scrollLeft}px)`;
-        }
-        const sc=document.getElementById('l7nGlobalHScroll');
-        if(sc&&window.__l7nHScroll){window.__l7nHScroll.syncFromTarget(wrap);}
-      },{passive:true});
-    }
-    function schedule(){
-      if(raf)cancelAnimationFrame(raf);
-      raf=requestAnimationFrame(()=>{raf=0;const wrap=getTableWrap();bindTable(wrap);updateRail();updateSticky();});
-    }
+    function schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;position()})}
+    function bind(wrap){if(!wrap||boundWrap===wrap)return;if(boundWrap)boundWrap.removeEventListener('scroll',schedule);boundWrap=wrap;boundWrap.addEventListener('scroll',schedule,{passive:true})}
+    function refresh(){const wrap=getWrap();if(wrap){build(wrap);bind(wrap)}else{cached={wrap:null,height:0,firstWidth:0,totalWidth:0};if(sticky)sticky.style.display='none'}schedule()}
+    window.__l7nRosterStickyRefresh=refresh;
     window.addEventListener('scroll',schedule,{passive:true});
-    window.addEventListener('resize',schedule,{passive:true});
-    document.addEventListener('scroll',schedule,{passive:true,capture:true});
-    new MutationObserver(schedule).observe(grid,{childList:true,subtree:true});
-    const tabs=document.querySelectorAll('.tab'); tabs.forEach(t=>t.addEventListener('click',schedule));
-    schedule();
+    window.addEventListener('resize',refresh,{passive:true});
+    document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>setTimeout(refresh,0)));
+    refresh();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
-
 </body></html>
